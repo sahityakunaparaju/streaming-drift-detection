@@ -1,0 +1,8 @@
+kafka-python
+pyspark
+psycopg2-binary
+scipy
+pandas
+evidently
+pytest
+pyyamlS

@@ -1,0 +1,107 @@
+# ============================================================
+# Phase 6 frozen thresholds (Section X threshold-tuning pass)
+# ============================================================
+# Every value is derived empirically by:
+#     python3 experiments/tuning_pass.py
+# (20 synthetic windows x 10 conditions sampled from the primary
+# reference dataset, plus the real 10-window stream).
+# Raw component/score distributions: experiments/tuning_results.json.
+# Decision-boundary report: results/phase6/threshold_derivation.md
+#
+# These values REPLACE the Phase 5 placeholder constants
+# (KS_PLACEHOLDER_FLOOR / PSI_PLACEHOLDER_SCALE /
+# CHI2_PLACEHOLDER_SCALE). No placeholder constants remain in code.
+
+# ------------------------------------------------------------
+# Statistical detector thresholds
+# ------------------------------------------------------------
+statistical:
+  # KS floor: values at or below this produce ks_component = 0.
+  # derivation: no-drift max_ks upper = 0.4996
+  # (tuning_results.json -> derivation.no_drift_max_ks), rounded up.
+  ks_floor: 0.50
+
+  # PSI scale: psi_component = min(max_psi / psi_scale, 1.0).
+  # derivation: no-drift max_psi upper = 17.87, mapped to score 0.25:
+  # ceil(17.87 / 0.25) = 72.0 (tuning_results.json -> derivation).
+  psi_scale: 72.0
+
+  # Chi-square scale: chi2_component = min(max_chi2 / chi2_scale, 1.0).
+  # derivation: no-drift max_chi2 upper = 7.94 (incl. real clean
+  # windows), mapped to score 0.25: ceil(7.94 / 0.25) = 32.0.
+  chi2_scale: 32.0
+
+  # PSI binning used by statistical_detector.calculate_psi.
+  psi_bins: 10
+
+  # Statistical decision threshold: the statistical_score value at
+  # which drift separates from noise. derivation: clean score band
+  # [0.124, 0.248] -> upper bound rounded up = 0.25. Category shift
+  # separates cleanly (low min = 0.270); high mean shift separates
+  # from p50 up (marginal); low/medium mean shift and variance shift
+  # are unresolved under max-over-columns aggregation (documented
+  # known limitation, docs/phase6_notes.md).
+  decision_threshold: 0.25
+
+  # p-value used by the streaming consumer's chi-square drift flag
+  # (informational; statistical_score uses chi2, not this flag).
+  categorical_p_value_threshold: 0.05
+
+# ------------------------------------------------------------
+# Semantic detector thresholds
+# ------------------------------------------------------------
+semantic:
+  # Relative tolerance band for value range validation: a value is a
+  # range_violation only if it lies outside
+  # [min - band, max + band] where band = fraction * (max - min).
+  # derivation: full-dataset boundary scan (tuning_results.json ->
+  # semantic.boundary_fp) shows the declared contract ranges are
+  # marginally narrower than the dataset's own observed min/max
+  # (max relative overrun 0.000027, lpg). band = 0.01 absorbs all
+  # latent boundary/measurement-noise overruns with ~370x margin
+  # while staying below the smallest injected severity
+  # (low = 0.02x range, detected 20/20 with the band in place).
+  # Sample FP risk: 0/20 clean and 0/20 normal-noise windows both
+  # with and without the band.
+  range_tolerance_fraction: 0.01
+
+  # Contract-level rules (unit_change, range_change,
+  # allowed_domain_change, business_meaning_change) are exact
+  # equality rules: 100% detection, no numeric threshold needed.
+  # Note: domain rules require the contract to declare
+  # `allowed_domain` as a list; the reference contract declares
+  # device.domain as a label, so domain rules are inert on the
+  # reference contract (verified to fire when allowed_domain is
+  # declared).
+
+# ------------------------------------------------------------
+# Schema detector
+# ------------------------------------------------------------
+schema:
+  # Schema drift is binary: drift iff any schema event
+  # (added / removed / type_change / nullability_change / rename).
+  # Detection is exact set comparison of columns/dtypes/nullability;
+  # no numeric threshold is needed or invented.
+  binary: true
+  threshold_required: false
+
+# ------------------------------------------------------------
+# Unified decision layer
+# ------------------------------------------------------------
+unified:
+  # Unified-score threshold for the non-override path.
+  # derivation: with binary schema/semantic scores and max-confidence
+  # overrides, the non-override path forces schema=0 and semantic=0,
+  # so unified = statistical_score / 3.0 < 1/3 < 0.5. The threshold is
+  # UNREACHABLE in the non-override path (tuning_results.json ->
+  # unified). Retained as a conservative frozen default; the effective
+  # non-override rule is statistical.decision_threshold. If the
+  # unified threshold should play a functional role, Phase 7 should
+  # introduce continuous component scores.
+  threshold: 0.5
+
+  # Max-confidence override conditions: any component score at or
+  # above its max forces DRIFT regardless of unified_score.
+  schema_max_score: 1.0
+  semantic_max_score: 1.0
+  statistical_max_score: 1.0

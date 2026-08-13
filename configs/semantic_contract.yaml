@@ -1,0 +1,74 @@
+contract_version: "1.0"
+
+dataset:
+  name: "iot_telemetry_data"
+
+fields:
+
+  ts:
+    business_meaning: "measurement_timestamp"
+    data_role: "timestamp"
+    unit: "unix_epoch_seconds"
+
+  device:
+    business_meaning: "iot_device_identifier"
+    data_role: "identifier"
+    domain: "device_id"
+    # Closed categorical domain: the three device IDs observed in the
+    # primary dataset (mirrors configs/schema_reference.yaml
+    # allowed_values). Enables the Level 1 allowed_domain value rule.
+    allowed_domain:
+      - "1c:bf:ce:15:ec:4d"
+      - "00:0f:00:70:91:0a"
+      - "b8:27:eb:bf:9d:51"
+
+  co:
+    business_meaning: "carbon_monoxide_sensor_reading"
+    data_role: "sensor_measurement"
+    unit: "sensor_units"
+    valid_range:
+      min: 0.001170
+      max: 0.014421
+
+  humidity:
+    business_meaning: "relative_humidity"
+    data_role: "sensor_measurement"
+    unit: "percent"
+    valid_range:
+      min: 1.1
+      max: 99.9
+
+  light:
+    business_meaning: "ambient_light_state"
+    data_role: "binary_sensor_state"
+    unit: "boolean"
+
+  lpg:
+    business_meaning: "liquefied_petroleum_gas_sensor_reading"
+    data_role: "sensor_measurement"
+    unit: "sensor_units"
+    valid_range:
+      min: 0.002693
+      max: 0.016567
+
+  motion:
+    business_meaning: "motion_detection_state"
+    data_role: "binary_sensor_state"
+    unit: "boolean"
+
+  smoke:
+    business_meaning: "smoke_sensor_reading"
+    data_role: "sensor_measurement"
+    unit: "sensor_units"
+    valid_range:
+      min: 0.006692
+      max: 0.046590
+
+  temp:
+    business_meaning: "device_temperature"
+    data_role: "sensor_measurement"
+    unit: "celsius"
+    valid_range:
+      min: 0.0
+      max: 30.6
+    range_source: "observed_min_max_from_primary_dataset"

@@ -1,0 +1,57 @@
+schema_version: "1.0"
+
+dataset:
+  name: "iot_telemetry_data"
+  description: "Reference schema for primary IoT telemetry dataset"
+
+columns:
+
+  ts:
+    dtype: "float64"
+    role: "timestamp"
+    nullable: false
+    format: "unix_epoch_seconds"
+
+  device:
+    dtype: "string"
+    role: "identifier"
+    nullable: false
+    allowed_values:
+      - "1c:bf:ce:15:ec:4d"
+      - "00:0f:00:70:91:0a"
+      - "b8:27:eb:bf:9d:51"
+
+  co:
+    dtype: "float64"
+    role: "sensor"
+    nullable: false
+
+  humidity:
+    dtype: "float64"
+    role: "sensor"
+    nullable: false
+
+  light:
+    dtype: "bool"
+    role: "state"
+    nullable: false
+
+  lpg:
+    dtype: "float64"
+    role: "sensor"
+    nullable: false
+
+  motion:
+    dtype: "bool"
+    role: "state"
+    nullable: false
+
+  smoke:
+    dtype: "float64"
+    role: "sensor"
+    nullable: false
+
+  temp:
+    dtype: "float64"
+    role: "sensor"
+    nullable: false

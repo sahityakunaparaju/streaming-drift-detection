@@ -1,0 +1,10 @@
+@"
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+results/
+data/
+kafka_output.txt
+"@ | Out-File -Encoding utf8 .gitignore
