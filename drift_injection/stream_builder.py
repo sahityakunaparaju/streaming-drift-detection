@@ -13,10 +13,26 @@ from drift_injection.injectors import (
     inject_normal_noise,
 )
 
+from drift_injection.flagging import (
+    expected_false_negative_reason,
+)
 from drift_injection.ground_truth import (
     create_event,
     append_event,
 )
+
+
+# Phase 6/7: variance-shift and distribution-shift detection under
+# max-over-columns statistical aggregation are known, documented
+# measurement limitations (docs/phase6_notes.md). Windows injecting
+# them are flagged via the shared rule in drift_injection/flagging.py
+# so Phase 7's precision/recall computation can account for the
+# expected false negative instead of silently penalizing the
+# detector. The controlled stream below contains a variance-shift
+# window (window_005), flagged by the rule; distribution-shift
+# windows are exercised end-to-end by the Phase 7 matrix generator
+# (drift_injection/phase7_generator.py), which applies the same rule
+# at every event-creation site.
 
 
 def build_stream(
@@ -41,11 +57,18 @@ def build_stream(
 
     input_path = Path(input_path)
     output_dir = Path(output_dir)
+    ground_truth_path = Path(ground_truth_path)
 
     output_dir.mkdir(
         parents=True,
         exist_ok=True,
     )
+
+    # build_stream generates the complete controlled set from
+    # scratch: start with a fresh ground-truth file so reruns never
+    # mix old rows (e.g. a pre-Phase-6 schema) with new ones.
+    if ground_truth_path.exists():
+        ground_truth_path.unlink()
 
     df = pd.read_csv(input_path)
 
@@ -186,6 +209,12 @@ def build_stream(
                 injected=True,
                 ground_truth="DRIFT",
                 timestamp=str(batch["ts"].iloc[0]),
+                expected_false_negative=(
+                    expected_false_negative_reason(
+                        "variance_shift"
+                    )
+                    or ""
+                ),
             )
 
         # Window 6: category shift

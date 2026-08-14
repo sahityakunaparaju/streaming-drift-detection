@@ -100,3 +100,81 @@ def test_ground_truth_columns(tmp_path):
     df = pd.read_csv(output)
 
     assert list(df.columns) == GROUND_TRUTH_COLUMNS
+
+
+def test_expected_false_negative_flag_written(tmp_path):
+
+    output = tmp_path / "ground_truth.csv"
+
+    event = log_injection(
+        drift_type="statistical",
+        subtype="variance_shift",
+        feature="temp",
+        severity="medium",
+        output_path=output,
+        expected_false_negative=(
+            "expected false negative — known aggregation limitation"
+        ),
+    )
+
+    assert event["expected_false_negative"] != ""
+
+    df = pd.read_csv(output)
+
+    assert df.iloc[0]["expected_false_negative"] != ""
+
+    # Phase 6 requirement: the variance-shift caveat must be carried
+    # into the ground-truth output, not just mentioned in prose.
+    assert (
+        "expected false negative"
+        in df.iloc[0]["expected_false_negative"]
+    )
+
+
+def test_distribution_shift_flag_written(tmp_path):
+
+    # Phase 6 follow-up: distribution shift is the same known
+    # aggregation limitation as variance shift and is flagged through
+    # the identical mechanism (expected_false_negative column).
+    output = tmp_path / "ground_truth.csv"
+
+    event = log_injection(
+        drift_type="statistical",
+        subtype="distribution_shift",
+        feature="temp",
+        severity="medium",
+        output_path=output,
+        expected_false_negative=(
+            "expected false negative — known aggregation limitation"
+        ),
+    )
+
+    assert event["expected_false_negative"] != ""
+
+    df = pd.read_csv(output)
+
+    assert df.iloc[0]["subtype"] == "distribution_shift"
+    assert (
+        "expected false negative"
+        in df.iloc[0]["expected_false_negative"]
+    )
+
+
+def test_default_flag_is_empty(tmp_path):
+
+    output = tmp_path / "ground_truth.csv"
+
+    log_injection(
+        drift_type="schema",
+        subtype="added",
+        feature="battery_level",
+        severity="high",
+        output_path=output,
+    )
+
+    df = pd.read_csv(output)
+
+    # Empty-string flag round-trips through CSV as NaN.
+    assert pd.isna(
+        df.iloc[0]["expected_false_negative"]
+    ) or df.iloc[0]["expected_false_negative"] == ""

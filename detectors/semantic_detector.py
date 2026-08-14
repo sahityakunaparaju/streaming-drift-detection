@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 
+import pandas as pd
+
 from detectors.thresholds import THRESHOLDS
 
 RANGE_TOLERANCE_FRACTION = float(
@@ -151,6 +153,13 @@ def validate_values_against_contract(df, contract):
         # --------------------------------------------------
 
         valid_range = specification.get("valid_range")
+
+        # A schema drift may have turned this column non-numeric
+        # (e.g. temp -> string); a numeric range cannot be validated
+        # against such values, so skip the range check for that
+        # column instead of crashing the detector.
+        if not pd.api.types.is_numeric_dtype(series):
+            valid_range = None
 
         if valid_range and len(valid_range) == 2:
 

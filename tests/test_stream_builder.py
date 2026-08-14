@@ -131,3 +131,33 @@ def test_stream_builder(tmp_path):
     assert "motion" not in (
         removed_window.columns
     )
+
+    # --------------------------------------------------
+    # Phase 6: variance-shift window must be flagged in the
+    # ground-truth output as an expected false negative so
+    # Phase 7 precision/recall can account for it.
+    # --------------------------------------------------
+
+    variance = truth[
+        truth["subtype"] == "variance_shift"
+    ]
+
+    assert len(variance) == 1
+
+    assert (
+        "expected false negative"
+        in str(
+            variance.iloc[0]["expected_false_negative"]
+        )
+    )
+
+    no_drift = truth[
+        truth["ground_truth"] == "NO_DRIFT"
+    ]
+
+    assert (
+        no_drift["expected_false_negative"]
+        .fillna("")
+        .eq("")
+        .all()
+    )

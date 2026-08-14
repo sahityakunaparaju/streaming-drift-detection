@@ -1,0 +1,25 @@
+# ============================================================
+# Severity labeling (frozen in Phase 6)
+# ============================================================
+# AUTHORITATIVE SOURCE: configs/thresholds.yaml -> schema.severity_labels
+# (frozen; DO NOT MODIFY outside the Phase 13 sanity check against
+# the secondary dataset).
+# This file mirrors that mapping for quick reference only — if a
+# change is ever justified (Phase 13), edit thresholds.yaml and
+# re-mirror here.
+
+schema:
+  added: high
+  removed: high
+  renamed: high
+  type_change: medium
+  nullability_change: low
+
+rationale: >-
+  Schema drift detection is binary (drift iff any schema event);
+  severity is a LABEL applied per event for per-severity reporting
+  (Section M of the research plan). Structural breaks (added /
+  removed / renamed columns) are HIGH because they change the record
+  shape and break downstream consumers. Type changes are MEDIUM:
+  values are reinterpreted but the record shape is unchanged.
+  Nullability changes are LOW: metadata-level, values unchanged.

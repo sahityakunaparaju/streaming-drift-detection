@@ -14,6 +14,13 @@ GROUND_TRUTH_COLUMNS = [
     "severity",
     "injected",
     "ground_truth",
+    # Phase 6: machine-readable flag for windows whose drift is
+    # expected to be missed under a documented measurement
+    # limitation (e.g. variance shift under max-over-columns
+    # aggregation). Empty string means "not flagged". Phase 7's
+    # precision/recall must account for these windows instead of
+    # silently penalizing the detector.
+    "expected_false_negative",
 ]
 
 
@@ -26,11 +33,17 @@ def create_event(
     ground_truth=None,
     timestamp=None,
     event_id=None,
+    expected_false_negative="",
 ):
     """
     Create one ground-truth event.
 
     Every event is explicitly labelled as DRIFT or NO_DRIFT.
+
+    expected_false_negative: non-empty flag string for windows whose
+    drift is expected to be missed under a documented measurement
+    limitation (Phase 6 variance-shift aggregation caveat). Phase 7
+    reads this to avoid penalizing the detector for known issues.
     """
 
     if ground_truth is None:
@@ -51,6 +64,7 @@ def create_event(
         "severity": severity,
         "injected": bool(injected),
         "ground_truth": ground_truth,
+        "expected_false_negative": expected_false_negative,
     }
 
 
@@ -93,6 +107,7 @@ def log_injection(
     severity,
     output_path="results/raw/ground_truth.csv",
     timestamp=None,
+    expected_false_negative="",
 ):
     """
     Log a positive drift event.
@@ -106,6 +121,7 @@ def log_injection(
         injected=True,
         ground_truth="DRIFT",
         timestamp=timestamp,
+        expected_false_negative=expected_false_negative,
     )
 
     append_event(
@@ -121,6 +137,7 @@ def log_no_drift(
     feature=None,
     output_path="results/raw/ground_truth.csv",
     timestamp=None,
+    expected_false_negative="",
 ):
     """
     Log an explicit negative/control event.
@@ -137,6 +154,7 @@ def log_no_drift(
         injected=False,
         ground_truth="NO_DRIFT",
         timestamp=timestamp,
+        expected_false_negative=expected_false_negative,
     )
 
     append_event(

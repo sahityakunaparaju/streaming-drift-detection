@@ -279,6 +279,7 @@ def inject_category_shift(
     column="device",
     category=None,
     severity="medium",
+    random_state=42,
 ):
     """
     Increase the frequency of one categorical value.
@@ -322,7 +323,7 @@ def inject_category_shift(
             "severity must be one of: low, medium, high"
         )
 
-    rng = np.random.default_rng(42)
+    rng = np.random.default_rng(random_state)
 
     candidate_indices = result.index[
         result[column] != category

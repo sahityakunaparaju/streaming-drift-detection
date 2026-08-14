@@ -1,12 +1,19 @@
 CREATE TABLE IF NOT EXISTS ground_truth (
-    event_id        TEXT PRIMARY KEY,
-    ts              DOUBLE PRECISION,
-    drift_type      TEXT,
-    subtype         TEXT,
-    feature         TEXT,
-    severity        TEXT,
-    injected        BOOLEAN,
-    ground_truth    TEXT
+    event_id                 TEXT PRIMARY KEY,
+    ts                       DOUBLE PRECISION,
+    drift_type               TEXT,
+    subtype                  TEXT,
+    feature                  TEXT,
+    severity                 TEXT,
+    injected                 BOOLEAN,
+    ground_truth             TEXT,
+    -- Phase 6: machine-readable flag for windows whose drift is
+    -- expected to be missed under a documented measurement
+    -- limitation (e.g. variance shift under max-over-columns
+    -- aggregation). Empty string = not flagged. Phase 7 must
+    -- account for these windows in precision/recall instead of
+    -- silently penalizing the detector.
+    expected_false_negative  TEXT
 );
 
 CREATE TABLE IF NOT EXISTS detection_events (

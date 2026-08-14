@@ -33,9 +33,10 @@ for _, row in df.iterrows():
             feature,
             severity,
             injected,
-            ground_truth
+            ground_truth,
+            expected_false_negative
         )
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """,
         (
             row["event_id"],
@@ -46,6 +47,7 @@ for _, row in df.iterrows():
             row["severity"],
             bool(row["injected"]),
             row["ground_truth"],
+            str(row.get("expected_false_negative") or ""),
         ),
     )
 

@@ -1,5 +1,22 @@
 from datetime import datetime, timezone
 
+from detectors.thresholds import THRESHOLDS
+
+# Frozen in configs/thresholds.yaml -> schema.severity_labels
+# (Phase 6, Section M of the research plan). Detection stays binary;
+# these labels are applied per event for per-severity reporting and
+# must not be changed outside the Phase 13 sanity check.
+SEVERITY_LABELS = THRESHOLDS.get("schema", {}).get(
+    "severity_labels",
+    {
+        "added": "high",
+        "removed": "high",
+        "renamed": "high",
+        "type_change": "medium",
+        "nullability_change": "low",
+    },
+)
+
 
 def compare_schemas(reference_schema, current_schema):
     """
@@ -35,7 +52,7 @@ def compare_schemas(reference_schema, current_schema):
             "change": "added",
             "old_value": None,
             "new_value": current.get("dtype"),
-            "severity": "high",
+            "severity": SEVERITY_LABELS["added"],
         })
 
     for column in sorted(removed_columns):
@@ -48,7 +65,7 @@ def compare_schemas(reference_schema, current_schema):
             "change": "removed",
             "old_value": reference.get("dtype"),
             "new_value": None,
-            "severity": "high",
+            "severity": SEVERITY_LABELS["removed"],
         })
 
     # --------------------------------------------------
@@ -78,7 +95,7 @@ def compare_schemas(reference_schema, current_schema):
                 "change": "type_change",
                 "old_value": reference_dtype,
                 "new_value": current_dtype,
-                "severity": "high",
+                "severity": SEVERITY_LABELS["type_change"],
             })
 
         # -----------------------------
@@ -97,7 +114,7 @@ def compare_schemas(reference_schema, current_schema):
                 "change": "nullability_change",
                 "old_value": reference_nullable,
                 "new_value": current_nullable,
-                "severity": "medium",
+                "severity": SEVERITY_LABELS["nullability_change"],
             })
 
     # --------------------------------------------------
@@ -146,7 +163,7 @@ def detect_renames(reference_schema, current_schema, rename_map):
             "change": "renamed",
             "old_value": old_name,
             "new_value": new_name,
-            "severity": "high",
+            "severity": SEVERITY_LABELS["renamed"],
         })
 
     return events

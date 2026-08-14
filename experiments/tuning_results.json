@@ -33,7 +33,46 @@
         "p75": 0.1857700765305434,
         "p95": 0.216919213141612,
         "max": 0.24821948809402125
-      }
+      },
+      "per_column": {
+        "co": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "humidity": {
+          "ks_max": 0.36431963749802565,
+          "ks_median": 0.24287803072184488,
+          "psi_max": 13.123814982005474
+        },
+        "light": {
+          "ks_max": 0.10728172879481912,
+          "ks_median": 0.02150000000000002,
+          "psi_max": 0.0
+        },
+        "lpg": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "motion": {
+          "ks_max": 0.00981041699573526,
+          "ks_median": 0.0011895830042647493,
+          "psi_max": 0.0
+        },
+        "smoke": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.41003031709050697,
+          "psi_max": 17.87180314276953
+        },
+        "temp": {
+          "ks_max": 0.44806940056863054,
+          "ks_median": 0.2571698487600695,
+          "psi_max": 13.022107991077979
+        }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     },
     {
       "condition": "mean_low",
@@ -68,7 +107,46 @@
         "p75": 0.1857700765305434,
         "p95": 0.216919213141612,
         "max": 0.24821948809402125
-      }
+      },
+      "per_column": {
+        "co": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "humidity": {
+          "ks_max": 0.36431963749802565,
+          "ks_median": 0.24287803072184488,
+          "psi_max": 13.123814982005474
+        },
+        "light": {
+          "ks_max": 0.10728172879481912,
+          "ks_median": 0.02150000000000002,
+          "psi_max": 0.0
+        },
+        "lpg": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "motion": {
+          "ks_max": 0.00981041699573526,
+          "ks_median": 0.0011895830042647493,
+          "psi_max": 0.0
+        },
+        "smoke": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.41003031709050697,
+          "psi_max": 17.87180314276953
+        },
+        "temp": {
+          "ks_max": 0.4289189109145475,
+          "ks_median": 0.25723449099668305,
+          "psi_max": 13.166493686010435
+        }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     },
     {
       "condition": "mean_medium",
@@ -103,7 +181,46 @@
         "p75": 0.20435531616996122,
         "p95": 0.216919213141612,
         "max": 0.24821948809402125
-      }
+      },
+      "per_column": {
+        "co": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "humidity": {
+          "ks_max": 0.36431963749802565,
+          "ks_median": 0.24287803072184488,
+          "psi_max": 13.123814982005474
+        },
+        "light": {
+          "ks_max": 0.10728172879481912,
+          "ks_median": 0.02150000000000002,
+          "psi_max": 0.0
+        },
+        "lpg": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "motion": {
+          "ks_max": 0.00981041699573526,
+          "ks_median": 0.0011895830042647493,
+          "psi_max": 0.0
+        },
+        "smoke": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.41003031709050697,
+          "psi_max": 17.87180314276953
+        },
+        "temp": {
+          "ks_max": 0.5417022389827831,
+          "ks_median": 0.47256611317327435,
+          "psi_max": 14.741096612197692
+        }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     },
     {
       "condition": "mean_high",
@@ -138,7 +255,46 @@
         "p75": 0.4629300663402306,
         "p95": 0.5895044779655663,
         "max": 0.5914044779655663
-      }
+      },
+      "per_column": {
+        "co": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "humidity": {
+          "ks_max": 0.36431963749802565,
+          "ks_median": 0.24287803072184488,
+          "psi_max": 13.123814982005474
+        },
+        "light": {
+          "ks_max": 0.10728172879481912,
+          "ks_median": 0.02150000000000002,
+          "psi_max": 0.0
+        },
+        "lpg": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "motion": {
+          "ks_max": 0.00981041699573526,
+          "ks_median": 0.0011895830042647493,
+          "psi_max": 0.0
+        },
+        "smoke": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.41003031709050697,
+          "psi_max": 17.87180314276953
+        },
+        "temp": {
+          "ks_max": 0.7957022389827831,
+          "ks_median": 0.6555340191123045,
+          "psi_max": 15.041370403725123
+        }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     },
     {
       "condition": "variance_low",
@@ -173,7 +329,46 @@
         "p75": 0.1857700765305434,
         "p95": 0.216919213141612,
         "max": 0.24821948809402125
-      }
+      },
+      "per_column": {
+        "co": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "humidity": {
+          "ks_max": 0.36431963749802565,
+          "ks_median": 0.24287803072184488,
+          "psi_max": 13.123814982005474
+        },
+        "light": {
+          "ks_max": 0.10728172879481912,
+          "ks_median": 0.02150000000000002,
+          "psi_max": 0.0
+        },
+        "lpg": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "motion": {
+          "ks_max": 0.00981041699573526,
+          "ks_median": 0.0011895830042647493,
+          "psi_max": 0.0
+        },
+        "smoke": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.41003031709050697,
+          "psi_max": 17.87180314276953
+        },
+        "temp": {
+          "ks_max": 0.45306940056863054,
+          "ks_median": 0.2794991213868267,
+          "psi_max": 13.135197333284694
+        }
+      },
+      "expected_false_negative": true,
+      "expected_false_negative_reason": "post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
     },
     {
       "condition": "variance_medium",
@@ -208,7 +403,46 @@
         "p75": 0.18582658836370075,
         "p95": 0.216919213141612,
         "max": 0.24821948809402125
-      }
+      },
+      "per_column": {
+        "co": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "humidity": {
+          "ks_max": 0.36431963749802565,
+          "ks_median": 0.24287803072184488,
+          "psi_max": 13.123814982005474
+        },
+        "light": {
+          "ks_max": 0.10728172879481912,
+          "ks_median": 0.02150000000000002,
+          "psi_max": 0.0
+        },
+        "lpg": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "motion": {
+          "ks_max": 0.00981041699573526,
+          "ks_median": 0.0011895830042647493,
+          "psi_max": 0.0
+        },
+        "smoke": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.41003031709050697,
+          "psi_max": 17.87180314276953
+        },
+        "temp": {
+          "ks_max": 0.45306940056863054,
+          "ks_median": 0.28419049123361234,
+          "psi_max": 13.374646768060625
+        }
+      },
+      "expected_false_negative": true,
+      "expected_false_negative_reason": "post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
     },
     {
       "condition": "variance_high",
@@ -243,7 +477,268 @@
         "p75": 0.18635278337059955,
         "p95": 0.216919213141612,
         "max": 0.24821948809402125
-      }
+      },
+      "per_column": {
+        "co": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "humidity": {
+          "ks_max": 0.36431963749802565,
+          "ks_median": 0.24287803072184488,
+          "psi_max": 13.123814982005474
+        },
+        "light": {
+          "ks_max": 0.10728172879481912,
+          "ks_median": 0.02150000000000002,
+          "psi_max": 0.0
+        },
+        "lpg": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "motion": {
+          "ks_max": 0.00981041699573526,
+          "ks_median": 0.0011895830042647493,
+          "psi_max": 0.0
+        },
+        "smoke": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.41003031709050697,
+          "psi_max": 17.87180314276953
+        },
+        "temp": {
+          "ks_max": 0.45306940056863054,
+          "ks_median": 0.28626319894171537,
+          "psi_max": 13.404645116043442
+        }
+      },
+      "expected_false_negative": true,
+      "expected_false_negative_reason": "post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
+    },
+    {
+      "condition": "distribution_low",
+      "max_ks": {
+        "min": 0.2623820289053862,
+        "p25": 0.35442275114515875,
+        "p50": 0.42009598602116566,
+        "p75": 0.4581576814484284,
+        "p95": 0.4824946108434687,
+        "max": 0.499575047385879
+      },
+      "max_psi": {
+        "min": 8.957646162525565,
+        "p25": 11.6720310985473,
+        "p50": 13.00438792949982,
+        "p75": 13.305745883370612,
+        "p95": 15.618183346196064,
+        "max": 17.87180314276953
+      },
+      "max_chi2": {
+        "min": 0.06029551663108959,
+        "p25": 0.4034609488224418,
+        "p50": 1.1340224644595662,
+        "p75": 3.410381157311522,
+        "p95": 5.055074318019216,
+        "max": 5.932757893065801
+      },
+      "statistical_score": {
+        "min": 0.12441175225729952,
+        "p25": 0.16355226763226538,
+        "p50": 0.18158955829504325,
+        "p75": 0.1857700765305434,
+        "p95": 0.216919213141612,
+        "max": 0.24821948809402125
+      },
+      "per_column": {
+        "co": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "humidity": {
+          "ks_max": 0.36431963749802565,
+          "ks_median": 0.24287803072184488,
+          "psi_max": 13.123814982005474
+        },
+        "light": {
+          "ks_max": 0.10728172879481912,
+          "ks_median": 0.02150000000000002,
+          "psi_max": 0.0
+        },
+        "lpg": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "motion": {
+          "ks_max": 0.00981041699573526,
+          "ks_median": 0.0011895830042647493,
+          "psi_max": 0.0
+        },
+        "smoke": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.41003031709050697,
+          "psi_max": 17.87180314276953
+        },
+        "temp": {
+          "ks_max": 0.46136706286526613,
+          "ks_median": 0.25266738074553785,
+          "psi_max": 12.983694446518886
+        }
+      },
+      "expected_false_negative": true,
+      "expected_false_negative_reason": "temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
+    },
+    {
+      "condition": "distribution_medium",
+      "max_ks": {
+        "min": 0.2623820289053862,
+        "p25": 0.35923167746011686,
+        "p50": 0.42009598602116566,
+        "p75": 0.4581576814484284,
+        "p95": 0.4824946108434687,
+        "max": 0.499575047385879
+      },
+      "max_psi": {
+        "min": 10.446632009468066,
+        "p25": 11.775763269523107,
+        "p50": 13.074448197243115,
+        "p75": 13.661250902997537,
+        "p95": 15.618183346196064,
+        "max": 17.87180314276953
+      },
+      "max_chi2": {
+        "min": 0.06029551663108959,
+        "p25": 0.4034609488224418,
+        "p50": 1.1340224644595662,
+        "p75": 3.410381157311522,
+        "p95": 5.055074318019216,
+        "max": 5.932757893065801
+      },
+      "statistical_score": {
+        "min": 0.14509211124261204,
+        "p25": 0.1639817848296736,
+        "p50": 0.1829045291101714,
+        "p75": 0.1897395958749658,
+        "p95": 0.216919213141612,
+        "max": 0.24821948809402125
+      },
+      "per_column": {
+        "co": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "humidity": {
+          "ks_max": 0.36431963749802565,
+          "ks_median": 0.24287803072184488,
+          "psi_max": 13.123814982005474
+        },
+        "light": {
+          "ks_max": 0.10728172879481912,
+          "ks_median": 0.02150000000000002,
+          "psi_max": 0.0
+        },
+        "lpg": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "motion": {
+          "ks_max": 0.00981041699573526,
+          "ks_median": 0.0011895830042647493,
+          "psi_max": 0.0
+        },
+        "smoke": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.41003031709050697,
+          "psi_max": 17.87180314276953
+        },
+        "temp": {
+          "ks_max": 0.46136706286526613,
+          "ks_median": 0.26746195308797976,
+          "psi_max": 14.278004824183121
+        }
+      },
+      "expected_false_negative": true,
+      "expected_false_negative_reason": "temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
+    },
+    {
+      "condition": "distribution_high",
+      "max_ks": {
+        "min": 0.2623820289053862,
+        "p25": 0.36357307791028276,
+        "p50": 0.4250397745221923,
+        "p75": 0.4581576814484284,
+        "p95": 0.4824946108434687,
+        "max": 0.499575047385879
+      },
+      "max_psi": {
+        "min": 10.446632009468066,
+        "p25": 11.8066885077365,
+        "p50": 12.892797368386201,
+        "p75": 13.543220450718579,
+        "p95": 15.618183346196064,
+        "max": 17.87180314276953
+      },
+      "max_chi2": {
+        "min": 0.06029551663108959,
+        "p25": 0.4034609488224418,
+        "p50": 1.1340224644595662,
+        "p75": 3.410381157311522,
+        "p95": 5.055074318019216,
+        "max": 5.932757893065801
+      },
+      "statistical_score": {
+        "min": 0.14509211124261204,
+        "p25": 0.16443443270166402,
+        "p50": 0.1829045291101714,
+        "p75": 0.18810028403775803,
+        "p95": 0.216919213141612,
+        "max": 0.24821948809402125
+      },
+      "per_column": {
+        "co": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "humidity": {
+          "ks_max": 0.36431963749802565,
+          "ks_median": 0.24287803072184488,
+          "psi_max": 13.123814982005474
+        },
+        "light": {
+          "ks_max": 0.10728172879481912,
+          "ks_median": 0.02150000000000002,
+          "psi_max": 0.0
+        },
+        "lpg": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "motion": {
+          "ks_max": 0.00981041699573526,
+          "ks_median": 0.0011895830042647493,
+          "psi_max": 0.0
+        },
+        "smoke": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.41003031709050697,
+          "psi_max": 17.87180314276953
+        },
+        "temp": {
+          "ks_max": 0.47436706286526614,
+          "ks_median": 0.29267864476386035,
+          "psi_max": 13.740337959730768
+        }
+      },
+      "expected_false_negative": true,
+      "expected_false_negative_reason": "temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
     },
     {
       "condition": "category_low",
@@ -278,7 +773,46 @@
         "p75": 0.9423449383436668,
         "p95": 1.0,
         "max": 1.0
-      }
+      },
+      "per_column": {
+        "co": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "humidity": {
+          "ks_max": 0.36431963749802565,
+          "ks_median": 0.24287803072184488,
+          "psi_max": 13.123814982005474
+        },
+        "light": {
+          "ks_max": 0.10728172879481912,
+          "ks_median": 0.02150000000000002,
+          "psi_max": 0.0
+        },
+        "lpg": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "motion": {
+          "ks_max": 0.00981041699573526,
+          "ks_median": 0.0011895830042647493,
+          "psi_max": 0.0
+        },
+        "smoke": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.41003031709050697,
+          "psi_max": 17.87180314276953
+        },
+        "temp": {
+          "ks_max": 0.44806940056863054,
+          "ks_median": 0.2571698487600695,
+          "psi_max": 13.022107991077979
+        }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     },
     {
       "condition": "category_medium",
@@ -313,7 +847,46 @@
         "p75": 1.0,
         "p95": 1.0,
         "max": 1.0
-      }
+      },
+      "per_column": {
+        "co": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "humidity": {
+          "ks_max": 0.36431963749802565,
+          "ks_median": 0.24287803072184488,
+          "psi_max": 13.123814982005474
+        },
+        "light": {
+          "ks_max": 0.10728172879481912,
+          "ks_median": 0.02150000000000002,
+          "psi_max": 0.0
+        },
+        "lpg": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "motion": {
+          "ks_max": 0.00981041699573526,
+          "ks_median": 0.0011895830042647493,
+          "psi_max": 0.0
+        },
+        "smoke": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.41003031709050697,
+          "psi_max": 17.87180314276953
+        },
+        "temp": {
+          "ks_max": 0.44806940056863054,
+          "ks_median": 0.2571698487600695,
+          "psi_max": 13.022107991077979
+        }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     },
     {
       "condition": "category_high",
@@ -348,7 +921,46 @@
         "p75": 1.0,
         "p95": 1.0,
         "max": 1.0
-      }
+      },
+      "per_column": {
+        "co": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "humidity": {
+          "ks_max": 0.36431963749802565,
+          "ks_median": 0.24287803072184488,
+          "psi_max": 13.123814982005474
+        },
+        "light": {
+          "ks_max": 0.10728172879481912,
+          "ks_median": 0.02150000000000002,
+          "psi_max": 0.0
+        },
+        "lpg": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.40997231874901274,
+          "psi_max": 17.87180314276953
+        },
+        "motion": {
+          "ks_max": 0.00981041699573526,
+          "ks_median": 0.0011895830042647493,
+          "psi_max": 0.0
+        },
+        "smoke": {
+          "ks_max": 0.499575047385879,
+          "ks_median": 0.41003031709050697,
+          "psi_max": 17.87180314276953
+        },
+        "temp": {
+          "ks_max": 0.44806940056863054,
+          "ks_median": 0.2571698487600695,
+          "psi_max": 13.022107991077979
+        }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     }
   ],
   "real_windows": [
@@ -450,6 +1062,13 @@
     },
     "suggested_statistical_decision_threshold": 0.25
   },
+  "seed": null,
+  "seed_note": "None = original deterministic run (linspace window starts, fixed injector seeds 42/7/11); any integer = reproducible seeded run (--seed N)",
+  "window": {
+    "size": 1000,
+    "confirmed_adequate": true,
+    "sweep_deferred": "window-size sweep noted as possible secondary result for a later phase; not executed in Phase 6"
+  },
   "separation": [
     {
       "condition": "clean",
@@ -461,7 +1080,9 @@
         "p75": 0.1857700765305434,
         "p95": 0.216919213141612,
         "max": 0.24821948809402125
-      }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     },
     {
       "condition": "mean_low",
@@ -473,7 +1094,9 @@
         "p75": 0.1857700765305434,
         "p95": 0.216919213141612,
         "max": 0.24821948809402125
-      }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     },
     {
       "condition": "mean_medium",
@@ -485,7 +1108,9 @@
         "p75": 0.20435531616996122,
         "p95": 0.216919213141612,
         "max": 0.24821948809402125
-      }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     },
     {
       "condition": "mean_high",
@@ -497,7 +1122,9 @@
         "p75": 0.4629300663402306,
         "p95": 0.5895044779655663,
         "max": 0.5914044779655663
-      }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     },
     {
       "condition": "variance_low",
@@ -509,7 +1136,9 @@
         "p75": 0.1857700765305434,
         "p95": 0.216919213141612,
         "max": 0.24821948809402125
-      }
+      },
+      "expected_false_negative": true,
+      "expected_false_negative_reason": "post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
     },
     {
       "condition": "variance_medium",
@@ -521,7 +1150,9 @@
         "p75": 0.18582658836370075,
         "p95": 0.216919213141612,
         "max": 0.24821948809402125
-      }
+      },
+      "expected_false_negative": true,
+      "expected_false_negative_reason": "post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
     },
     {
       "condition": "variance_high",
@@ -533,7 +1164,51 @@
         "p75": 0.18635278337059955,
         "p95": 0.216919213141612,
         "max": 0.24821948809402125
-      }
+      },
+      "expected_false_negative": true,
+      "expected_false_negative_reason": "post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
+    },
+    {
+      "condition": "distribution_low",
+      "status": "unresolved",
+      "score_band": {
+        "min": 0.12441175225729952,
+        "p25": 0.16355226763226538,
+        "p50": 0.18158955829504325,
+        "p75": 0.1857700765305434,
+        "p95": 0.216919213141612,
+        "max": 0.24821948809402125
+      },
+      "expected_false_negative": true,
+      "expected_false_negative_reason": "temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
+    },
+    {
+      "condition": "distribution_medium",
+      "status": "unresolved",
+      "score_band": {
+        "min": 0.14509211124261204,
+        "p25": 0.1639817848296736,
+        "p50": 0.1829045291101714,
+        "p75": 0.1897395958749658,
+        "p95": 0.216919213141612,
+        "max": 0.24821948809402125
+      },
+      "expected_false_negative": true,
+      "expected_false_negative_reason": "temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
+    },
+    {
+      "condition": "distribution_high",
+      "status": "unresolved",
+      "score_band": {
+        "min": 0.14509211124261204,
+        "p25": 0.16443443270166402,
+        "p50": 0.1829045291101714,
+        "p75": 0.18810028403775803,
+        "p95": 0.216919213141612,
+        "max": 0.24821948809402125
+      },
+      "expected_false_negative": true,
+      "expected_false_negative_reason": "temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
     },
     {
       "condition": "category_low",
@@ -545,7 +1220,9 @@
         "p75": 0.9423449383436668,
         "p95": 1.0,
         "max": 1.0
-      }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     },
     {
       "condition": "category_medium",
@@ -557,7 +1234,9 @@
         "p75": 1.0,
         "p95": 1.0,
         "max": 1.0
-      }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     },
     {
       "condition": "category_high",
@@ -569,7 +1248,9 @@
         "p75": 1.0,
         "p95": 1.0,
         "max": 1.0
-      }
+      },
+      "expected_false_negative": false,
+      "expected_false_negative_reason": null
     }
   ],
   "semantic": {
@@ -577,7 +1258,14 @@
       "unit_change": true,
       "range_change": true,
       "domain_change": true,
-      "business_meaning_change": true
+      "business_meaning_change": true,
+      "domain_declared": true
+    },
+    "definition_change": {
+      "definition_field_declared": false,
+      "detector_rule": "none: the Level 1/Level 2 rule set implements no definition comparison and the reference contract declares no definition field",
+      "recommended_rule": "exact-equality comparison of the declared definition string, mirroring business_meaning_change (Level 2); no numeric threshold",
+      "note": "definition change is a COVERAGE gap for the Phase 8 semantic blind-spot experiment, not a threshold gap; no fake continuous threshold is invented here"
     },
     "range_severities": [
       {
@@ -657,8 +1345,50 @@
   "schema": {
     "binary": true,
     "threshold_required": false,
-    "note": "drift iff any schema event; exact set comparison"
+    "severity_labels": {
+      "added": "high",
+      "removed": "high",
+      "renamed": "high",
+      "type_change": "medium",
+      "nullability_change": "low"
+    },
+    "severity_labels_ok": true,
+    "detector_matches_config": true,
+    "note": "drift iff any schema event; exact set comparison; severity labeling frozen per Section M (added/removed/renamed=high, type_change=medium, nullability_change=low)"
   },
+  "known_limitations": [
+    {
+      "id": "variance_shift_aggregation",
+      "flag": "expected false negative \u2014 known aggregation limitation",
+      "affected_conditions": [
+        "variance_low",
+        "variance_medium",
+        "variance_high"
+      ],
+      "reason": "post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6",
+      "action": "Phase 7 precision/recall must exclude or annotate these windows instead of silently penalizing the detector"
+    },
+    {
+      "id": "distribution_shift_aggregation",
+      "flag": "expected false negative \u2014 known aggregation limitation",
+      "affected_conditions": [
+        "distribution_low",
+        "distribution_medium",
+        "distribution_high"
+      ],
+      "reason": "temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6",
+      "action": "Phase 7 precision/recall must exclude or annotate these windows instead of silently penalizing the detector (same treatment as variance shift)"
+    },
+    {
+      "id": "semantic_definition_change_coverage",
+      "flag": "coverage gap, not a threshold gap",
+      "affected": [
+        "definition_change"
+      ],
+      "reason": "Level 1/Level 2 implement no definition comparison; reference contract declares no definition field",
+      "action": "flag for the Phase 8 semantic blind-spot experiment"
+    }
+  ],
   "unified": {
     "non_override_max_unified": 0.3333333333333333,
     "threshold_unreachable_in_non_override": true,
@@ -672,7 +1402,10 @@
       "chi2_scale": true,
       "statistical_decision_threshold": true,
       "range_tolerance_fraction": true,
-      "unified_threshold": true
+      "unified_threshold": true,
+      "schema_severity_labels": true,
+      "schema_severity_detector_match": true,
+      "window_size": true
     }
   }
 }
