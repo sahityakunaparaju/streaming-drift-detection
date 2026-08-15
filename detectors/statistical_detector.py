@@ -5,7 +5,6 @@ from detectors.thresholds import THRESHOLDS
 
 PSI_BINS = int(THRESHOLDS["statistical"]["psi_bins"])
 
-
 def calculate_psi(reference, current, bins=None):
     if bins is None:
         bins = PSI_BINS
@@ -19,20 +18,16 @@ def calculate_psi(reference, current, bins=None):
     reference = np.asarray(reference, dtype=float)
     current = np.asarray(current, dtype=float)
 
-    # Use reference quantiles to create stable bins.
     edges = np.quantile(
         reference,
         np.linspace(0, 1, bins + 1)
     )
 
-    # Remove duplicate edges
     edges = np.unique(edges)
 
     if len(edges) < 2:
         return 0.0
 
-    # Extend boundaries so values outside the reference
-    # range are still included.
     edges[0] = -np.inf
     edges[-1] = np.inf
 
@@ -42,7 +37,6 @@ def calculate_psi(reference, current, bins=None):
     reference_pct = reference_counts / len(reference)
     current_pct = current_counts / len(current)
 
-    # Avoid log(0)
     epsilon = 1e-10
 
     reference_pct = np.maximum(reference_pct, epsilon)
@@ -54,7 +48,6 @@ def calculate_psi(reference, current, bins=None):
     )
 
     return float(psi)
-
 
 def calculate_ks(reference, current):
     """
@@ -73,7 +66,6 @@ def calculate_ks(reference, current):
         "ks_statistic": float(statistic),
         "ks_p_value": float(p_value),
     }
-
 
 def compare_distribution(reference, current, bins=None):
     if bins is None:
@@ -100,7 +92,6 @@ def compare_distribution(reference, current, bins=None):
         "ks_p_value": ks_result["ks_p_value"],
         "psi": psi,
     }
-
 
 def compare_numeric_fields(reference_df, current_df, columns):
     """

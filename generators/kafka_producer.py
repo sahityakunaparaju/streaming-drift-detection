@@ -6,17 +6,13 @@ from pathlib import Path
 import pandas as pd
 from kafka import KafkaProducer
 
-
 STREAM_DIR = Path("results/raw/stream")
 TOPIC = "iot-drift-stream"
 
-# Overridable so the producer can run on the host (localhost:9092)
-# or inside a container on the Docker network (kafka:29092).
 BOOTSTRAP_SERVERS = os.environ.get(
     "KAFKA_BOOTSTRAP_SERVERS",
     "localhost:9092",
 )
-
 
 def load_semantic_metadata(window_file):
     """
@@ -36,12 +32,10 @@ def load_semantic_metadata(window_file):
     with open(metadata_path, "r") as file:
         return json.load(file)
 
-
 producer = KafkaProducer(
     bootstrap_servers=BOOTSTRAP_SERVERS,
     value_serializer=lambda value: json.dumps(value).encode("utf-8"),
 )
-
 
 window_files = sorted(
     STREAM_DIR.glob("window_*.csv")
@@ -55,7 +49,6 @@ print(f"Topic: {TOPIC}")
 print(f"Bootstrap: {BOOTSTRAP_SERVERS}")
 print(f"Windows: {len(window_files)}")
 
-
 for window_file in window_files:
 
     df = pd.read_csv(window_file)
@@ -65,10 +58,6 @@ for window_file in window_files:
     semantic_metadata = load_semantic_metadata(
         window_file
     )
-
-    # --------------------------------------------------
-    # Payload
-    # --------------------------------------------------
 
     payload = {
         "event_id": window_id,
@@ -97,7 +86,6 @@ for window_file in window_files:
     )
 
     time.sleep(0.5)
-
 
 producer.flush()
 producer.close()

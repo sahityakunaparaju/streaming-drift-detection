@@ -44,7 +44,6 @@ from drift_injection.phase7_generator import build_phase7_set
 DEFAULT_SEED = 42
 OUTPUT_ROOT = Path("results/phase7")
 
-# Detector configs: name -> runner key in run_config()
 ALL_CONFIGS = [
     "B0_null",
     "B1_schema",
@@ -71,7 +70,6 @@ MATRIX_DETECTORS = [
     ("B4_unified", "combined"),
 ]
 
-
 def load_reference():
     reference_df = pd.read_csv(
         "data/primary/iot_telemetry_data.csv"
@@ -82,7 +80,6 @@ def load_reference():
     ) as file:
         profile = json.load(file)
     return reference_df, profile
-
 
 def run_config(name, reference_df, profile, window_df, metadata):
     if name == "B0_null":
@@ -115,13 +112,11 @@ def run_config(name, reference_df, profile, window_df, metadata):
         )
     raise ValueError(f"Unknown config: {name}")
 
-
 def load_metadata(metadata_file):
     if not metadata_file:
         return None
     with open(metadata_file, "r") as file:
         return json.load(file)
-
 
 def run_detector_over_manifest(
     name,
@@ -157,7 +152,6 @@ def run_detector_over_manifest(
         })
     return rows
 
-
 def summarize_rows(rows):
     """Metrics over a set of rows, with raw + adjusted variants."""
     available = [
@@ -176,7 +170,6 @@ def summarize_rows(rows):
         row["expected_false_negative"] for row in available
     ]
     return evaluate(y_true, y_pred, expected_fn)
-
 
 def lag_for_rows(rows, onset_position=3):
     """Per-stream detection lag in windows."""
@@ -203,7 +196,6 @@ def lag_for_rows(rows, onset_position=3):
             )
         )
     return lags
-
 
 def main():
     parser = argparse.ArgumentParser(
@@ -243,9 +235,6 @@ def main():
         "expected-false-negative."
     )
 
-    # ----------------------------------------------------------
-    # Run each detector ONCE over every window; cache the rows.
-    # ----------------------------------------------------------
     rows_by_config = {}
     for name in ALL_CONFIGS:
         print(f"\nRunning {name} over {manifest['n_windows']} windows ...")
@@ -272,9 +261,6 @@ def main():
         "subtype_recall": {},
     }
 
-    # ----------------------------------------------------------
-    # Baseline ladder over the full test set
-    # ----------------------------------------------------------
     print("\n" + "=" * 90)
     print("BASELINE LADDER - full test set (matrix + lag streams)")
     print("=" * 90)
@@ -323,9 +309,6 @@ def main():
             f"{lag['n_never_detected']})"
         )
 
-    # ----------------------------------------------------------
-    # Controlled matrix by severity (matrix windows only)
-    # ----------------------------------------------------------
     print("\n" + "=" * 90)
     print("CONTROLLED MATRIX - by severity level (matrix windows)")
     print("=" * 90)
@@ -377,9 +360,6 @@ def main():
                 f"(n={summary['n']})"
             )
 
-    # ----------------------------------------------------------
-    # Per-subtype recall for the full detectors
-    # ----------------------------------------------------------
     print("\n" + "=" * 90)
     print("PER-SUBTYPE RECALL (raw / adjusted)")
     print("=" * 90)
@@ -416,9 +396,6 @@ def main():
                 "flagged": summary["flagged"]["n_flagged"],
             })
 
-    # ----------------------------------------------------------
-    # Write outputs
-    # ----------------------------------------------------------
     tables_dir = OUTPUT_ROOT / "tables"
     tables_dir.mkdir(parents=True, exist_ok=True)
 
@@ -437,7 +414,6 @@ def main():
 
     print(f"\nWrote results to {OUTPUT_ROOT / 'results.json'}")
     print(f"Tables to {tables_dir}")
-
 
 if __name__ == "__main__":
     main()

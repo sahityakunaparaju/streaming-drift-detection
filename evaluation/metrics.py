@@ -29,7 +29,6 @@ sequences/lists and does not know about any specific experiment.
 
 import numpy as np
 
-
 def confusion_counts(y_true, y_pred):
     """Standard 2x2 confusion counts from label/prediction sequences."""
     pairs = list(zip(y_true, y_pred))
@@ -38,7 +37,6 @@ def confusion_counts(y_true, y_pred):
     tn = sum(1 for t, p in pairs if t == 0 and p == 0)
     fn = sum(1 for t, p in pairs if t == 1 and p == 0)
     return {"tp": tp, "fp": fp, "tn": tn, "fn": fn}
-
 
 def compute_metrics(tp, fp, tn, fn):
     """Derive all scalar metrics from confusion counts (zero-safe)."""
@@ -71,7 +69,6 @@ def compute_metrics(tp, fp, tn, fn):
         "fn": int(fn),
     }
 
-
 def _flagged_mask(expected_false_negative, n):
     if expected_false_negative is None:
         return np.zeros(n, dtype=bool)
@@ -84,14 +81,12 @@ def _flagged_mask(expected_false_negative, n):
     )
     return mask
 
-
 def pd_isna(value):
     """NaN check that works for plain values without importing pandas."""
     try:
-        return bool(value != value)  # NaN != NaN
+        return bool(value != value)
     except (TypeError, ValueError):
         return False
-
 
 def evaluate(y_true, y_pred, expected_false_negative=None):
     """
@@ -147,7 +142,6 @@ def evaluate(y_true, y_pred, expected_false_negative=None):
         },
     }
 
-
 def lag_summary(detection_lags, unit="windows"):
     """
     Summarize detection lags (per drift stream, in `unit`).
@@ -179,7 +173,6 @@ def lag_summary(detection_lags, unit="windows"):
         "n_detected": len(detected),
         "n_never_detected": never,
     }
-
 
 def detection_lag_windows(predictions, onset_position):
     """

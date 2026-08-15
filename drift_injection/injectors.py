@@ -3,15 +3,9 @@ import copy
 import numpy as np
 import pandas as pd
 
-
-# ============================================================
-# Helper
-# ============================================================
-
 def _validate_column(df, column):
     if column not in df.columns:
         raise ValueError(f"Column '{column}' not found in dataframe")
-
 
 def _severity_shift(df, column, severity):
     """
@@ -38,11 +32,6 @@ def _severity_shift(df, column, severity):
 
     return multipliers[severity] * sigma
 
-
-# ============================================================
-# SCHEMA INJECTORS
-# ============================================================
-
 def inject_add_column(
     df,
     column="battery_level",
@@ -63,7 +52,6 @@ def inject_add_column(
 
     return result
 
-
 def inject_remove_column(
     df,
     column="motion",
@@ -78,7 +66,6 @@ def inject_remove_column(
     result = result.drop(columns=[column])
 
     return result
-
 
 def inject_rename_column(
     df,
@@ -106,7 +93,6 @@ def inject_rename_column(
             )
 
     return result.rename(columns=rename_map)
-
 
 def inject_type_change(
     df,
@@ -146,11 +132,6 @@ def inject_type_change(
 
     return result
 
-
-# ============================================================
-# STATISTICAL INJECTORS
-# ============================================================
-
 def inject_mean_shift(
     df,
     column="temp",
@@ -180,7 +161,6 @@ def inject_mean_shift(
     result[column] = result[column] + shift
 
     return result
-
 
 def inject_variance_shift(
     df,
@@ -221,7 +201,6 @@ def inject_variance_shift(
     ) + mean
 
     return result
-
 
 def inject_distribution_shift(
     df,
@@ -272,7 +251,6 @@ def inject_distribution_shift(
     result[column] = mean + transformed * scale
 
     return result
-
 
 def inject_category_shift(
     df,
@@ -344,11 +322,6 @@ def inject_category_shift(
 
     return result
 
-
-# ============================================================
-# SEMANTIC INJECTORS
-# ============================================================
-
 def inject_unit_change(
     df,
     column="temp",
@@ -407,7 +380,6 @@ def inject_unit_change(
 
     return result, metadata
 
-
 def inject_definition_change(
     df,
     column,
@@ -431,7 +403,6 @@ def inject_definition_change(
     }
 
     return result, metadata
-
 
 def inject_domain_change(
     df,
@@ -461,7 +432,6 @@ def inject_domain_change(
 
     return result, metadata
 
-
 def inject_business_meaning_change(
     df,
     column,
@@ -485,11 +455,6 @@ def inject_business_meaning_change(
     }
 
     return result, metadata
-
-
-# ============================================================
-# NORMAL VARIATION
-# ============================================================
 
 def inject_normal_noise(
     df,

@@ -21,20 +21,6 @@ from drift_injection.ground_truth import (
     append_event,
 )
 
-
-# Phase 6/7: variance-shift and distribution-shift detection under
-# max-over-columns statistical aggregation are known, documented
-# measurement limitations (docs/phase6_notes.md). Windows injecting
-# them are flagged via the shared rule in drift_injection/flagging.py
-# so Phase 7's precision/recall computation can account for the
-# expected false negative instead of silently penalizing the
-# detector. The controlled stream below contains a variance-shift
-# window (window_005), flagged by the rule; distribution-shift
-# windows are exercised end-to-end by the Phase 7 matrix generator
-# (drift_injection/phase7_generator.py), which applies the same rule
-# at every event-creation site.
-
-
 def build_stream(
     input_path,
     output_dir="results/raw/stream",
@@ -64,9 +50,6 @@ def build_stream(
         exist_ok=True,
     )
 
-    # build_stream generates the complete controlled set from
-    # scratch: start with a fresh ground-truth file so reruns never
-    # mix old rows (e.g. a pre-Phase-6 schema) with new ones.
     if ground_truth_path.exists():
         ground_truth_path.unlink()
 
@@ -93,15 +76,8 @@ def build_stream(
 
         batch = df.iloc[start:end].copy()
 
-        # --------------------------------------------------
-        # Schedule
-        # --------------------------------------------------
-
-        # Semantic metadata produced by this window's
-        # injection (None unless an injector returns it).
         metadata = None
 
-        # Window 0: clean
         if window_id == 0:
 
             modified = batch
@@ -116,7 +92,6 @@ def build_stream(
                 timestamp=str(batch["ts"].iloc[0]),
             )
 
-        # Window 1: normal noise
         elif window_id == 1:
 
             modified = inject_normal_noise(
@@ -136,7 +111,6 @@ def build_stream(
                 timestamp=str(batch["ts"].iloc[0]),
             )
 
-        # Window 2: add column
         elif window_id == 2:
 
             modified = inject_add_column(
@@ -155,7 +129,6 @@ def build_stream(
                 timestamp=str(batch["ts"].iloc[0]),
             )
 
-        # Window 3: remove column
         elif window_id == 3:
 
             modified = inject_remove_column(
@@ -173,7 +146,6 @@ def build_stream(
                 timestamp=str(batch["ts"].iloc[0]),
             )
 
-        # Window 4: mean shift
         elif window_id == 4:
 
             modified = inject_mean_shift(
@@ -192,7 +164,6 @@ def build_stream(
                 timestamp=str(batch["ts"].iloc[0]),
             )
 
-        # Window 5: variance shift
         elif window_id == 5:
 
             modified = inject_variance_shift(
@@ -217,7 +188,6 @@ def build_stream(
                 ),
             )
 
-        # Window 6: category shift
         elif window_id == 6:
 
             modified = inject_category_shift(
@@ -237,7 +207,6 @@ def build_stream(
                 timestamp=str(batch["ts"].iloc[0]),
             )
 
-        # Window 7: semantic metadata-only unit change
         elif window_id == 7:
 
             modified, metadata = inject_unit_change(
@@ -258,7 +227,6 @@ def build_stream(
                 timestamp=str(batch["ts"].iloc[0]),
             )
 
-        # Window 8: actual Celsius → Fahrenheit conversion
         elif window_id == 8:
 
             modified, metadata = inject_unit_change(
@@ -279,7 +247,6 @@ def build_stream(
                 timestamp=str(batch["ts"].iloc[0]),
             )
 
-        # Window 9: clean control
         else:
 
             modified = batch
@@ -294,10 +261,6 @@ def build_stream(
                 timestamp=str(batch["ts"].iloc[0]),
             )
 
-        # --------------------------------------------------
-        # Save window
-        # --------------------------------------------------
-
         window_path = (
             output_dir
             / f"window_{window_id:03d}.csv"
@@ -307,16 +270,6 @@ def build_stream(
             window_path,
             index=False,
         )
-
-        # --------------------------------------------------
-        # Persist semantic metadata as a sidecar file
-        # --------------------------------------------------
-        #
-        # Windows whose injector returns metadata (e.g. the
-        # semantic unit-change windows) write a small JSON
-        # sidecar so downstream consumers do not need to
-        # hardcode the schedule.
-        # --------------------------------------------------
 
         if metadata is not None:
 
@@ -340,10 +293,6 @@ def build_stream(
                 "file": str(window_path),
             }
         )
-
-        # --------------------------------------------------
-        # Save ground truth
-        # --------------------------------------------------
 
         event["event_id"] = (
             f"window-{window_id:03d}"

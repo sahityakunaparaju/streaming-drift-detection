@@ -41,11 +41,6 @@ CATEGORICAL_P_VALUE_THRESHOLD = float(
 
 NUMERIC_COLUMNS_EXCLUDE = {"ts"}
 
-
-# ------------------------------------------------------------------
-# Shared helpers (mirror the streaming consumer)
-# ------------------------------------------------------------------
-
 def build_current_schema(df):
     columns = {}
     for column in df.columns:
@@ -63,7 +58,6 @@ def build_current_schema(df):
             "nullable": bool(df[column].isna().any()),
         }
     return {"schema_version": "stream", "columns": columns}
-
 
 def categorical_drift(reference_series, current_series):
     ref_counts = reference_series.value_counts()
@@ -86,7 +80,6 @@ def categorical_drift(reference_series, current_series):
         "p_value": float(p_value),
     }
 
-
 def statistical_details_for(reference_df, current_df):
     """Numeric KS/PSI per column + categorical chi2, as a dict."""
     numeric_columns = [
@@ -105,7 +98,7 @@ def statistical_details_for(reference_df, current_df):
                 current_df,
                 numeric_columns,
             )
-        except Exception as exc:  # pragma: no cover - defensive
+        except Exception as exc:
             numeric = {"error": str(exc)}
 
     categorical = {}
@@ -118,7 +111,6 @@ def statistical_details_for(reference_df, current_df):
             current_df["device"],
         )
     return {"numeric": numeric, "categorical": categorical}
-
 
 def semantic_events_for(reference_contract, current_df, metadata):
     current_contract = apply_semantic_metadata(
@@ -135,11 +127,6 @@ def semantic_events_for(reference_contract, current_df, metadata):
     )
     return contract_events + value_events
 
-
-# ------------------------------------------------------------------
-# B0 — null-value monitoring only
-# ------------------------------------------------------------------
-
 def run_b0_null_monitor(current_df):
     null_rates = current_df.isna().mean()
     max_null_rate = float(null_rates.max()) if len(null_rates) else 0.0
@@ -153,11 +140,6 @@ def run_b0_null_monitor(current_df):
         ],
     }
 
-
-# ------------------------------------------------------------------
-# B1 — schema detector only
-# ------------------------------------------------------------------
-
 def run_b1_schema(reference_schema, current_df):
     current_schema = build_current_schema(current_df)
     events = compare_schemas(reference_schema, current_schema)
@@ -165,11 +147,6 @@ def run_b1_schema(reference_schema, current_df):
         "events": events,
         "current_schema": current_schema,
     }
-
-
-# ------------------------------------------------------------------
-# B2 — statistical only (KS+PSI+chi2 with frozen thresholds)
-# ------------------------------------------------------------------
 
 def run_b2_statistical(reference_df, current_df):
     details = statistical_details_for(reference_df, current_df)
@@ -184,16 +161,10 @@ def run_b2_statistical(reference_df, current_df):
         "statistical_score": score,
     }
 
-
 def _statistical_score(details):
     from detectors.unified import statistical_score
 
     return statistical_score(details)
-
-
-# ------------------------------------------------------------------
-# B3 — schema + statistical
-# ------------------------------------------------------------------
 
 def run_b3_schema_statistical(reference_schema, reference_df,
                               current_df):
@@ -214,11 +185,6 @@ def run_b3_schema_statistical(reference_schema, reference_df,
         "schema": schema_details,
         "statistical": stat_details,
     }
-
-
-# ------------------------------------------------------------------
-# B4 — full unified detector (schema + statistical + semantic)
-# ------------------------------------------------------------------
 
 def run_b4_unified(reference_schema, reference_contract,
                    reference_df, current_df, metadata):
@@ -253,11 +219,6 @@ def run_b4_unified(reference_schema, reference_contract,
         "scores": scores,
     }
 
-
-# ------------------------------------------------------------------
-# Semantic-only detector (used in the controlled matrix)
-# ------------------------------------------------------------------
-
 def run_semantic_only(reference_contract, current_df, metadata):
     events = semantic_events_for(
         reference_contract,
@@ -267,11 +228,6 @@ def run_semantic_only(reference_contract, current_df, metadata):
     return ("DRIFT" if events else "NO_DRIFT"), {
         "events": events,
     }
-
-
-# ------------------------------------------------------------------
-# B5 — Evidently (off-the-shelf, qualitative)
-# ------------------------------------------------------------------
 
 def run_b5_evidently(reference_df, current_df):
     """
@@ -297,6 +253,7 @@ def run_b5_evidently(reference_df, current_df):
         if pd.api.types.is_numeric_dtype(reference_df[column])
         and not pd.api.types.is_bool_dtype(reference_df[column])
         and column != "ts"
+        and column in current_df.columns
     ]
 
     report = Report(metrics=[DataDriftPreset()])
@@ -306,14 +263,16 @@ def run_b5_evidently(reference_df, current_df):
     )
     summary = json.loads(report.json())
 
-    # Any column drifted -> window drifted (qualitative).
     drifted_columns = []
     try:
-        results = summary["metrics"][0]["result"]
-        for column in results.get("drift_by_columns", {}):
-            info = results["drift_by_columns"][column]
-            if info.get("drift_detected"):
-                drifted_columns.append(column)
+        for metric in summary.get("metrics", []):
+            results = metric.get("result", {})
+            if "drift_by_columns" not in results:
+                continue
+            for column, info in results["drift_by_columns"].items():
+                if info.get("drift_detected"):
+                    drifted_columns.append(column)
+            break
     except (KeyError, IndexError, TypeError):
         drifted_columns = []
 
@@ -322,11 +281,6 @@ def run_b5_evidently(reference_df, current_df):
         "drifted_columns": drifted_columns,
         "summary": summary,
     }
-
-
-# ------------------------------------------------------------------
-# Config registry
-# ------------------------------------------------------------------
 
 def baseline_configs():
     """name -> callable(reference, window_ctx) -> (decision, details)."""

@@ -2,10 +2,6 @@ from datetime import datetime, timezone
 
 from detectors.thresholds import THRESHOLDS
 
-# Frozen in configs/thresholds.yaml -> schema.severity_labels
-# (Phase 6, Section M of the research plan). Detection stays binary;
-# these labels are applied per event for per-severity reporting and
-# must not be changed outside the Phase 13 sanity check.
 SEVERITY_LABELS = THRESHOLDS.get("schema", {}).get(
     "severity_labels",
     {
@@ -16,7 +12,6 @@ SEVERITY_LABELS = THRESHOLDS.get("schema", {}).get(
         "nullability_change": "low",
     },
 )
-
 
 def compare_schemas(reference_schema, current_schema):
     """
@@ -31,10 +26,6 @@ def compare_schemas(reference_schema, current_schema):
     current_columns = current_schema.get("columns", {})
 
     timestamp = datetime.now(timezone.utc).isoformat()
-
-    # --------------------------------------------------
-    # Added / removed columns
-    # --------------------------------------------------
 
     reference_names = set(reference_columns.keys())
     current_names = set(current_columns.keys())
@@ -68,20 +59,12 @@ def compare_schemas(reference_schema, current_schema):
             "severity": SEVERITY_LABELS["removed"],
         })
 
-    # --------------------------------------------------
-    # Existing columns
-    # --------------------------------------------------
-
     common_columns = reference_names & current_names
 
     for column in sorted(common_columns):
 
         reference = reference_columns[column]
         current = current_columns[column]
-
-        # -----------------------------
-        # Type change
-        # -----------------------------
 
         reference_dtype = reference.get("dtype")
         current_dtype = current.get("dtype")
@@ -98,10 +81,6 @@ def compare_schemas(reference_schema, current_schema):
                 "severity": SEVERITY_LABELS["type_change"],
             })
 
-        # -----------------------------
-        # Nullability change
-        # -----------------------------
-
         reference_nullable = reference.get("nullable")
         current_nullable = current.get("nullable")
 
@@ -117,19 +96,7 @@ def compare_schemas(reference_schema, current_schema):
                 "severity": SEVERITY_LABELS["nullability_change"],
             })
 
-    # --------------------------------------------------
-    # Renamed columns
-    # --------------------------------------------------
-    #
-    # A pure schema dictionary cannot reliably determine
-    # whether a removed column was renamed or simply removed.
-    #
-    # Therefore rename detection requires an explicit
-    # rename mapping.
-    # --------------------------------------------------
-
     return events
-
 
 def detect_renames(reference_schema, current_schema, rename_map):
     """

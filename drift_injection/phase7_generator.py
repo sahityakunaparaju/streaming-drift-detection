@@ -17,6 +17,14 @@ from the shared rule (drift_injection/flagging.py) — no window type
 is silently unflagged. Variance-shift and distribution-shift windows
 are flagged end-to-end here for the first time in a real window set.
 
+Seed-aware window placement (Section Y): window START POSITIONS are
+sampled per seed inside fixed bounding regions (matrix within
+[0, MATRIX_REGION), lag streams within [LAG_REGION_BASE,
+LAG_REGION_END)), so different seeds draw different, non-overlapping
+windows from the dataset. Window counts, subtype/severity
+distribution, and expected-false-negative flagging are identical
+across seeds; only WHERE each window is placed varies.
+
 Reproducible: pass the same --seed and get the same windows.
 """
 
@@ -48,13 +56,48 @@ from drift_injection.injectors import (
 
 WINDOW_SIZE = 1000
 
-# Deterministic non-overlapping regions of the reference dataset.
 MATRIX_REGION = 100000
 LAG_REGION_BASE = 120000
+LAG_REGION_END = 250000
 LAG_STREAM_STRIDE = 5 * WINDOW_SIZE
 
-# Range-violation magnitudes (fraction of the valid range) and
-# domain-violation record counts per severity, mirroring Phase 6.
+def sample_non_overlapping_starts(
+    rng,
+    n,
+    window_size,
+    region_start,
+    region_end,
+):
+    """Sample n non-overlapping window start rows inside a region.
+
+    Places n windows of `window_size` rows so that no two windows
+    share any rows, all within [region_start, region_end). Uses the
+    standard sorted-offsets construction: offsets are n distinct
+    values in [0, region_size - n*window_size], and
+
+        start_i = region_start + offset_i + i * window_size
+
+    which guarantees start_{i+1} >= start_i + window_size (no
+    overlap) and max(start_n) + window_size <= region_end.
+    """
+    region_size = region_end - region_start
+    span = region_size - n * window_size
+    if span < 0:
+        raise ValueError(
+            f"Region [{region_start}, {region_end}) too small for "
+            f"{n} windows of {window_size} rows (need "
+            f"{n * window_size} rows, have {region_size})."
+        )
+    offsets = np.sort(
+        rng.choice(
+            np.arange(0, span + 1),
+            size=n,
+            replace=False,
+        )
+    )
+    starts = region_start + offsets + np.arange(n) * window_size
+    return starts
+
 RANGE_VIOLATION_FRACTION = 0.02
 RANGE_MAGNITUDES = {
     "low": 0.02,
@@ -67,7 +110,6 @@ DOMAIN_INVALID_COUNTS = {
     "high": 200,
 }
 
-# Section M severity labels for schema events (frozen in Phase 6).
 SCHEMA_SEVERITY = {
     "added": "high",
     "removed": "high",
@@ -75,10 +117,6 @@ SCHEMA_SEVERITY = {
     "type_change": "medium",
     "nullability_change": "low",
 }
-
-# ------------------------------------------------------------------
-# Matrix spec: (drift_type, subtype, feature, severity)
-# ------------------------------------------------------------------
 
 STATISTICAL_TYPES = ["mean_shift", "variance_shift",
                      "distribution_shift", "category_shift"]
@@ -99,7 +137,6 @@ CONTROLS = [
     ("clean", None, "none"),
     ("normal_noise", "temp", "none"),
 ]
-
 
 def build_matrix_spec():
     spec = []
@@ -125,7 +162,6 @@ def build_matrix_spec():
     for subtype, feature, severity in CONTROLS:
         spec.append(("normal", subtype, feature, severity))
     return spec
-
 
 def build_lag_spec():
     """One 5-window stream per drift type at medium severity.
@@ -153,11 +189,6 @@ def build_lag_spec():
                         if subtype == "range_violation" else "device"))
     return streams
 
-
-# ------------------------------------------------------------------
-# Injection helpers
-# ------------------------------------------------------------------
-
 def inject_range_violation(batch, magnitude_fraction, random_state):
     """Push a fraction of temp values above the contract max."""
     contract = {"valid_range": {"min": 0.0, "max": 30.6}}
@@ -171,7 +202,6 @@ def inject_range_violation(batch, magnitude_fraction, random_state):
     result.loc[selected, "temp"] = valid_range["max"] + overrun
     return result
 
-
 def inject_domain_violation(batch, n_invalid, random_state):
     result = batch.copy()
     rng = np.random.default_rng(random_state)
@@ -182,7 +212,6 @@ def inject_domain_violation(batch, n_invalid, random_state):
     )
     result.loc[selected, "device"] = "unknown_device"
     return result
-
 
 def inject_nullability_change(batch, column="temp", n_nulls=2):
     """Make a column nullable by injecting a few nulls."""
@@ -195,7 +224,6 @@ def inject_nullability_change(batch, column="temp", n_nulls=2):
     )
     result.loc[selected, column] = np.nan
     return result
-
 
 def semantic_metadata_for(subtype):
     if subtype == "unit_change":
@@ -217,7 +245,6 @@ def semantic_metadata_for(subtype):
                     "00:0f:00:70:91:0a",
                 ]}
     return None
-
 
 def inject_window(batch, drift_type, subtype, severity, random_state):
     """
@@ -315,7 +342,6 @@ def inject_window(batch, drift_type, subtype, severity, random_state):
         f"Unknown matrix cell: {drift_type}/{subtype}/{severity}"
     )
 
-
 def apply_semantic_metadata(contract, metadata):
     """
     Apply generator-format semantic metadata to a deep copy of the
@@ -338,11 +364,6 @@ def apply_semantic_metadata(contract, metadata):
             field["allowed_domain"] = metadata["allowed_domain"]
     return current
 
-
-# ------------------------------------------------------------------
-# Ground-truth / manifest writing
-# ------------------------------------------------------------------
-
 def _event_for(batch, drift_type, subtype, feature, severity,
                injected, ground_truth, random_state):
     return create_event(
@@ -357,7 +378,6 @@ def _event_for(batch, drift_type, subtype, feature, severity,
             expected_false_negative_reason(subtype) or ""
         ),
     )
-
 
 def build_phase7_set(
     input_path,
@@ -384,19 +404,24 @@ def build_phase7_set(
 
     df = pd.read_csv(input_path)
 
+    if LAG_REGION_END > len(df):
+        raise ValueError(
+            f"LAG_REGION_END ({LAG_REGION_END}) exceeds dataset "
+            f"length ({len(df)})."
+        )
+
     rng = np.random.default_rng(seed)
     windows_in_memory = {}
     manifest_windows = []
 
-    # --------------------------------------------------------------
-    # 1. Matrix windows (independent cells, varied starts)
-    # --------------------------------------------------------------
     matrix_spec = build_matrix_spec()
-    starts = np.linspace(
-        0,
-        MATRIX_REGION - window_size,
+    starts = sample_non_overlapping_starts(
+        rng,
         len(matrix_spec),
-    ).astype(int)
+        window_size,
+        0,
+        MATRIX_REGION,
+    )
 
     for cell_index, (drift_type, subtype, feature, severity) in enumerate(
         matrix_spec
@@ -460,15 +485,19 @@ def build_phase7_set(
             "start_row": int(start),
         })
 
-    # --------------------------------------------------------------
-    # 2. Lag streams (3 clean + 2 drifted, contiguous per stream)
-    # --------------------------------------------------------------
     lag_spec = build_lag_spec()
+    stream_starts = sample_non_overlapping_starts(
+        rng,
+        len(lag_spec),
+        LAG_STREAM_STRIDE,
+        LAG_REGION_BASE,
+        LAG_REGION_END,
+    )
     for stream_index, (stream_id, drift_type, subtype, feature) in enumerate(
         lag_spec
     ):
-        stream_base = LAG_REGION_BASE + stream_index * LAG_STREAM_STRIDE
-        onset_position = 3  # positions 0-2 clean, 3-4 drifted
+        stream_base = int(stream_starts[stream_index])
+        onset_position = 3
         for position in range(5):
             start = stream_base + position * window_size
             batch = df.iloc[start:start + window_size].copy()
@@ -567,7 +596,6 @@ def build_phase7_set(
         )
 
     return manifest
-
 
 if __name__ == "__main__":
     import argparse

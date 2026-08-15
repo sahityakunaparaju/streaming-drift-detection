@@ -76,10 +76,6 @@ WINDOW_SIZE = 1000
 N_WINDOWS = 20
 SAMPLE_REGION = 100000
 
-# Expected-false-negative flagging rule lives in
-# drift_injection/flagging.py (single source of truth); imported
-# above so the tuning pass and every window generator share it.
-
 KS_FLOOR = 0.50
 PSI_SCALE = 72.0
 CHI2_SCALE = 32.0
@@ -109,7 +105,6 @@ STAT_CONDITIONS = [
     ("category_high", ("category", "high")),
 ]
 
-# Column each condition injects into (for the per-column table).
 INJECTED_COLUMN = {
     "mean": "temp",
     "variance": "temp",
@@ -130,7 +125,6 @@ DOMAIN_SEVERITIES = {
 RANGE_VIOLATION_FRACTION = 0.02
 CANDIDATE_TOLERANCE = 0.01
 
-
 def numeric_columns(reference_df, current_df):
     return [
         column
@@ -140,7 +134,6 @@ def numeric_columns(reference_df, current_df):
         and pd.api.types.is_numeric_dtype(current_df[column])
         and column != "ts"
     ]
-
 
 def categorical_chi2(reference, current):
     ref_counts = reference.value_counts()
@@ -169,7 +162,6 @@ def categorical_chi2(reference, current):
     chi2, _, _, _ = chi2_contingency(observed)
     return float(chi2)
 
-
 def detector_result(reference_df, current_df):
     columns = numeric_columns(reference_df, current_df)
     numeric = compare_numeric_fields(
@@ -194,7 +186,6 @@ def detector_result(reference_df, current_df):
         "numeric": numeric,
         "categorical": categorical,
     }
-
 
 def max_components(result):
     max_ks = 0.0
@@ -221,7 +212,6 @@ def max_components(result):
         "max_chi2": max_chi2,
     }
 
-
 def statistical_score(components):
     ks_component = min(
         max(components["max_ks"] - KS_FLOOR, 0.0)
@@ -247,7 +237,6 @@ def statistical_score(components):
             1.0,
         ),
     )
-
 
 def apply_injector(batch, spec, random_state=None):
     """
@@ -295,7 +284,6 @@ def apply_injector(batch, spec, random_state=None):
         ),
     )
 
-
 def summarize(values):
     values = sorted(values)
     return {
@@ -307,14 +295,12 @@ def summarize(values):
         "max": float(values[-1]),
     }
 
-
 def format_distribution(summary):
     return (
         f"{summary['min']:.3f} / {summary['p25']:.3f} / "
         f"{summary['p50']:.3f} / {summary['p75']:.3f} / "
         f"{summary['p95']:.3f} / {summary['max']:.3f}"
     )
-
 
 def load_ground_truth_subtypes():
     if not GROUND_TRUTH_CSV.exists():
@@ -326,12 +312,10 @@ def load_ground_truth_subtypes():
         subtypes[event_id] = str(row["subtype"])
     return subtypes
 
-
 def load_contract():
     with open(PROFILE_JSON, "r") as file:
         profile = json.load(file)
     return profile["semantic_contract"]
-
 
 def relative_overruns(df, contract):
     overruns = {}
@@ -354,11 +338,9 @@ def relative_overruns(df, contract):
             overruns[column] = max(relative)
     return overruns
 
-
 def has_range_violation(df, contract, tolerance):
     overruns = relative_overruns(df, contract)
     return any(value > tolerance for value in overruns.values())
-
 
 def inject_range_violation(
     batch,
@@ -376,14 +358,12 @@ def inject_range_violation(
     result.loc[selected, "temp"] = valid_range["max"] + overrun
     return result
 
-
 def inject_domain_violation(batch, n_invalid, random_state=11):
     result = batch.copy()
     rng = np.random.default_rng(random_state)
     selected = rng.choice(result.index, size=n_invalid, replace=False)
     result.loc[selected, "device"] = "unknown_device"
     return result
-
 
 def current_contract_with_change(contract, change):
     current = json.loads(json.dumps(contract))
@@ -402,14 +382,12 @@ def current_contract_with_change(contract, change):
         temp["business_meaning"] = "case_temperature"
     return current
 
-
 def separation_status(condition_summary, clean_summary):
     if condition_summary["min"] > clean_summary["max"]:
         return "well-separated"
     if condition_summary["max"] > clean_summary["max"]:
         return "marginal"
     return "unresolved"
-
 
 def verify_schema_severities(labels):
     """
@@ -495,7 +473,6 @@ def verify_schema_severities(labels):
         )
     return ok
 
-
 def parse_args():
     parser = argparse.ArgumentParser(
         description=(
@@ -518,7 +495,6 @@ def parse_args():
         ),
     )
     return parser.parse_args()
-
 
 def main():
     args = parse_args()
@@ -570,10 +546,6 @@ def main():
         chi2_values = []
         score_values = []
 
-        # Per-column KS/PSI across the 20 windows, so the
-        # distributions can be tabulated per severity level AND
-        # per column (the injected column vs the noise-floor
-        # columns) rather than only as max-over-columns.
         column_stats = {}
 
         for start in starts:
@@ -1557,7 +1529,6 @@ def main():
     print(f"Results written to {OUTPUT_JSON}")
     print(f"Report written to {OUTPUT_MD}")
 
-
 def write_report(
     output,
     clean_score_summary,
@@ -1879,7 +1850,6 @@ def write_report(
 
     with open(OUTPUT_MD, "w", encoding="utf-8") as file:
         file.write("\n".join(lines))
-
 
 if __name__ == "__main__":
     main()

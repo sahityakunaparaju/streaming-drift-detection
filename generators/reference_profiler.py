@@ -4,11 +4,6 @@ from pathlib import Path
 import pandas as pd
 import yaml
 
-
-# --------------------------------------------------
-# Paths
-# --------------------------------------------------
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 DATA_PATH = PROJECT_ROOT / "data" / "primary" / "iot_telemetry_data.csv"
@@ -17,19 +12,9 @@ SEMANTIC_PATH = PROJECT_ROOT / "configs" / "semantic_contract.yaml"
 
 OUTPUT_PATH = PROJECT_ROOT / "data" / "primary" / "reference_profile.json"
 
-
-# --------------------------------------------------
-# Load configuration
-# --------------------------------------------------
-
 def load_yaml(path):
     with open(path, "r", encoding="utf-8") as file:
         return yaml.safe_load(file)
-
-
-# --------------------------------------------------
-# Build statistical profile
-# --------------------------------------------------
 
 def build_statistical_profile(df):
     profile = {}
@@ -46,7 +31,6 @@ def build_statistical_profile(df):
             "unique_count": int(series.nunique()),
         }
 
-        # Numerical columns
         if pd.api.types.is_numeric_dtype(series) and not pd.api.types.is_bool_dtype(series):
 
             column_profile["statistics"] = {
@@ -59,7 +43,6 @@ def build_statistical_profile(df):
                 "max": float(series.max()),
             }
 
-        # Categorical / string columns
         elif pd.api.types.is_object_dtype(series):
 
             frequencies = series.value_counts(normalize=True)
@@ -69,7 +52,6 @@ def build_statistical_profile(df):
                 for key, value in frequencies.items()
             }
 
-        # Boolean columns
         elif pd.api.types.is_bool_dtype(series):
 
             frequencies = series.value_counts(normalize=True)
@@ -83,11 +65,6 @@ def build_statistical_profile(df):
 
     return profile
 
-
-# --------------------------------------------------
-# Timestamp profile
-# --------------------------------------------------
-
 def build_timestamp_profile(df):
 
     ts = df["ts"]
@@ -98,11 +75,6 @@ def build_timestamp_profile(df):
         "duration_seconds": float(ts.max() - ts.min()),
         "duration_days": float((ts.max() - ts.min()) / 86400),
     }
-
-
-# --------------------------------------------------
-# Main profiler
-# --------------------------------------------------
 
 def main():
 
@@ -155,7 +127,6 @@ def main():
     print(f"  Days:  {timestamp_profile['duration_days']:.2f}")
 
     print("\nProfiler completed successfully.")
-
 
 if __name__ == "__main__":
     main()

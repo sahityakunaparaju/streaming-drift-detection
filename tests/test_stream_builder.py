@@ -3,9 +3,7 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 
-
 from drift_injection.stream_builder import build_stream
-
 
 def test_stream_builder(tmp_path):
 
@@ -23,10 +21,6 @@ def test_stream_builder(tmp_path):
         max_windows=10,
     )
 
-    # --------------------------------------------------
-    # Ten windows should be created
-    # --------------------------------------------------
-
     assert len(windows) == 10
 
     files = list(
@@ -34,10 +28,6 @@ def test_stream_builder(tmp_path):
     )
 
     assert len(files) == 10
-
-    # --------------------------------------------------
-    # Ground truth should contain one event per window
-    # --------------------------------------------------
 
     truth = pd.read_csv(
         ground_truth
@@ -52,29 +42,17 @@ def test_stream_builder(tmp_path):
         "NO_DRIFT",
     }
 
-    # --------------------------------------------------
-    # Expected drift types
-    # --------------------------------------------------
-
     drift_events = truth[
         truth["ground_truth"] == "DRIFT"
     ]
 
     assert len(drift_events) == 7
 
-    # --------------------------------------------------
-    # Normal windows
-    # --------------------------------------------------
-
     normal_events = truth[
         truth["ground_truth"] == "NO_DRIFT"
     ]
 
     assert len(normal_events) == 3
-
-    # --------------------------------------------------
-    # Check semantic metadata-only window
-    # --------------------------------------------------
 
     original = pd.read_csv(
         "data/primary/iot_telemetry_data.csv"
@@ -93,10 +71,6 @@ def test_stream_builder(tmp_path):
     atol=1e-10,
     )
 
-    # --------------------------------------------------
-    # Check actual unit-conversion window
-    # --------------------------------------------------
-
     conversion_window = pd.read_csv(
         output_dir / "window_008.csv"
     )
@@ -108,10 +82,6 @@ def test_stream_builder(tmp_path):
     atol=1e-10,
     )
 
-    # --------------------------------------------------
-    # Check schema addition
-    # --------------------------------------------------
-
     added_window = pd.read_csv(
         output_dir / "window_002.csv"
     )
@@ -120,10 +90,6 @@ def test_stream_builder(tmp_path):
         added_window.columns
     )
 
-    # --------------------------------------------------
-    # Check schema removal
-    # --------------------------------------------------
-
     removed_window = pd.read_csv(
         output_dir / "window_003.csv"
     )
@@ -131,12 +97,6 @@ def test_stream_builder(tmp_path):
     assert "motion" not in (
         removed_window.columns
     )
-
-    # --------------------------------------------------
-    # Phase 6: variance-shift window must be flagged in the
-    # ground-truth output as an expected false negative so
-    # Phase 7 precision/recall can account for it.
-    # --------------------------------------------------
 
     variance = truth[
         truth["subtype"] == "variance_shift"

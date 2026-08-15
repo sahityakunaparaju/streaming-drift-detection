@@ -6,7 +6,6 @@ from evaluation.metrics import (
     lag_summary,
 )
 
-
 def test_confusion_counts():
 
     y_true = [1, 1, 1, 0, 0]
@@ -15,7 +14,6 @@ def test_confusion_counts():
     counts = confusion_counts(y_true, y_pred)
 
     assert counts == {"tp": 1, "fp": 1, "tn": 1, "fn": 2}
-
 
 def test_compute_metrics_perfect():
 
@@ -26,7 +24,6 @@ def test_compute_metrics_perfect():
     assert metrics["f1"] == 1.0
     assert metrics["fpr"] == 0.0
 
-
 def test_evaluate_raw_counts_flagged_miss_as_fn():
 
     y_true = [1, 1, 1, 0]
@@ -35,12 +32,10 @@ def test_evaluate_raw_counts_flagged_miss_as_fn():
 
     result = evaluate(y_true, y_pred, flagged)
 
-    # Raw: the flagged miss counts as an ordinary FN.
     assert result["raw"]["tp"] == 1
     assert result["raw"]["fn"] == 2
     assert result["raw"]["recall"] == round(1 / 3, 6)
 
-    # Adjusted: flagged window excluded from evaluation entirely.
     assert result["adjusted"]["tp"] == 1
     assert result["adjusted"]["fn"] == 1
     assert result["adjusted"]["recall"] == 0.5
@@ -50,7 +45,6 @@ def test_evaluate_raw_counts_flagged_miss_as_fn():
         "n_flagged_detected": 0,
         "n_flagged_missed": 1,
     }
-
 
 def test_evaluate_flagged_detected_counts_in_raw_not_adjusted():
 
@@ -64,7 +58,6 @@ def test_evaluate_flagged_detected_counts_in_raw_not_adjusted():
     assert result["adjusted"]["tp"] == 1
     assert result["flagged"]["n_flagged_detected"] == 1
 
-
 def test_evaluate_no_flag_is_raw_only():
 
     y_true = [1, 0, 1]
@@ -74,7 +67,6 @@ def test_evaluate_no_flag_is_raw_only():
 
     assert result["raw"] == result["adjusted"]
     assert result["flagged"]["n_flagged"] == 0
-
 
 def test_lag_summary_ignores_never_detected():
 
@@ -86,7 +78,6 @@ def test_lag_summary_ignores_never_detected():
     assert summary["median"] == 1.0
     assert summary["p95"] == 1.9
 
-
 def test_lag_summary_empty():
 
     summary = lag_summary([None, None])
@@ -94,7 +85,6 @@ def test_lag_summary_empty():
     assert summary["n_detected"] == 0
     assert summary["n_never_detected"] == 2
     assert summary["mean"] is None
-
 
 def test_detection_lag_windows():
 

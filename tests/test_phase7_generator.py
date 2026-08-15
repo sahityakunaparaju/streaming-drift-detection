@@ -7,7 +7,6 @@ from drift_injection.phase7_generator import (
     build_matrix_spec,
 )
 
-
 def _build(tmp_path):
     return build_phase7_set(
         input_path="data/primary/iot_telemetry_data.csv",
@@ -16,7 +15,6 @@ def _build(tmp_path):
         manifest_path=str(tmp_path / "manifest.json"),
         seed=42,
     )
-
 
 def test_expected_false_negative_propagates_to_every_window(tmp_path):
 
@@ -27,11 +25,12 @@ def test_expected_false_negative_propagates_to_every_window(tmp_path):
     for entry in manifest["windows"]:
         subtype = entry["subtype"]
         flagged = bool(entry["expected_false_negative"])
-        if subtype.startswith("variance_") or subtype.startswith(
-            "distribution_"
+        if (
+            subtype.startswith("variance_")
+            or subtype.startswith("distribution_")
+            or subtype.startswith("mean_")
         ):
-            # Mandatory Phase 7 precondition: variance_* and
-            # distribution_* windows are ALWAYS flagged.
+
             assert flagged, (
                 f"{entry['event_id']} ({subtype}) not flagged"
             )
@@ -39,7 +38,6 @@ def test_expected_false_negative_propagates_to_every_window(tmp_path):
             assert not flagged, (
                 f"{entry['event_id']} ({subtype}) unexpectedly flagged"
             )
-
 
 def test_flagging_matches_ground_truth_csv(tmp_path):
 
@@ -52,22 +50,21 @@ def test_flagging_matches_ground_truth_csv(tmp_path):
     for _, row in truth.iterrows():
         subtype = str(row["subtype"])
         raw_flag = row["expected_false_negative"]
-        # Empty strings round-trip through CSV as NaN.
+
         flag = "" if pd.isna(raw_flag) else str(raw_flag)
-        if subtype.startswith("variance_") or subtype.startswith(
-            "distribution_"
+        if (
+            subtype.startswith("variance_")
+            or subtype.startswith("distribution_")
+            or subtype.startswith("mean_")
         ):
             assert "expected false negative" in flag
         else:
             assert flag == ""
 
-
 def test_distribution_shift_has_real_windows_at_all_severities(tmp_path):
 
     manifest = _build(tmp_path)
 
-    # Phase 6 caveat: distribution shift previously had ZERO real
-    # windows. Phase 7 must exercise it end-to-end.
     distribution_windows = [
         entry
         for entry in manifest["windows"]
@@ -82,13 +79,11 @@ def test_distribution_shift_has_real_windows_at_all_severities(tmp_path):
     }
     assert severities == {"low", "medium", "high"}
 
-    # Lag streams also exercise it.
     assert any(
         entry["set"] == "lag"
         and entry["subtype"] == "distribution_shift"
         for entry in manifest["windows"]
     )
-
 
 def test_matrix_spec_covers_expected_cells():
 

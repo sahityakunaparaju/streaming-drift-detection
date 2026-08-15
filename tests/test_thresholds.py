@@ -7,11 +7,9 @@ from detectors.thresholds import (
     find_config_path,
 )
 
-
 def test_config_file_resolves():
 
     assert find_config_path().name == "thresholds.yaml"
-
 
 def test_all_sections_present():
 
@@ -21,7 +19,6 @@ def test_all_sections_present():
         "schema",
         "unified",
     }
-
 
 def test_statistical_constants_in_range():
 
@@ -34,7 +31,6 @@ def test_statistical_constants_in_range():
     assert 0.0 < statistical["categorical_p_value_threshold"] < 1.0
     assert statistical["psi_bins"] > 0
 
-
 def test_semantic_tolerance_between_zero_and_one():
 
     fraction = THRESHOLDS["semantic"][
@@ -43,7 +39,6 @@ def test_semantic_tolerance_between_zero_and_one():
 
     assert 0.0 < fraction < 1.0
 
-
 def test_schema_is_binary_no_threshold():
 
     schema = THRESHOLDS["schema"]
@@ -51,11 +46,8 @@ def test_schema_is_binary_no_threshold():
     assert schema["binary"] is True
     assert schema["threshold_required"] is False
 
-
 def test_schema_severity_labels_frozen():
 
-    # Phase 6 closure: Section M severity labeling is frozen and must
-    # not change outside the Phase 13 sanity check.
     labels = THRESHOLDS["schema"]["severity_labels"]
 
     assert labels == {
@@ -65,7 +57,6 @@ def test_schema_severity_labels_frozen():
         "type_change": "medium",
         "nullability_change": "low",
     }
-
 
 def test_schema_detector_emits_frozen_severities():
 
@@ -144,7 +135,6 @@ def test_schema_detector_emits_frozen_severities():
         == THRESHOLDS["schema"]["severity_labels"]["renamed"]
     )
 
-
 def test_severity_yaml_mirrors_thresholds():
 
     severity_path = (
@@ -161,7 +151,6 @@ def test_severity_yaml_mirrors_thresholds():
         == THRESHOLDS["schema"]["severity_labels"]
     )
 
-
 def test_window_config_confirmed():
 
     window = THRESHOLDS["window"]
@@ -169,13 +158,11 @@ def test_window_config_confirmed():
     assert window["size"] == 1000
     assert window["sweep_deferred"] is True
 
-
 def test_unified_threshold_between_zero_and_one():
 
     threshold = THRESHOLDS["unified"]["threshold"]
 
     assert 0.0 <= threshold <= 1.0
-
 
 def test_unified_max_scores_are_one():
 

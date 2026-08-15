@@ -7,7 +7,6 @@ from drift_injection.ground_truth import (
     load_ground_truth,
 )
 
-
 def test_log_drift_event(tmp_path):
 
     output = tmp_path / "ground_truth.csv"
@@ -33,7 +32,6 @@ def test_log_drift_event(tmp_path):
     assert df.iloc[0]["severity"] == "medium"
     assert df.iloc[0]["ground_truth"] == "DRIFT"
 
-
 def test_log_no_drift_event(tmp_path):
 
     output = tmp_path / "ground_truth.csv"
@@ -55,7 +53,6 @@ def test_log_no_drift_event(tmp_path):
     assert df.iloc[0]["subtype"] == "normal_noise"
     assert df.iloc[0]["severity"] == "none"
     assert df.iloc[0]["ground_truth"] == "NO_DRIFT"
-
 
 def test_drift_and_no_drift_are_both_recorded(tmp_path):
 
@@ -84,7 +81,6 @@ def test_drift_and_no_drift_are_both_recorded(tmp_path):
         "NO_DRIFT",
     }
 
-
 def test_ground_truth_columns(tmp_path):
 
     output = tmp_path / "ground_truth.csv"
@@ -100,7 +96,6 @@ def test_ground_truth_columns(tmp_path):
     df = pd.read_csv(output)
 
     assert list(df.columns) == GROUND_TRUTH_COLUMNS
-
 
 def test_expected_false_negative_flag_written(tmp_path):
 
@@ -123,19 +118,13 @@ def test_expected_false_negative_flag_written(tmp_path):
 
     assert df.iloc[0]["expected_false_negative"] != ""
 
-    # Phase 6 requirement: the variance-shift caveat must be carried
-    # into the ground-truth output, not just mentioned in prose.
     assert (
         "expected false negative"
         in df.iloc[0]["expected_false_negative"]
     )
 
-
 def test_distribution_shift_flag_written(tmp_path):
 
-    # Phase 6 follow-up: distribution shift is the same known
-    # aggregation limitation as variance shift and is flagged through
-    # the identical mechanism (expected_false_negative column).
     output = tmp_path / "ground_truth.csv"
 
     event = log_injection(
@@ -159,7 +148,6 @@ def test_distribution_shift_flag_written(tmp_path):
         in df.iloc[0]["expected_false_negative"]
     )
 
-
 def test_default_flag_is_empty(tmp_path):
 
     output = tmp_path / "ground_truth.csv"
@@ -174,7 +162,6 @@ def test_default_flag_is_empty(tmp_path):
 
     df = pd.read_csv(output)
 
-    # Empty-string flag round-trips through CSV as NaN.
     assert pd.isna(
         df.iloc[0]["expected_false_negative"]
     ) or df.iloc[0]["expected_false_negative"] == ""

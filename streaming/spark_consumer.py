@@ -22,22 +22,15 @@ from detectors.unified import (
 )
 from detectors.thresholds import THRESHOLDS
 
-
 CATEGORICAL_P_VALUE_THRESHOLD = float(
     THRESHOLDS["statistical"]["categorical_p_value_threshold"]
 )
-
 
 KAFKA_BOOTSTRAP = "kafka:29092"
 KAFKA_TOPIC = "iot-drift-stream"
 
 REFERENCE_CSV = "/tmp/iot_telemetry_data.csv"
 PROFILE_PATH = "/tmp/reference_profile.json"
-
-
-# --------------------------------------------------
-# Reference data
-# --------------------------------------------------
 
 reference_df = pd.read_csv(REFERENCE_CSV)
 
@@ -47,11 +40,6 @@ with open(PROFILE_PATH, "r") as f:
 reference_schema = reference_profile["schema"]
 reference_contract = reference_profile["semantic_contract"]
 
-
-# --------------------------------------------------
-# Spark
-# --------------------------------------------------
-
 spark = (
     SparkSession.builder
     .appName("IoTDriftConsumer")
@@ -59,7 +47,6 @@ spark = (
 )
 
 spark.sparkContext.setLogLevel("WARN")
-
 
 df_stream = (
     spark.readStream
@@ -69,11 +56,6 @@ df_stream = (
     .option("startingOffsets", "earliest")
     .load()
 )
-
-
-# --------------------------------------------------
-# Helpers
-# --------------------------------------------------
 
 def build_current_schema(df):
     columns = {}
@@ -100,7 +82,6 @@ def build_current_schema(df):
         "schema_version": "stream",
         "columns": columns,
     }
-
 
 def categorical_drift(reference, current):
     """
@@ -139,7 +120,6 @@ def categorical_drift(reference, current):
         dtype=float,
     )
 
-    # Avoid invalid chi-square calculation
     if observed.sum() == 0:
         return {
             "drift": False,
@@ -156,7 +136,6 @@ def categorical_drift(reference, current):
         "chi2": float(chi2),
         "p_value": float(p_value),
     }
-
 
 def make_semantic_contract(metadata):
     """
@@ -182,11 +161,6 @@ def make_semantic_contract(metadata):
         contract["fields"][column]["unit"] = new_unit
 
     return contract
-
-
-# --------------------------------------------------
-# Spark batch
-# --------------------------------------------------
 
 def process_batch(batch_df, batch_id):
 
@@ -243,10 +217,6 @@ def process_batch(batch_df, batch_id):
 
         current_df = pd.DataFrame(records)
 
-        # ==================================================
-        # 1. SCHEMA DETECTION
-        # ==================================================
-
         current_schema = build_current_schema(
             current_df
         )
@@ -262,10 +232,6 @@ def process_batch(batch_df, batch_id):
             "drift": schema_drift,
             "events": schema_events,
         }
-
-        # ==================================================
-        # 2. STATISTICAL DETECTION
-        # ==================================================
 
         statistical_results = {}
 
@@ -304,10 +270,6 @@ def process_batch(batch_df, batch_id):
                     "error": str(e)
                 }
 
-        # --------------------------------------------------
-        # Categorical device detection
-        # --------------------------------------------------
-
         categorical_results = {}
 
         if (
@@ -321,10 +283,6 @@ def process_batch(batch_df, batch_id):
                     current_df["device"],
                 )
             )
-
-        # ==================================================
-        # 3. SEMANTIC DETECTION
-        # ==================================================
 
         current_contract = make_semantic_contract(
             semantic_metadata
@@ -363,10 +321,6 @@ def process_batch(batch_df, batch_id):
             ),
         }
 
-        # ==================================================
-        # 4. UNIFIED SCORING + DECISION
-        # ==================================================
-
         statistical_details = {
             "numeric": statistical_results,
             "categorical": categorical_results,
@@ -384,10 +338,6 @@ def process_batch(batch_df, batch_id):
             semantic_score=scores["semantic_score"],
             statistical_score=scores["statistical_score"],
         )
-
-        # ==================================================
-        # Print results
-        # ==================================================
 
         print(
             f"  Schema drift: "
@@ -412,10 +362,6 @@ def process_batch(batch_df, batch_id):
         print(
             f"  Decision: {decision}"
         )
-
-        # ==================================================
-        # PostgreSQL
-        # ==================================================
 
         temp_stats = (
             statistical_results.get("temp", {})
@@ -503,11 +449,6 @@ def process_batch(batch_df, batch_id):
         f"Stored {len(rows)} event(s) "
         "in PostgreSQL"
     )
-
-
-# --------------------------------------------------
-# Start stream
-# --------------------------------------------------
 
 query = (
     df_stream

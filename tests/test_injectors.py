@@ -17,7 +17,6 @@ from drift_injection.injectors import (
     inject_normal_noise,
 )
 
-
 def make_sample_data():
     return pd.DataFrame({
         "temp": np.array([
@@ -46,11 +45,6 @@ def make_sample_data():
         ],
     })
 
-
-# ============================================================
-# Schema tests
-# ============================================================
-
 def test_add_column():
 
     df = make_sample_data()
@@ -64,7 +58,6 @@ def test_add_column():
     assert "battery_level" in result.columns
     assert len(result) == len(df)
 
-
 def test_remove_column():
 
     df = make_sample_data()
@@ -75,7 +68,6 @@ def test_remove_column():
     )
 
     assert "motion" not in result.columns
-
 
 def test_rename_column():
 
@@ -89,7 +81,6 @@ def test_rename_column():
     assert "temp" not in result.columns
     assert "temperature" in result.columns
 
-
 def test_type_change():
 
     df = make_sample_data()
@@ -101,11 +92,6 @@ def test_type_change():
     )
 
     assert result["temp"].dtype == object
-
-
-# ============================================================
-# Statistical tests
-# ============================================================
 
 def test_mean_shift_medium():
 
@@ -130,7 +116,6 @@ def test_mean_shift_medium():
         atol=1e-10,
     )
 
-
 def test_variance_shift():
 
     df = make_sample_data()
@@ -147,7 +132,6 @@ def test_variance_shift():
 
     assert new_variance > original_variance
 
-
 def test_distribution_shift():
 
     df = make_sample_data()
@@ -162,7 +146,6 @@ def test_distribution_shift():
         df["temp"].values,
         result["temp"].values,
     )
-
 
 def test_category_shift():
 
@@ -185,11 +168,6 @@ def test_category_shift():
 
     assert new_frequency > original_frequency
 
-
-# ============================================================
-# Semantic tests
-# ============================================================
-
 def test_unit_change_metadata_only():
 
     df = make_sample_data()
@@ -202,8 +180,6 @@ def test_unit_change_metadata_only():
         metadata_only=True,
     )
 
-    # Critical semantic-only requirement:
-    # values MUST remain identical.
     assert np.array_equal(
         df["temp"].values,
         result["temp"].values,
@@ -212,7 +188,6 @@ def test_unit_change_metadata_only():
     assert metadata["old_unit"] == "celsius"
     assert metadata["new_unit"] == "fahrenheit"
     assert metadata["metadata_only"] is True
-
 
 def test_unit_change_actual_conversion():
 
@@ -240,7 +215,6 @@ def test_unit_change_actual_conversion():
         result["temp"].values,
     )
 
-
 def test_definition_change():
 
     df = make_sample_data()
@@ -267,7 +241,6 @@ def test_definition_change():
         == "ambient_temperature"
     )
 
-
 def test_domain_change():
 
     df = make_sample_data()
@@ -290,7 +263,6 @@ def test_domain_change():
 
     assert metadata["change"] == "domain_change"
 
-
 def test_business_meaning_change():
 
     df = make_sample_data()
@@ -312,11 +284,6 @@ def test_business_meaning_change():
         == "business_meaning_change"
     )
 
-
-# ============================================================
-# Normal variation test
-# ============================================================
-
 def test_normal_noise_changes_values_but_stays_close():
 
     df = make_sample_data()
@@ -336,6 +303,4 @@ def test_normal_noise_changes_values_but_stays_close():
     original_mean = df["temp"].mean()
     new_mean = result["temp"].mean()
 
-    # Small normal variation should not create a large
-    # mean displacement.
     assert abs(new_mean - original_mean) < 0.5

@@ -8,7 +8,6 @@ RANGE_TOLERANCE_FRACTION = float(
     THRESHOLDS["semantic"]["range_tolerance_fraction"]
 )
 
-
 def _event(column, change, old_value, new_value, severity="medium"):
     return {
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -19,7 +18,6 @@ def _event(column, change, old_value, new_value, severity="medium"):
         "new_value": new_value,
         "severity": severity,
     }
-
 
 def compare_semantic_contracts(reference, current):
     """
@@ -50,10 +48,6 @@ def compare_semantic_contracts(reference, current):
         ref = reference_fields[column]
         cur = current_fields[column]
 
-        # --------------------------------------------------
-        # Level 1: Unit
-        # --------------------------------------------------
-
         ref_unit = ref.get("unit")
         cur_unit = cur.get("unit")
 
@@ -67,10 +61,6 @@ def compare_semantic_contracts(reference, current):
                     "high",
                 )
             )
-
-        # --------------------------------------------------
-        # Level 1: Valid range
-        # --------------------------------------------------
 
         ref_range = ref.get("valid_range")
         cur_range = cur.get("valid_range")
@@ -86,10 +76,6 @@ def compare_semantic_contracts(reference, current):
                 )
             )
 
-        # --------------------------------------------------
-        # Level 1: Allowed domain
-        # --------------------------------------------------
-
         ref_domain = ref.get("allowed_domain")
         cur_domain = cur.get("allowed_domain")
 
@@ -103,10 +89,6 @@ def compare_semantic_contracts(reference, current):
                     "medium",
                 )
             )
-
-        # --------------------------------------------------
-        # Level 2: Business meaning
-        # --------------------------------------------------
 
         ref_meaning = ref.get("business_meaning")
         cur_meaning = cur.get("business_meaning")
@@ -123,7 +105,6 @@ def compare_semantic_contracts(reference, current):
             )
 
     return events
-
 
 def validate_values_against_contract(df, contract):
     """
@@ -148,16 +129,8 @@ def validate_values_against_contract(df, contract):
 
         series = df[column]
 
-        # --------------------------------------------------
-        # Valid range
-        # --------------------------------------------------
-
         valid_range = specification.get("valid_range")
 
-        # A schema drift may have turned this column non-numeric
-        # (e.g. temp -> string); a numeric range cannot be validated
-        # against such values, so skip the range check for that
-        # column instead of crashing the detector.
         if not pd.api.types.is_numeric_dtype(series):
             valid_range = None
 
@@ -197,10 +170,6 @@ def validate_values_against_contract(df, contract):
                         "high",
                     )
                 )
-
-        # --------------------------------------------------
-        # Allowed domain
-        # --------------------------------------------------
 
         allowed_domain = specification.get("allowed_domain")
 

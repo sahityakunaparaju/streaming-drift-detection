@@ -4,7 +4,6 @@ import uuid
 
 import pandas as pd
 
-
 GROUND_TRUTH_COLUMNS = [
     "event_id",
     "timestamp",
@@ -14,15 +13,9 @@ GROUND_TRUTH_COLUMNS = [
     "severity",
     "injected",
     "ground_truth",
-    # Phase 6: machine-readable flag for windows whose drift is
-    # expected to be missed under a documented measurement
-    # limitation (e.g. variance shift under max-over-columns
-    # aggregation). Empty string means "not flagged". Phase 7's
-    # precision/recall must account for these windows instead of
-    # silently penalizing the detector.
+
     "expected_false_negative",
 ]
-
 
 def create_event(
     drift_type,
@@ -67,7 +60,6 @@ def create_event(
         "expected_false_negative": expected_false_negative,
     }
 
-
 def append_event(
     event,
     output_path="results/raw/ground_truth.csv",
@@ -98,7 +90,6 @@ def append_event(
     )
 
     return output
-
 
 def log_injection(
     drift_type,
@@ -131,7 +122,6 @@ def log_injection(
 
     return event
 
-
 def log_no_drift(
     subtype="normal_noise",
     feature=None,
@@ -163,7 +153,6 @@ def log_no_drift(
     )
 
     return event
-
 
 def load_ground_truth(
     input_path="results/raw/ground_truth.csv",
