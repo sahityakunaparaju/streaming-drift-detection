@@ -43,6 +43,7 @@ OUTPUT_ROOT = Path("results/phase7/multiseed")
 INPUT = "data/primary/iot_telemetry_data.csv"
 
 def rebuild_seed(seed):
+    """Regenerate one seed's ground truth/manifest and recompute metrics."""
     seed_dir = OUTPUT_ROOT / f"seed-{seed}"
     print(f"  regenerating seed {seed} ground truth/manifest ...")
     manifest = build_phase7_set(
@@ -112,6 +113,7 @@ def rebuild_seed(seed):
     return seed_results
 
 def main():
+    """Rebuild every seed's results with corrected expected-FN flags."""
     seed_results_list = []
     for seed in DEFAULT_SEEDS:
         seed_results_list.append(rebuild_seed(seed))

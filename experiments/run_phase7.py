@@ -71,6 +71,7 @@ MATRIX_DETECTORS = [
 ]
 
 def load_reference():
+    """Load the primary reference dataframe and its profile JSON."""
     reference_df = pd.read_csv(
         "data/primary/iot_telemetry_data.csv"
     )
@@ -82,6 +83,7 @@ def load_reference():
     return reference_df, profile
 
 def run_config(name, reference_df, profile, window_df, metadata):
+    """Dispatch one detector config by name; returns (decision, details)."""
     if name == "B0_null":
         return run_b0_null_monitor(window_df)
     if name == "B1_schema":
@@ -113,6 +115,7 @@ def run_config(name, reference_df, profile, window_df, metadata):
     raise ValueError(f"Unknown config: {name}")
 
 def load_metadata(metadata_file):
+    """Load a metadata sidecar JSON, or None if no file given."""
     if not metadata_file:
         return None
     with open(metadata_file, "r") as file:
@@ -198,6 +201,7 @@ def lag_for_rows(rows, onset_position=3):
     return lags
 
 def main():
+    """Run the Phase 7 baseline ladder and controlled matrix."""
     parser = argparse.ArgumentParser(
         description="Phase 7 baseline ladder + controlled matrix."
     )

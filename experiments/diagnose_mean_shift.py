@@ -30,6 +30,7 @@ SEEDS = [42, 123, 7, 11, 2024, 314, 2718, 999, 555, 777]
 MULTISEED = Path("results/phase7/multiseed")
 
 def analyze_window(reference_df, window_df, ground_truth, subtype, severity, seed):
+    """Measure statistical response of one mean-shift window."""
     details = statistical_details_for(reference_df, window_df)
     numeric = details.get("numeric", {})
     score = statistical_score(details)
@@ -87,6 +88,7 @@ def analyze_window(reference_df, window_df, ground_truth, subtype, severity, see
     }
 
 def main():
+    """Diagnose the mean-shift severity sweep across all seeds."""
     reference_df = pd.read_csv("data/primary/iot_telemetry_data.csv")
 
     rows = []

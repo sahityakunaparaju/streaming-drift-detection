@@ -1,0 +1,139 @@
+contract_version: "1.0"
+
+dataset:
+  name: "beijing_air_quality"
+
+fields:
+
+  ts:
+    business_meaning: "measurement_timestamp"
+    data_role: "timestamp"
+    unit: "unix_epoch_seconds"
+
+  station:
+    business_meaning: "air_quality_monitoring_station_identifier"
+    data_role: "identifier"
+    domain: "station_id"
+    allowed_domain:
+      - "Aotizhongxin"
+      - "Changping"
+      - "Dingling"
+      - "Dongsi"
+      - "Guanyuan"
+      - "Gucheng"
+      - "Huairou"
+      - "Nongzhanguan"
+      - "Shunyi"
+      - "Tiantan"
+      - "Wanliu"
+      - "Wanshouxigong"
+
+  PM2.5:
+    business_meaning: "fine_particulate_matter_concentration"
+    data_role: "sensor_measurement"
+    unit: "ug_m3"
+    valid_range:
+      min: 0.0
+      max: 1000.0
+
+  PM10:
+    business_meaning: "coarse_particulate_matter_concentration"
+    data_role: "sensor_measurement"
+    unit: "ug_m3"
+    valid_range:
+      min: 0.0
+      max: 1000.0
+
+  SO2:
+    business_meaning: "sulfur_dioxide_concentration"
+    data_role: "sensor_measurement"
+    unit: "ug_m3"
+    valid_range:
+      min: 0.0
+      max: 500.0
+
+  NO2:
+    business_meaning: "nitrogen_dioxide_concentration"
+    data_role: "sensor_measurement"
+    unit: "ug_m3"
+    valid_range:
+      min: 0.0
+      max: 500.0
+
+  CO:
+    business_meaning: "carbon_monoxide_concentration"
+    data_role: "sensor_measurement"
+    unit: "ug_m3"
+    valid_range:
+      min: 0.0
+      max: 10000.0
+
+  O3:
+    business_meaning: "ozone_concentration"
+    data_role: "sensor_measurement"
+    unit: "ug_m3"
+    valid_range:
+      min: 0.0
+      max: 1000.0
+
+  TEMP:
+    business_meaning: "ambient_air_temperature"
+    data_role: "sensor_measurement"
+    unit: "celsius"
+    valid_range:
+      min: -40.0
+      max: 60.0
+
+  PRES:
+    business_meaning: "atmospheric_pressure"
+    data_role: "sensor_measurement"
+    unit: "hpa"
+    valid_range:
+      min: 900.0
+      max: 1100.0
+
+  DEWP:
+    business_meaning: "dew_point_temperature"
+    data_role: "sensor_measurement"
+    unit: "celsius"
+    valid_range:
+      min: -50.0
+      max: 50.0
+
+  RAIN:
+    business_meaning: "precipitation"
+    data_role: "sensor_measurement"
+    unit: "mm"
+    valid_range:
+      min: 0.0
+      max: 200.0
+
+  WSPM:
+    business_meaning: "wind_speed"
+    data_role: "sensor_measurement"
+    unit: "m_s"
+    valid_range:
+      min: 0.0
+      max: 50.0
+
+  wd:
+    business_meaning: "wind_direction"
+    data_role: "categorical_measurement"
+    unit: "compass_direction"
+    allowed_values:
+      - "N"
+      - "NNE"
+      - "NE"
+      - "ENE"
+      - "E"
+      - "ESE"
+      - "SE"
+      - "SSE"
+      - "S"
+      - "SSW"
+      - "SW"
+      - "WSW"
+      - "W"
+      - "WNW"
+      - "NW"
+      - "NNW"

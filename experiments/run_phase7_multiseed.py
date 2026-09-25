@@ -153,6 +153,7 @@ def run_seed(seed, reference_df, profile, input_path, seed_dir):
     return rows_by_config, manifest, seed_results
 
 def mean_std(values):
+    """Arithmetic mean and population std of a numeric list."""
     values = [float(v) for v in values]
     return float(np.mean(values)), float(np.std(values))
 
@@ -286,6 +287,7 @@ def flag_high_variance(aggregate_rows, metric_kind):
     return flagged
 
 def main():
+    """Run the Phase 7 multi-seed robustness sweep (Section Y)."""
     parser = argparse.ArgumentParser(
         description="Phase 7 multi-seed robustness sweep (Section Y)."
     )

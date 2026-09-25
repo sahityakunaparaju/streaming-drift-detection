@@ -126,6 +126,7 @@ RANGE_VIOLATION_FRACTION = 0.02
 CANDIDATE_TOLERANCE = 0.01
 
 def numeric_columns(reference_df, current_df):
+    """Numeric, non-boolean columns shared by reference and current."""
     return [
         column
         for column in reference_df.columns
@@ -136,6 +137,7 @@ def numeric_columns(reference_df, current_df):
     ]
 
 def categorical_chi2(reference, current):
+    """Chi-square test between two categorical distributions."""
     ref_counts = reference.value_counts()
     cur_counts = current.value_counts()
     categories = sorted(
@@ -163,6 +165,7 @@ def categorical_chi2(reference, current):
     return float(chi2)
 
 def detector_result(reference_df, current_df):
+    """Run the statistical detector and return its numeric details."""
     columns = numeric_columns(reference_df, current_df)
     numeric = compare_numeric_fields(
         reference_df,
@@ -188,6 +191,7 @@ def detector_result(reference_df, current_df):
     }
 
 def max_components(result):
+    """Max KS/PSI/chi2 across all measured columns."""
     max_ks = 0.0
     max_psi = 0.0
     for column, metrics in result["numeric"].items():
@@ -213,6 +217,7 @@ def max_components(result):
     }
 
 def statistical_score(components):
+    """Map component metrics to the unified 0-1 statistical score."""
     ks_component = min(
         max(components["max_ks"] - KS_FLOOR, 0.0)
         / (1.0 - KS_FLOOR),
@@ -285,6 +290,7 @@ def apply_injector(batch, spec, random_state=None):
     )
 
 def summarize(values):
+    """Min/quartile/max summary of a list of numbers."""
     values = sorted(values)
     return {
         "min": float(values[0]),
@@ -296,6 +302,7 @@ def summarize(values):
     }
 
 def format_distribution(summary):
+    """Render a summarize() dict as a compact five-number string."""
     return (
         f"{summary['min']:.3f} / {summary['p25']:.3f} / "
         f"{summary['p50']:.3f} / {summary['p75']:.3f} / "
@@ -303,6 +310,7 @@ def format_distribution(summary):
     )
 
 def load_ground_truth_subtypes():
+    """Map event_id -> drift subtype from the Phase 7 ground truth."""
     if not GROUND_TRUTH_CSV.exists():
         return {}
     truth = pd.read_csv(GROUND_TRUTH_CSV)
@@ -313,11 +321,13 @@ def load_ground_truth_subtypes():
     return subtypes
 
 def load_contract():
+    """Load the semantic contract from the reference profile JSON."""
     with open(PROFILE_JSON, "r") as file:
         profile = json.load(file)
     return profile["semantic_contract"]
 
 def relative_overruns(df, contract):
+    """Per-column relative range violation against the contract."""
     overruns = {}
     for column, specification in contract["fields"].items():
         if column not in df.columns:
@@ -339,6 +349,7 @@ def relative_overruns(df, contract):
     return overruns
 
 def has_range_violation(df, contract, tolerance):
+    """True if any column exceeds its contract range by more than tolerance."""
     overruns = relative_overruns(df, contract)
     return any(value > tolerance for value in overruns.values())
 
@@ -348,6 +359,7 @@ def inject_range_violation(
     contract,
     random_state=7,
 ):
+    """Push a fraction of temp rows beyond the contract's valid range."""
     result = batch.copy()
     valid_range = contract["fields"]["temp"]["valid_range"]
     width = valid_range["max"] - valid_range["min"]
@@ -359,6 +371,7 @@ def inject_range_violation(
     return result
 
 def inject_domain_violation(batch, n_invalid, random_state=11):
+    """Force n_invalid rows outside their contract's allowed domain."""
     result = batch.copy()
     rng = np.random.default_rng(random_state)
     selected = rng.choice(result.index, size=n_invalid, replace=False)
@@ -366,6 +379,7 @@ def inject_domain_violation(batch, n_invalid, random_state=11):
     return result
 
 def current_contract_with_change(contract, change):
+    """Copy of the contract with one semantic change applied to temp/device."""
     current = json.loads(json.dumps(contract))
     temp = current["fields"]["temp"]
     device = current["fields"]["device"]
@@ -383,6 +397,7 @@ def current_contract_with_change(contract, change):
     return current
 
 def separation_status(condition_summary, clean_summary):
+    """Classify score separation between a condition and the clean baseline."""
     if condition_summary["min"] > clean_summary["max"]:
         return "well-separated"
     if condition_summary["max"] > clean_summary["max"]:
@@ -474,6 +489,7 @@ def verify_schema_severities(labels):
     return ok
 
 def parse_args():
+    """Parse CLI arguments for the tuning pass."""
     parser = argparse.ArgumentParser(
         description=(
             "Phase 6 threshold tuning pass. Reproducible by design: "
@@ -497,6 +513,7 @@ def parse_args():
     return parser.parse_args()
 
 def main():
+    """Run the full Phase 6 threshold-derivation experiment suite."""
     args = parse_args()
     seed = args.seed
 
@@ -1536,6 +1553,7 @@ def write_report(
     suggested_tolerance,
     separation_rows,
 ):
+    """Render the Phase 6 decision-boundary report as markdown."""
     lines = []
     lines.append("# Phase 6 Threshold Derivation — Decision-Boundary Table")
     lines.append("")
