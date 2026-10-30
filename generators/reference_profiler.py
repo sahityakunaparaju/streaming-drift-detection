@@ -13,10 +13,12 @@ SEMANTIC_PATH = PROJECT_ROOT / "configs" / "semantic_contract.yaml"
 OUTPUT_PATH = PROJECT_ROOT / "data" / "primary" / "reference_profile.json"
 
 def load_yaml(path):
+    """Load a YAML file and return its parsed contents."""
     with open(path, "r", encoding="utf-8") as file:
         return yaml.safe_load(file)
 
 def build_statistical_profile(df):
+    """Per-column dtype, missingness, and value statistics for a dataframe."""
     profile = {}
 
     for column in df.columns:
@@ -66,7 +68,7 @@ def build_statistical_profile(df):
     return profile
 
 def build_timestamp_profile(df):
-
+    """Min/max/range summary of the `ts` column."""
     ts = df["ts"]
 
     return {
@@ -77,7 +79,7 @@ def build_timestamp_profile(df):
     }
 
 def main():
-
+    """Build and save the primary-dataset reference profile JSON."""
     print("=" * 60)
     print("REFERENCE PROFILER")
     print("=" * 60)

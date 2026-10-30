@@ -20,6 +20,7 @@ def _candidate_paths():
 
 
 def find_config_path():
+    """First existing thresholds.yaml from THRESHOLDS_CONFIG or the default locations."""
     for candidate in _candidate_paths():
         if candidate.exists():
             return candidate
@@ -30,6 +31,7 @@ def find_config_path():
 
 
 def load_thresholds():
+    """Load and return the frozen thresholds.yaml mapping."""
     config_path = find_config_path()
     with open(config_path, "r") as file:
         return yaml.safe_load(file)

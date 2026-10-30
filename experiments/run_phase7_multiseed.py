@@ -58,7 +58,8 @@ SUBTYPE_DETECTORS = [
 
 VARIANCE_RATIO_THRESHOLD = 0.2
 
-def run_seed(seed, reference_df, profile, input_path, seed_dir):
+def run_seed(seed, reference_df, profile, input_path, seed_dir,
+             reference_model=None, raw_df=None):
     """Run the full harness for one seed; return (rows_by_config,
     manifest, per-seed summary dict)."""
     seed_dir = Path(seed_dir)
@@ -80,6 +81,8 @@ def run_seed(seed, reference_df, profile, input_path, seed_dir):
             reference_df,
             profile,
             manifest,
+            reference_model=reference_model,
+            raw_df=raw_df,
         )
 
     all_rows = []
@@ -317,7 +320,7 @@ def main():
     print(f"seeds: {seeds}")
     print("=" * 90)
 
-    reference_df, profile = load_reference()
+    reference_df, profile, reference_model, raw_df = load_reference()
 
     seed_results_list = []
     for seed in seeds:
@@ -334,6 +337,8 @@ def main():
             profile,
             args.input,
             seed_dir,
+            reference_model=reference_model,
+            raw_df=raw_df,
         )
         seed_results_list.append(seed_results)
         print(

@@ -95,3 +95,41 @@ def test_detection_lag_windows():
         ["NO_DRIFT", "NO_DRIFT", "NO_DRIFT", "DRIFT", "DRIFT"],
         onset_position=3,
     ) == 0
+
+
+def test_detection_lag_windows_string_no_drift_not_truthy():
+    """Regression: 'NO_DRIFT' must map to 0, not 1.
+
+    Before the fix, bool("NO_DRIFT") == True in Python (any non-empty
+    string is truthy), so a NO_DRIFT prediction was incorrectly counted
+    as a detected drift.  The test cases below would have FAILED with
+    the old code: detection_lag_windows(["NO_DRIFT", "NO_DRIFT",
+    "NO_DRIFT", "NO_DRIFT", "DRIFT"], onset_position=3) returned 4
+    (wrong) instead of 1, and detection_lag_windows(["NO_DRIFT"]*5,
+    onset_position=3) returned 0 (wrong) instead of None.
+    """
+    # DRIFT at position 4 -> lag = 4 - 3 = 1
+    assert detection_lag_windows(
+        ["NO_DRIFT", "NO_DRIFT", "NO_DRIFT", "NO_DRIFT", "DRIFT"],
+        onset_position=3,
+    ) == 1
+    # All NO_DRIFT -> never detected
+    assert detection_lag_windows(
+        ["NO_DRIFT"] * 5,
+        onset_position=3,
+    ) is None
+    # Mixed case and whitespace
+    assert detection_lag_windows(
+        [" no_drift ", "Drift"],
+        onset_position=0,
+    ) == 1
+    # Lowercase drift is also detected (upper-cased)
+    assert detection_lag_windows(
+        ["drift"],
+        onset_position=0,
+    ) == 0
+    # Non-string numeric inputs still work
+    assert detection_lag_windows(
+        [0, 0, 1],
+        onset_position=2,
+    ) == 0

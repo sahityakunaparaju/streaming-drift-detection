@@ -85,6 +85,56 @@ def test_no_contract_change_is_silent():
     assert events == []
 
 
+def test_definition_change_detected():
+    """Phase 8: definition_change rule (exact equality, mirrors
+    business_meaning_change)."""
+
+    reference = make_temp_contract("celsius")
+    reference["fields"]["temp"]["definition"] = (
+        "instantaneous_raw_sensor_value"
+    )
+
+    current = make_temp_contract("celsius")
+    current["fields"]["temp"]["definition"] = (
+        "exponentially_weighted_moving_average_of_raw_readings"
+    )
+
+    events = compare_semantic_contracts(
+        reference,
+        current,
+    )
+
+    assert len(events) == 1
+    assert events[0]["change"] == "definition_change"
+    assert events[0]["column"] == "temp"
+    assert events[0]["old_value"] == (
+        "instantaneous_raw_sensor_value"
+    )
+    assert events[0]["new_value"] == (
+        "exponentially_weighted_moving_average_of_raw_readings"
+    )
+
+
+def test_definition_change_silent_when_unchanged():
+    """A definition present and unchanged must not fire."""
+
+    reference = make_temp_contract("celsius")
+    reference["fields"]["temp"]["definition"] = (
+        "instantaneous_raw_sensor_value"
+    )
+    current = make_temp_contract("celsius")
+    current["fields"]["temp"]["definition"] = (
+        "instantaneous_raw_sensor_value"
+    )
+
+    events = compare_semantic_contracts(
+        reference,
+        current,
+    )
+
+    assert events == []
+
+
 def test_range_violation_detected():
 
     contract = make_temp_contract("celsius")

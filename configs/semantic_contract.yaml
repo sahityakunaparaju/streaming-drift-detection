@@ -72,3 +72,10 @@ fields:
       min: 0.0
       max: 30.6
     range_source: "observed_min_max_from_primary_dataset"
+    # Phase 8 (Section T): computation/definition semantics for the
+    # temp field. Closes the Phase 6 definition-change coverage gap by
+    # declaring what the reported value MEANS (the gross->net-revenue
+    # analog for an IoT sensor). Exact-equality comparison, mirroring
+    # business_meaning_change; values are untouched by a definition
+    # change, so it is a pure semantic blind-spot case.
+    definition: "instantaneous_raw_sensor_value"

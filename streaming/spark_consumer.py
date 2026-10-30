@@ -58,6 +58,7 @@ df_stream = (
 )
 
 def build_current_schema(df):
+    """Build a {dtype, nullable} schema reference from a live batch."""
     columns = {}
 
     for column in df.columns:
@@ -163,7 +164,7 @@ def make_semantic_contract(metadata):
     return contract
 
 def process_batch(batch_df, batch_id):
-
+    """Run detection on one Spark micro-batch and persist the event."""
     rows = (
         batch_df
         .selectExpr("CAST(value AS STRING) AS value")

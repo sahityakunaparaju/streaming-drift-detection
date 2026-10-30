@@ -7,21 +7,18 @@ Balanced Accuracy / Youden's J from ground-truth labels + detector
 predictions, plus Detection Lag (mean/median/P95) from per-window
 lag measurements.
 
-Expected-false-negative handling:
-    Ground-truth windows with `expected_false_negative` set are
-    known, documented measurement limitations (variance shift,
-    distribution shift under max-over-columns aggregation). They are
-    reported two ways, never hidden:
+Expected-false-negative handling (REVISION):
+    Raw metrics are the only headline metrics. Every window counts,
+    including windows tagged `expected_false_negative`.
 
-    - raw:      computed over ALL windows (flagged misses count as
-                ordinary false negatives).
-    - adjusted: computed with flagged windows excluded from the
-                evaluation entirely (they are expected misses, not
-                ordinary detector failures).
+    The `adjusted` variant (flagged windows removed from the
+    denominator) is retained ONLY as a legacy diagnostic for the old
+    Phase 6/7/8/9/13 artifacts. It must never be reported as a
+    headline, and the revision experiments do not use it.
 
-    The flagged windows themselves are also reported separately
-    (count, how many were detected, how many were missed) so the
-    raw-vs-adjusted difference is visible and auditable.
+    The flagged windows themselves are reported separately (count,
+    how many were detected, how many were missed) as an analysis
+    column, never as a denominator choice.
 
 This module is intentionally shape-agnostic: it operates on plain
 sequences/lists and does not know about any specific experiment.
@@ -180,12 +177,12 @@ def detection_lag_windows(predictions, onset_position):
     after `onset_position` minus `onset_position`. None if never
     detected. predictions is a sequence of 0/1 (or "DRIFT"/"NO_DRIFT").
     """
-    binary = [
-        1
-        if str(p).strip().upper() == "DRIFT" or bool(p)
-        else 0
-        for p in predictions
-    ]
+    def _to_binary(p):
+        if isinstance(p, str):
+            return 1 if p.strip().upper() == "DRIFT" else 0
+        return 1 if bool(p) else 0
+
+    binary = [_to_binary(p) for p in predictions]
     for position in range(onset_position, len(binary)):
         if binary[position] == 1:
             return position - onset_position

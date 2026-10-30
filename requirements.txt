@@ -5,4 +5,6 @@ scipy
 pandas
 evidently
 pytest
-pyyamlS
+pyyaml
+river==0.21.0
+psutil

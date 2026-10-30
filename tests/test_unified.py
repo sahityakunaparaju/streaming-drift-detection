@@ -1,224 +1,121 @@
 from detectors.unified import (
-    unified_score,
+    channel_score,
     decide,
+    statistical_score,
+    unified_score,
 )
 
 
 def make_statistical_result(
     numeric=None,
     categorical=None,
+    **extra,
 ):
     return {
         "numeric": numeric or {},
         "categorical": categorical or {},
+        **extra,
     }
 
 
-def test_schema_score_one_when_schema_drift():
+def test_schema_channel_is_continuous():
+    assert channel_score(False) == 0.0
+    assert channel_score(True) == 1.0
+    assert channel_score([]) == 0.0
+    assert channel_score([{"severity": "high"}]) == 1.0
+    assert 0.0 < channel_score([{"severity": "low"}]) < 1.0
+    # Severity weights are capped at 1.0.
+    assert channel_score(
+        [{"severity": "high"}, {"severity": "high"}]
+    ) == 1.0
 
+
+def test_unified_score_is_mean_of_continuous_components():
     result = unified_score(
-        True,
-        make_statistical_result(),
-        False,
+        [{"severity": "high"}],
+        make_statistical_result(statistical_score=0.5),
+        [{"severity": "low"}],
     )
-
-    assert result["schema_score"] == 1.0
-
-
-def test_schema_score_zero_when_no_schema_drift():
-
-    result = unified_score(
-        False,
-        make_statistical_result(),
-        False,
-    )
-
-    assert result["schema_score"] == 0.0
-
-
-def test_semantic_score_one_when_semantic_drift():
-
-    result = unified_score(
-        False,
-        make_statistical_result(),
-        True,
-    )
-
-    assert result["semantic_score"] == 1.0
-
-
-def test_semantic_score_zero_when_no_semantic_drift():
-
-    result = unified_score(
-        False,
-        make_statistical_result(),
-        False,
-    )
-
-    assert result["semantic_score"] == 0.0
-
-
-def test_statistical_score_between_zero_and_one():
-
-    results = [
-        make_statistical_result(),
-        make_statistical_result(
-            numeric={
-                "temp": {
-                    "ks_statistic": 0.5,
-                    "psi": 12.0,
-                }
-            }
-        ),
-        make_statistical_result(
-            numeric={
-                "temp": {
-                    "ks_statistic": 1.0,
-                    "psi": 100.0,
-                }
-            }
-        ),
-        make_statistical_result(
-            categorical={
-                "device": {
-                    "chi2": 500.0,
-                    "p_value": 0.0,
-                }
-            }
-        ),
-        make_statistical_result(
-            numeric={
-                "temp": {
-                    "ks_statistic": 0.2,
-                    "psi": 30.0,
-                }
-            },
-            categorical={
-                "device": {
-                    "chi2": 15.0,
-                    "p_value": 0.05,
-                }
-            }
-        ),
-    ]
-
-    for statistical_result in results:
-
-        result = unified_score(
-            False,
-            statistical_result,
-            False,
-        )
-
-        assert (
-            0.0
-            <= result["statistical_score"]
-            <= 1.0
-        )
-
-
-def test_unified_score_between_zero_and_one():
-
-    results = [
-        make_statistical_result(),
-        make_statistical_result(
-            numeric={
-                "temp": {
-                    "ks_statistic": 1.0,
-                    "psi": 100.0,
-                }
-            }
-        ),
-        make_statistical_result(
-            categorical={
-                "device": {
-                    "chi2": 200.0,
-                    "p_value": 0.0,
-                }
-            }
-        ),
-    ]
-
-    for statistical_result in results:
-
-        result = unified_score(
-            True,
-            statistical_result,
-            True,
-        )
-
-        assert (
-            0.0
-            <= result["unified_score"]
-            <= 1.0
-        )
-
-
-def test_unified_score_is_average_of_components():
-
-    statistical_result = make_statistical_result(
-        numeric={
-            "temp": {
-                "ks_statistic": 0.5,
-                "psi": 10.0,
-            }
-        }
-    )
-
-    result = unified_score(
-        True,
-        statistical_result,
-        True,
-    )
-
     expected = (
         result["schema_score"]
         + result["statistical_score"]
         + result["semantic_score"]
     ) / 3.0
-
     assert result["unified_score"] == expected
+    assert 0.0 <= result["unified_score"] <= 1.0
 
 
-def test_schema_override_forces_drift_with_low_statistical():
+def test_statistical_score_prefers_per_column_score():
+    details = make_statistical_result(statistical_score=0.42)
+    assert statistical_score(details) == 0.42
 
+
+def test_statistical_score_legacy_effect_fallback():
+    details = make_statistical_result(
+        numeric={
+            "temp": {
+                "effect_size": 0.2,
+                "threshold": 0.1,
+            }
+        }
+    )
+    assert statistical_score(details) == 1.0  # capped at 1
+
+
+def test_statistical_score_legacy_raw_ks_fallback():
+    details = make_statistical_result(
+        numeric={
+            "temp": {
+                "ks_statistic": 0.01,
+                "psi": 0.01,
+            }
+        }
+    )
+    score = statistical_score(details)
+    assert 0.0 <= score < 1.0
+
+
+def test_schema_channel_forces_drift():
     assert (
         decide(
-            0.3,
-            schema_score=1.0,
+            None,
+            schema_score=0.3,
             semantic_score=0.0,
+            statistical_score=0.0,
         )
         == "DRIFT"
     )
 
 
+def test_semantic_channel_forces_drift_alone():
     assert (
         decide(
-            0.0,
-            schema_score=1.0,
-            semantic_score=0.0,
-        )
-        == "DRIFT"
-    )
-
-
-def test_semantic_override_forces_drift_alone():
-
-    assert (
-        decide(
-            0.1,
+            None,
             schema_score=0.0,
-            semantic_score=1.0,
+            semantic_score=0.3,
+            statistical_score=0.0,
         )
         == "DRIFT"
     )
 
 
-def test_statistical_override_forces_drift_alone():
-
+def test_statistical_drift_flag_forces_drift_alone():
     assert (
         decide(
-            0.1,
+            None,
+            schema_score=0.0,
+            semantic_score=0.0,
+            statistical_score=0.0,
+            statistical_drift=True,
+        )
+        == "DRIFT"
+    )
+
+
+def test_statistical_score_gate_forces_drift():
+    assert (
+        decide(
+            None,
             schema_score=0.0,
             semantic_score=0.0,
             statistical_score=1.0,
@@ -226,114 +123,50 @@ def test_statistical_override_forces_drift_alone():
         == "DRIFT"
     )
 
+
+def test_no_channel_fires_is_no_drift():
     assert (
         decide(
-            0.0,
+            None,
             schema_score=0.0,
             semantic_score=0.0,
-            statistical_score=1.0,
+            statistical_score=0.5,
+            statistical_drift=False,
         )
-        == "DRIFT"
+        == "NO_DRIFT"
     )
-
-
-def test_no_override_keeps_threshold_behavior():
-
     assert (
         decide(
-            0.6,
-            schema_score=0.4,
-            semantic_score=0.4,
-        )
-        == "DRIFT"
-    )
-
-    assert (
-        decide(
-            0.4,
-            schema_score=0.4,
-            semantic_score=0.4,
+            None,
+            schema_score=0.0,
+            semantic_score=0.0,
+            statistical_score=0.0,
         )
         == "NO_DRIFT"
     )
 
 
-def test_decide_at_threshold_is_drift():
-
-    assert decide(0.5) == "DRIFT"
-
-
-def test_decide_below_threshold_is_no_drift():
-
-    assert decide(0.49) == "NO_DRIFT"
-
-
-def test_decide_one_is_drift():
-
-    assert decide(1.0) == "DRIFT"
-
-
-def test_decide_zero_is_no_drift():
-
-    assert decide(0.0) == "NO_DRIFT"
-
-
-def test_statistical_decision_threshold_forces_drift():
-
+def test_unified_threshold_path_is_removed():
+    """The old 0.5 unified-score branch must not decide anything."""
     assert (
         decide(
-            0.0,
+            1.0,
+            threshold=0.5,
             schema_score=0.0,
             semantic_score=0.0,
-            statistical_score=0.3,
-        )
-        == "DRIFT"
-    )
-
-
-def test_statistical_below_decision_threshold_no_drift():
-
-    assert (
-        decide(
-            0.0,
-            schema_score=0.0,
-            semantic_score=0.0,
-            statistical_score=0.2,
+            statistical_score=0.0,
+            statistical_drift=False,
         )
         == "NO_DRIFT"
-    )
-
-
-def test_statistical_decision_threshold_not_an_override():
-
-    assert (
-        decide(
-            0.0,
-            schema_score=0.0,
-            semantic_score=0.0,
-            statistical_score=0.99,
-        )
-        == "DRIFT"
     )
 
 
 def test_frozen_constants_match_config():
-
-    from detectors.unified import (
-        KS_FLOOR,
-        PSI_SCALE,
-        CHI2_SCALE,
-        STATISTICAL_DECISION_THRESHOLD,
-        UNIFIED_THRESHOLD,
-    )
-
+    from detectors.unified import STATISTICAL_DECISION_THRESHOLD
     from detectors.thresholds import THRESHOLDS
 
-    assert KS_FLOOR == THRESHOLDS["statistical"]["ks_floor"]
-    assert PSI_SCALE == THRESHOLDS["statistical"]["psi_scale"]
-    assert CHI2_SCALE == THRESHOLDS["statistical"]["chi2_scale"]
     assert (
         STATISTICAL_DECISION_THRESHOLD
         == THRESHOLDS["statistical"]["decision_threshold"]
     )
-    assert UNIFIED_THRESHOLD == THRESHOLDS["unified"]["threshold"]
+    assert STATISTICAL_DECISION_THRESHOLD > 0.0

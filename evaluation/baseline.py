@@ -42,6 +42,7 @@ CATEGORICAL_P_VALUE_THRESHOLD = float(
 NUMERIC_COLUMNS_EXCLUDE = {"ts"}
 
 def build_current_schema(df):
+    """Column name -> normalized dtype for the given dataframe."""
     columns = {}
     for column in df.columns:
         dtype = str(df[column].dtype)
@@ -53,13 +54,16 @@ def build_current_schema(df):
             dtype_name = "bool"
         else:
             dtype_name = "string"
+        missing_rate = float(df[column].isna().mean())
         columns[column] = {
             "dtype": dtype_name,
-            "nullable": bool(df[column].isna().any()),
+            "nullable": bool(missing_rate > 0),
+            "missing_rate": missing_rate,
         }
     return {"schema_version": "stream", "columns": columns}
 
 def categorical_drift(reference_series, current_series):
+    """Chi-square test between reference and current categorical counts."""
     ref_counts = reference_series.value_counts()
     cur_counts = current_series.value_counts()
     categories = sorted(
@@ -80,8 +84,27 @@ def categorical_drift(reference_series, current_series):
         "p_value": float(p_value),
     }
 
-def statistical_details_for(reference_df, current_df):
-    """Numeric KS/PSI per column + categorical chi2, as a dict."""
+def statistical_details_for(reference_df, current_df,
+                           categorical_columns=None,
+                           reference_model=None):
+    """Numeric KS/PSI per column + categorical chi2, as a dict.
+
+    Parameters
+    ----------
+    reference_model : detectors.reference.ReferenceModel or None
+        When given, the window is compared to the reference using the
+        configured mode (global / per_device / rolling) and the result
+        carries calibrated per-column drift flags. When None, the legacy
+        global comparison against `reference_df` is used.
+    categorical_columns : list[str] or None
+        Explicit list of categorical columns to test.  When *None* the
+        function falls back to the legacy behaviour of checking only
+        the ``device`` column (backward-compatible with Phase 7 primary-
+        dataset runs where category-shift was injected into ``device``).
+    """
+    if reference_model is not None:
+        return reference_model.details(current_df)
+
     numeric_columns = [
         column
         for column in reference_df.columns
@@ -102,17 +125,29 @@ def statistical_details_for(reference_df, current_df):
             numeric = {"error": str(exc)}
 
     categorical = {}
-    if (
-        "device" in reference_df.columns
-        and "device" in current_df.columns
-    ):
-        categorical["device"] = categorical_drift(
-            reference_df["device"],
-            current_df["device"],
-        )
+    if categorical_columns is not None:
+        # Explicit column list (dataset-agnostic path).
+        for col in categorical_columns:
+            if (
+                col in reference_df.columns
+                and col in current_df.columns
+            ):
+                categorical[col] = categorical_drift(
+                    reference_df[col], current_df[col],
+                )
+    else:
+        # Legacy fallback: check only "device" (Phase 7 primary dataset).
+        if (
+            "device" in reference_df.columns
+            and "device" in current_df.columns
+        ):
+            categorical["device"] = categorical_drift(
+                reference_df["device"], current_df["device"],
+            )
     return {"numeric": numeric, "categorical": categorical}
 
 def semantic_events_for(reference_contract, current_df, metadata):
+    """Contract + value-level semantic events, with window metadata applied to the reference contract."""
     current_contract = apply_semantic_metadata(
         reference_contract,
         metadata,
@@ -128,6 +163,7 @@ def semantic_events_for(reference_contract, current_df, metadata):
     return contract_events + value_events
 
 def run_b0_null_monitor(current_df):
+    """B0: DRIFT if any column contains nulls (nullability monitor)."""
     null_rates = current_df.isna().mean()
     max_null_rate = float(null_rates.max()) if len(null_rates) else 0.0
     decision = "DRIFT" if max_null_rate > 0.0 else "NO_DRIFT"
@@ -141,6 +177,7 @@ def run_b0_null_monitor(current_df):
     }
 
 def run_b1_schema(reference_schema, current_df):
+    """B1: DRIFT if the current schema differs from the reference schema."""
     current_schema = build_current_schema(current_df)
     events = compare_schemas(reference_schema, current_schema)
     return ("DRIFT" if events else "NO_DRIFT"), {
@@ -148,17 +185,25 @@ def run_b1_schema(reference_schema, current_df):
         "current_schema": current_schema,
     }
 
-def run_b2_statistical(reference_df, current_df):
-    details = statistical_details_for(reference_df, current_df)
-    score = _statistical_score(details)
-    decision = (
-        "DRIFT"
-        if score >= STATISTICAL_DECISION_THRESHOLD
-        else "NO_DRIFT"
+def run_b2_statistical(reference_df, current_df,
+                       categorical_columns=None,
+                       reference_model=None):
+    """B2: statistical channel decision (per-column gates)."""
+    details = statistical_details_for(
+        reference_df, current_df,
+        categorical_columns=categorical_columns,
+        reference_model=reference_model,
     )
+    score = _statistical_score(details)
+    if "statistical_drift" in details:
+        drifted = bool(details["statistical_drift"])
+    else:
+        drifted = score >= STATISTICAL_DECISION_THRESHOLD
+    decision = "DRIFT" if drifted else "NO_DRIFT"
     return decision, {
         "statistical_details": details,
         "statistical_score": score,
+        "trigger_columns": details.get("trigger_columns", []),
     }
 
 def _statistical_score(details):
@@ -167,14 +212,17 @@ def _statistical_score(details):
     return statistical_score(details)
 
 def run_b3_schema_statistical(reference_schema, reference_df,
-                              current_df):
+                              current_df, categorical_columns=None,
+                              reference_model=None):
+    """B3: DRIFT if either the schema (B1) or statistical (B2) channel fires."""
     schema_decision, schema_details = run_b1_schema(
         reference_schema,
         current_df,
     )
     stat_decision, stat_details = run_b2_statistical(
-        reference_df,
-        current_df,
+        reference_df, current_df,
+        categorical_columns=categorical_columns,
+        reference_model=reference_model,
     )
     decision = (
         "DRIFT"
@@ -187,39 +235,49 @@ def run_b3_schema_statistical(reference_schema, reference_df,
     }
 
 def run_b4_unified(reference_schema, reference_contract,
-                   reference_df, current_df, metadata):
+                   reference_df, current_df, metadata,
+                   categorical_columns=None, reference_model=None):
+    """B4: full unified detector (schema + statistical + semantic)."""
     schema_decision, schema_details = run_b1_schema(
         reference_schema,
         current_df,
     )
-    stat_details = statistical_details_for(reference_df, current_df)
+    stat_details = statistical_details_for(
+        reference_df, current_df,
+        categorical_columns=categorical_columns,
+        reference_model=reference_model,
+    )
     semantic_events = semantic_events_for(
         reference_contract,
         current_df,
         metadata,
     )
 
+    schema_events = schema_details["events"]
     schema_drift = schema_decision == "DRIFT"
     semantic_drift = len(semantic_events) > 0
 
     scores = unified_score(
-        schema_drift,
+        schema_events if schema_events else schema_drift,
         stat_details,
-        semantic_drift,
+        semantic_events if semantic_events else semantic_drift,
     )
     decision = decide(
         scores["unified_score"],
         schema_score=scores["schema_score"],
         semantic_score=scores["semantic_score"],
         statistical_score=scores["statistical_score"],
+        statistical_drift=bool(stat_details.get("statistical_drift", False)),
     )
     return decision, {
-        "schema_events": schema_details["events"],
+        "schema_events": schema_events,
         "semantic_events": semantic_events,
         "scores": scores,
+        "trigger_columns": stat_details.get("trigger_columns", []),
     }
 
 def run_semantic_only(reference_contract, current_df, metadata):
+    """Semantic channel alone: DRIFT if any contract or value event fires."""
     events = semantic_events_for(
         reference_contract,
         current_df,

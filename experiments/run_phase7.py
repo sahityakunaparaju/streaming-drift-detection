@@ -21,6 +21,7 @@ with --seed).
 
 import argparse
 import json
+from collections import deque
 from pathlib import Path
 
 import pandas as pd
@@ -40,6 +41,13 @@ from evaluation.metrics import (
     detection_lag_windows,
 )
 from drift_injection.phase7_generator import build_phase7_set
+from detectors.persistence import persistence_last_n, persistence_alarm
+from detectors.reference import (
+    ReferenceModel,
+    build_reference_model,
+    load_reference_config,
+    load_reference_region,
+)
 
 DEFAULT_SEED = 42
 OUTPUT_ROOT = Path("results/phase7")
@@ -70,31 +78,75 @@ MATRIX_DETECTORS = [
     ("B4_unified", "combined"),
 ]
 
+# Detector configs whose decision uses the statistical channel and can
+# therefore be gated by the persistence rule (Revision v3, option b).
+PERSISTENCE_CONFIGS = {
+    "B2_statistical",
+    "B3_schema_statistical",
+    "B4_unified",
+}
+
+
+def persistence_settings():
+    """(enabled, k, n) switch from configs/thresholds.yaml."""
+    from detectors.thresholds import THRESHOLDS
+
+    section = (THRESHOLDS.get("statistical", {}) or {}).get(
+        "persistence", {}
+    ) or {}
+    return (
+        bool(section.get("enabled", False)),
+        int(section.get("k", 2)),
+        int(section.get("n", 3)),
+    )
+
+
+def _statistical_fired(config_name, details):
+    """Base per-window statistical trigger boolean of one config."""
+    if config_name not in PERSISTENCE_CONFIGS:
+        return None
+    return bool(_trigger_columns(details))
+
 def load_reference():
-    """Load the primary reference dataframe and its profile JSON."""
-    reference_df = pd.read_csv(
+    """Load the reference sample, profile JSON, reference model and raw data.
+
+    The statistical reference sample is restricted to the config-defined
+    `reference_region` (disjoint from the calibration and evaluation
+    regions); the raw dataframe is kept for rolling-mode replay.
+    """
+    raw_df = pd.read_csv(
         "data/primary/iot_telemetry_data.csv"
+    )
+    reference_df = load_reference_region(
+        df=raw_df,
+        config=load_reference_config(),
     )
     with open(
         "data/primary/reference_profile.json",
         "r",
     ) as file:
         profile = json.load(file)
-    return reference_df, profile
+    reference_model = build_reference_model(reference_df)
+    return reference_df, profile, reference_model, raw_df
 
-def run_config(name, reference_df, profile, window_df, metadata):
+def run_config(name, reference_df, profile, window_df, metadata,
+               reference_model=None):
     """Dispatch one detector config by name; returns (decision, details)."""
     if name == "B0_null":
         return run_b0_null_monitor(window_df)
     if name == "B1_schema":
         return run_b1_schema(profile["schema"], window_df)
     if name == "B2_statistical":
-        return run_b2_statistical(reference_df, window_df)
+        return run_b2_statistical(
+            reference_df, window_df,
+            reference_model=reference_model,
+        )
     if name == "B3_schema_statistical":
         return run_b3_schema_statistical(
             profile["schema"],
             reference_df,
             window_df,
+            reference_model=reference_model,
         )
     if name == "B4_unified":
         return run_b4_unified(
@@ -103,6 +155,7 @@ def run_config(name, reference_df, profile, window_df, metadata):
             reference_df,
             window_df,
             metadata,
+            reference_model=reference_model,
         )
     if name == "B5_evidently":
         return run_b5_evidently(reference_df, window_df)
@@ -121,24 +174,175 @@ def load_metadata(metadata_file):
     with open(metadata_file, "r") as file:
         return json.load(file)
 
+def _apply_persistence(config_name, details, decision, alarm, k, n):
+    """Re-decide one config's decision when persistence gates it.
+
+    The persistence rule only gates the STATISTICAL channel: schema and
+    semantic channels keep their own decisions untouched.
+    """
+    if alarm:
+        return decision, True
+
+    if config_name == "B2_statistical":
+        return "NO_DRIFT", False
+
+    if config_name == "B3_schema_statistical":
+        schema_events = (details.get("schema") or {}).get("events") or []
+        return (
+            "DRIFT" if schema_events else "NO_DRIFT"
+        ), bool(schema_events)
+
+    if config_name == "B4_unified":
+        scores = details.get("scores") or {}
+        schema = float(scores.get("schema_score", 0.0)) > 0.0
+        semantic = float(scores.get("semantic_score", 0.0)) > 0.0
+        return (
+            "DRIFT" if (schema or semantic) else "NO_DRIFT"
+        ), bool(schema or semantic)
+
+    return decision, None
+
+
 def run_detector_over_manifest(
     name,
     reference_df,
     profile,
     manifest,
+    reference_model=None,
+    raw_df=None,
 ):
-    """Run one detector over every window; return rows of results."""
+    """Run one detector over every window; return rows of results.
+
+    When the persistence switch is enabled (configs/thresholds.yaml,
+    `statistical.persistence`) and the config uses the statistical
+    channel, the statistical trigger must fire in `k` of the last `n`
+    windows before it may raise the decision:
+
+    * lag streams: history is the stream's own evaluated windows;
+    * isolated matrix windows: history is reconstructed from the
+      preceding `n - 1` RAW dataset blocks (the same continuous-stream
+      convention used by rolling-mode references; injections are never
+      written back to the raw data).
+    """
     rows = []
+    if reference_model is not None:
+        reference_model.reset()
+    window_size = manifest.get("window_size", 1000)
+
+    persistence_on, persist_k, persist_n = persistence_settings()
+    if persistence_on and name not in PERSISTENCE_CONFIGS:
+        persistence_on = False
+
+    history_model = None
+    if (
+        persistence_on
+        and raw_df is not None
+        and reference_model is not None
+    ):
+        history_model = ReferenceModel(
+            reference_model.reference_df,
+            mode=reference_model.mode,
+            min_rows=reference_model.min_rows,
+            history=reference_model.history,
+            config=reference_model.config,
+        )
+    stream_history = {}
+    history_cache = {}
+
+    def raw_preceding_triggers(start):
+        """Trigger booleans of the (n-1) preceding RAW blocks.
+
+        Returns oldest first; blocks with no complete preceding block
+        of their own (start < window_size) yield no entry.
+        """
+        if start not in history_cache:
+            triggers = []
+            for offset in range(persist_n - 1, 0, -1):
+                block_start = start - offset * window_size
+                if block_start < 0:
+                    continue
+                if history_model is not None and block_start >= window_size:
+                    history_model.set_rolling_reference(
+                        raw_df.iloc[
+                            block_start - window_size:block_start
+                        ]
+                    )
+                elif history_model is not None:
+                    history_model.set_rolling_reference(None)
+                if history_model is None:
+                    continue
+                block = raw_df.iloc[
+                    block_start:block_start + window_size
+                ]
+                details = history_model.details(block)
+                triggers.append(
+                    bool(details.get("trigger_columns"))
+                )
+            history_cache[start] = triggers
+        return list(history_cache[start])
+
     for entry in manifest["windows"]:
         window_df = manifest["_windows"][entry["event_id"]]
         metadata = load_metadata(entry.get("metadata_file"))
+        if (
+            reference_model is not None
+            and reference_model.mode == "rolling"
+            and raw_df is not None
+        ):
+            # Clear any stale reference first: a window with no preceding
+            # block (start < window_size) must fall back to `global`.
+            reference_model.set_rolling_reference(None)
+            start = int(entry.get("start_row", 0))
+            if start >= window_size:
+                reference_model.set_rolling_reference(
+                    raw_df.iloc[start - window_size:start]
+                )
         decision, details = run_config(
             name,
             reference_df,
             profile,
             window_df,
             metadata,
+            reference_model=reference_model,
         )
+
+        persistence_record = None
+        persistence_alarm_fired = None
+        if persistence_on:
+            base_fired = _statistical_fired(name, details)
+            stream_key = entry.get("stream_id")
+            if base_fired is not None and stream_key is not None:
+                hist = list(
+                    stream_history.setdefault(
+                        stream_key,
+                        deque(maxlen=persist_n - 1),
+                    )
+                )
+            elif base_fired is not None:
+                hist = raw_preceding_triggers(
+                    int(entry.get("start_row", 0))
+                )
+            else:
+                hist = []
+            alarm = bool(base_fired is not None and persistence_alarm(
+                hist + [base_fired], persist_k, persist_n
+            ))
+            if stream_key is not None and base_fired is not None:
+                stream_history[stream_key].append(base_fired)
+            decision, kept_drift = _apply_persistence(
+                name, details, decision, alarm, persist_k, persist_n
+            )
+            persistence_alarm_fired = alarm
+            persistence_record = {
+                "enabled": True,
+                "k": persist_k,
+                "n": persist_n,
+                "base_statistical_fired": base_fired,
+                "history_triggers": hist,
+                "alarm": alarm,
+            }
+
+        triggers = _trigger_columns(details)
         rows.append({
             "event_id": entry["event_id"],
             "set": entry["set"],
@@ -151,9 +355,27 @@ def run_detector_over_manifest(
             "expected_false_negative": entry[
                 "expected_false_negative"
             ],
+            "trigger_columns": ",".join(triggers),
+            "persistence_alarm": (
+                "" if persistence_alarm_fired is None
+                else str(persistence_alarm_fired)
+            ),
             "decision": decision,
         })
     return rows
+
+def _trigger_columns(details):
+    """Extract triggered columns from any config's details payload."""
+    if not isinstance(details, dict):
+        return []
+    triggers = details.get("trigger_columns")
+    if triggers:
+        return list(triggers)
+    statistical = details.get("statistical")
+    if isinstance(statistical, dict):
+        return list(statistical.get("trigger_columns", []))
+    return []
+
 
 def summarize_rows(rows):
     """Metrics over a set of rows, with raw + adjusted variants."""
@@ -223,7 +445,7 @@ def main():
     print(f"seed={seed}")
     print("=" * 90)
 
-    reference_df, profile = load_reference()
+    reference_df, profile, reference_model, raw_df = load_reference()
 
     manifest = build_phase7_set(
         args.input,
@@ -247,6 +469,8 @@ def main():
             reference_df,
             profile,
             manifest,
+            reference_model=reference_model,
+            raw_df=raw_df,
         )
 
     results = {

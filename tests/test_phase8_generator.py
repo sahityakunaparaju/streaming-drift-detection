@@ -13,8 +13,6 @@ import json
 import pandas as pd
 
 from detectors.schema_detector import compare_schemas
-from detectors.thresholds import THRESHOLDS
-from detectors.unified import statistical_score
 from evaluation.baseline import (
     build_current_schema,
     statistical_details_for,
@@ -25,11 +23,6 @@ from drift_injection.phase8_generator import (
     build_phase8_set,
     BLIND_SPOT_CASES,
     CONTROLS,
-)
-
-KS_FLOOR = float(THRESHOLDS["statistical"]["ks_floor"])
-DECISION_THRESHOLD = float(
-    THRESHOLDS["statistical"]["decision_threshold"]
 )
 
 
@@ -98,7 +91,7 @@ def test_blind_spot_cases_are_isolated(tmp_path):
     contract change.
     """
     manifest = _build(tmp_path)
-    reference_df, profile = load_reference()
+    reference_df, profile, reference_model, raw_df = load_reference()
 
     for entry in manifest["windows"]:
         if entry["set"] != "blind_spot":
@@ -114,11 +107,19 @@ def test_blind_spot_cases_are_isolated(tmp_path):
         )
         assert schema_events == [], f"{event_id}: schema changed"
 
-        details = statistical_details_for(reference_df, window_df)
-        score = statistical_score(details)
-        assert score < DECISION_THRESHOLD, (
-            f"{event_id}: statistical score {score} >= "
-            f"{DECISION_THRESHOLD}"
+        start = int(entry["start_row"])
+        if reference_model.mode == "rolling" and start >= 1000:
+            reference_model.set_rolling_reference(
+                raw_df.iloc[start - 1000:start]
+            )
+        details = statistical_details_for(
+            reference_df,
+            window_df,
+            reference_model=reference_model,
+        )
+        assert not details["statistical_drift"], (
+            f"{event_id}: statistical channel fired on a blind-spot "
+            f"window (triggers={details['trigger_columns']})"
         )
 
         current_contract = apply_semantic_metadata(
@@ -147,7 +148,7 @@ def test_blind_spot_cases_are_isolated(tmp_path):
 
 def test_controls_are_semantic_silent(tmp_path):
     manifest = _build(tmp_path)
-    reference_df, profile = load_reference()
+    reference_df, profile, _reference_model, _raw_df = load_reference()
 
     from detectors.semantic_detector import (
         compare_semantic_contracts,

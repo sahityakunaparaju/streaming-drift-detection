@@ -20,6 +20,7 @@ messages = kafka_df.selectExpr(
 )
 
 def write_to_postgres(batch_df, batch_id):
+    """Append one micro-batch to the pipeline_test table via JDBC."""
     (
         batch_df.write
         .format("jdbc")

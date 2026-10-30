@@ -30,6 +30,8 @@ def compare_semantic_contracts(reference, current):
 
     Level 2:
         - business meaning
+        - computation/definition semantics (Phase 8: closes the
+          Phase 6 definition-change coverage gap)
         - semantic metadata changes
     """
 
@@ -100,6 +102,20 @@ def compare_semantic_contracts(reference, current):
                     "business_meaning_change",
                     ref_meaning,
                     cur_meaning,
+                    "high",
+                )
+            )
+
+        ref_definition = ref.get("definition")
+        cur_definition = cur.get("definition")
+
+        if ref_definition != cur_definition:
+            events.append(
+                _event(
+                    column,
+                    "definition_change",
+                    ref_definition,
+                    cur_definition,
                     "high",
                 )
             )

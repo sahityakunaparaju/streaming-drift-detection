@@ -1,0 +1,59 @@
+# ============================================================
+# Reference builder configuration (Revision, Step 1)
+# ============================================================
+# Selects how a streaming window is compared to the reference
+# distribution and defines the DISJOINT row regions used for the
+# reference sample, for threshold calibration, and for evaluation.
+#
+#   mode: global      one global reference sample (legacy behaviour)
+#   mode: per_device  a separate reference sample per device; a window
+#                     is split by device and each device slice is
+#                     compared to its own device reference. Slices
+#                     with fewer than min_rows_per_device rows are
+#                     skipped and logged. Categorical columns
+#                     (e.g. `device`) are always compared globally,
+#                     because a device slice has only one device value.
+#   mode: rolling     each window is compared to the immediately
+#                     preceding clean window(s) instead of a fixed
+#                     reference (history = number of preceding clean
+#                     windows to pool). Falls back to `global` when no
+#                     clean history exists yet.
+#
+# Row regions MUST stay disjoint:
+#   reference_region   rows used to build the reference sample
+#   calibration_region rows used ONLY to derive thresholds
+#   evaluation         rows used by the Phase 7 matrix + lag streams
+#                      (fixed in drift_injection/phase7_generator.py:
+#                       matrix [0, 100000), lag [120000, 250000))
+# ============================================================
+
+# Chosen after the Step 1b clean-window measurement: rolling gives the
+# lowest clean-window KS (~0.16 mean vs 0.26 for global and 0.65 for
+# per_device) and the lowest clean effect size (~0.22 vs 0.33 / 1.46).
+# See results/revision/clean_baseline_noise_summary.csv and
+# docs/revision_notes.md.
+mode: rolling
+
+# Minimum rows for a device slice to be compared (and for a reference
+# device sample to be usable).
+min_rows_per_device: 30
+
+# Number of preceding clean windows pooled in `rolling` mode.
+rolling_history: 1
+
+# Row regions: [start, end) in the primary reference dataset.
+reference_region: [250000, 325000]
+# Thresholds are derived from calibration_region only; the clean_holdout
+# region is used to report out-of-sample clean FPR (never to set a value).
+calibration_region: [325000, 385000]
+clean_holdout_region: [385000, 405184]
+
+# Evaluation regions, recorded here for auditability only; the actual
+# windows are sampled by drift_injection/phase7_generator.py.
+evaluation_regions:
+  matrix: [0, 100000]
+  lag: [120000, 250000]
+
+# Seed used for calibration sampling (deliberately NOT one of the ten
+# evaluation seeds [42, 123, 7, 11, 2024, 314, 2718, 999, 555, 777]).
+calibration_seed: 1234567

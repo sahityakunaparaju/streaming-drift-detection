@@ -41,7 +41,7 @@ services:
       POSTGRES_PASSWORD: drift
       POSTGRES_DB: drift_db
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

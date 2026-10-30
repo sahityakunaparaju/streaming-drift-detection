@@ -24,12 +24,143 @@ def test_statistical_constants_in_range():
 
     statistical = THRESHOLDS["statistical"]
 
-    assert 0.0 < statistical["ks_floor"] < 1.0
-    assert statistical["psi_scale"] > 0.0
-    assert statistical["chi2_scale"] > 0.0
+    assert 0.0 < statistical["alpha"] < 1.0
+    assert statistical["correction"] == "benjamini-hochberg"
     assert 0.0 <= statistical["decision_threshold"] <= 1.0
     assert 0.0 < statistical["categorical_p_value_threshold"] < 1.0
     assert statistical["psi_bins"] > 0
+    assert statistical["default_effect_threshold"] > 0.0
+
+
+def test_per_column_effect_thresholds_are_calibrated():
+
+    statistical = THRESHOLDS["statistical"]
+    thresholds = statistical["column_effect_thresholds"]
+
+    assert set(thresholds) >= {
+        "temp",
+        "co",
+        "humidity",
+        "lpg",
+        "smoke",
+        "light",
+        "motion",
+        "device",
+    }
+    for column, value in thresholds.items():
+        assert value > 0.0, column
+        assert value < 1.0, column
+
+
+def test_thresholds_were_derived_on_clean_calibration_data():
+
+    calibration = THRESHOLDS["statistical"]["calibration"]
+
+    assert calibration["reference_mode"] in {
+        "global",
+        "per_device",
+        "rolling",
+    }
+    assert calibration["quantile"] in {0.99, 0.995, 0.999}
+    assert calibration["calibration_region"] != calibration["reference_region"]
+    assert (
+        calibration["clean_holdout_region"]
+        != calibration["calibration_region"]
+    )
+    assert calibration["n_calibration_windows"] > 0
+    assert calibration["calibration_seed"] not in {
+        42, 123, 7, 11, 2024, 314, 2718, 999, 555, 777,
+    }
+
+
+def test_revision3_switches_are_well_formed():
+    """Options (a)/(b)/(c) switches exist and point the gateway to valid
+    values; the selection protocol (results/revision/
+    validation_fpr_options/selection.json) chose them on validation
+    data, never on evaluation windows."""
+
+    statistical = THRESHOLDS["statistical"]
+    calibration = statistical["calibration"]
+
+    # Option (c): single region or disjoint multi-block calibration.
+    assert calibration["mode"] in {"single_region", "multi_block"}
+    assert calibration["pooling"] in {
+        "pooled", "max_blocks", "gas_envelope",
+    }
+    blocks = calibration.get("blocks", [])
+    evaluation_regions = {
+        "matrix": [0, 100000],
+        "lag": [120000, 250000],
+    }
+    for block in blocks:
+        start, end = block
+        assert (end - start) % 1000 == 0
+        # No calibration block may reach into an evaluation region.
+        for name, region in evaluation_regions.items():
+            overlaps = max(start, region[0]) < min(end, region[1])
+            assert not overlaps, (
+                f"block {block} overlaps the evaluation {name} region"
+            )
+
+    # Option (a): gas group switch with one calibrated group threshold.
+    gas_group = statistical["gas_group"]
+    assert isinstance(gas_group["enabled"], bool)
+    assert gas_group["columns"] == ["co", "lpg", "smoke"]
+    assert gas_group["aggregation"] in {"max", "mean"}
+    assert gas_group["threshold"] > 0.0
+
+    # Option (b): persistence switch k-of-n with k >= 2 and k <= n.
+    persistence = statistical["persistence"]
+    assert isinstance(persistence["enabled"], bool)
+    assert 2 <= persistence["k"] <= persistence["n"]
+
+
+def test_legacy_frozen_values_are_preserved():
+
+    frozen_path = (
+        Path(__file__).resolve().parents[1]
+        / "configs"
+        / "thresholds_v1_frozen.yaml"
+    )
+    assert frozen_path.exists()
+
+    with open(frozen_path, "r") as file:
+        frozen = yaml.safe_load(file)
+
+    assert frozen["statistical"]["ks_floor"] == 0.50
+    assert frozen["statistical"]["psi_scale"] == 72.0
+    assert frozen["statistical"]["chi2_scale"] == 32.0
+
+    # The new config must not reuse the deaf legacy constants.
+    assert "ks_floor" not in THRESHOLDS["statistical"]
+    assert "psi_scale" not in THRESHOLDS["statistical"]
+    assert "chi2_scale" not in THRESHOLDS["statistical"]
+
+
+def test_reference_config_regions_are_disjoint():
+
+    from detectors.reference import load_reference_config
+
+    config = load_reference_config()
+
+    assert config["mode"] in {"global", "per_device", "rolling"}
+    assert config["min_rows_per_device"] >= 1
+
+    reference = config["reference_region"]
+    calibration = config["calibration_region"]
+    holdout = config["clean_holdout_region"]
+
+    def _overlaps(a, b):
+        return max(a[0], b[0]) < min(a[1], b[1])
+
+    assert not _overlaps(reference, calibration)
+    assert not _overlaps(reference, holdout)
+    assert not _overlaps(calibration, holdout)
+
+    for evaluation in config["evaluation_regions"].values():
+        assert not _overlaps(reference, evaluation)
+        assert not _overlaps(calibration, evaluation)
+        assert not _overlaps(holdout, evaluation)
 
 def test_semantic_tolerance_between_zero_and_one():
 
@@ -158,16 +289,13 @@ def test_window_config_confirmed():
     assert window["size"] == 1000
     assert window["sweep_deferred"] is True
 
-def test_unified_threshold_between_zero_and_one():
-
-    threshold = THRESHOLDS["unified"]["threshold"]
-
-    assert 0.0 <= threshold <= 1.0
-
-def test_unified_max_scores_are_one():
+def test_unified_has_no_dead_threshold_path():
 
     unified = THRESHOLDS["unified"]
 
-    assert unified["schema_max_score"] == 1.0
-    assert unified["semantic_max_score"] == 1.0
-    assert unified["statistical_max_score"] == 1.0
+    assert "threshold" not in unified
+    assert "schema_max_score" not in unified
+    assert "semantic_max_score" not in unified
+    assert "statistical_max_score" not in unified
+    assert unified["severity_weights"]["high"] == 1.0
+    assert 0.0 < unified["severity_weights"]["low"] < 1.0

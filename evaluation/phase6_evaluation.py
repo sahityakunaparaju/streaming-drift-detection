@@ -7,9 +7,6 @@ import pandas as pd
 
 from detectors.unified import (
     decide as policy_decide,
-    KS_FLOOR,
-    PSI_SCALE,
-    CHI2_SCALE,
     STATISTICAL_DECISION_THRESHOLD,
 )
 
@@ -53,6 +50,7 @@ NUMERIC_COLUMNS = [
 
 
 def ground_truth_binary(value):
+    """Map a ground-truth label to 1 (DRIFT) / 0 (NO_DRIFT)."""
     return (
         1
         if str(value).strip().upper() == POSITIVE
@@ -61,6 +59,7 @@ def ground_truth_binary(value):
 
 
 def confusion_counts(y_true, y_pred):
+    """Standard 2x2 confusion counts from label/prediction lists."""
     pairs = list(zip(y_true, y_pred))
     tp = sum(1 for t, p in pairs if t == 1 and p == 1)
     tn = sum(1 for t, p in pairs if t == 0 and p == 0)
@@ -75,6 +74,7 @@ def confusion_counts(y_true, y_pred):
 
 
 def compute_metrics(tp, tn, fp, fn):
+    """Zero-safe precision/recall/F1/specificity/FPR from confusion counts."""
     precision = (
         tp / (tp + fp)
         if (tp + fp) > 0
@@ -123,6 +123,7 @@ def compute_metrics(tp, tn, fp, fn):
 
 
 def metrics_row(threshold, y_true, predictions):
+    """One sweep row: threshold, counts, metrics, balanced accuracy, Youden's J."""
     counts = confusion_counts(y_true, predictions)
     metrics = compute_metrics(**counts)
     row = {"threshold": round(float(threshold), 6)}
@@ -138,6 +139,7 @@ def metrics_row(threshold, y_true, predictions):
 
 
 def threshold_values():
+    """Sweep grid from THRESHOLD_MIN to THRESHOLD_MAX in THRESHOLD_STEP increments."""
     return np.round(
         np.arange(
             THRESHOLD_MIN,
@@ -149,6 +151,7 @@ def threshold_values():
 
 
 def evaluate_threshold(y_true, scores, threshold):
+    """Metrics for one raw-score threshold."""
     predictions = [
         1 if score >= threshold else 0
         for score in scores
@@ -161,6 +164,7 @@ def evaluate_threshold(y_true, scores, threshold):
 
 
 def evaluate_policy_threshold(rows, threshold):
+    """Metrics for one policy-decision threshold (drives decide())."""
     y_true = [row["y_true"] for row in rows]
     predictions = []
     for row in rows:
@@ -182,6 +186,7 @@ def evaluate_policy_threshold(rows, threshold):
 
 
 def threshold_sweep(y_true, scores):
+    """Metrics for every raw-score threshold."""
     return [
         evaluate_threshold(
             y_true,
@@ -193,6 +198,7 @@ def threshold_sweep(y_true, scores):
 
 
 def policy_threshold_sweep(rows):
+    """Metrics for every policy threshold."""
     return [
         evaluate_policy_threshold(
             rows,
@@ -203,6 +209,7 @@ def policy_threshold_sweep(rows):
 
 
 def best_thresholds(sweep_rows, key):
+    """All thresholds achieving the maximum of one metric key."""
     best_value = max(row[key] for row in sweep_rows)
     best = [
         row["threshold"]
@@ -217,6 +224,7 @@ def best_thresholds(sweep_rows, key):
 
 
 def roc_auc(y_true, scores):
+    """Rank-based ROC AUC; None when only one class is present."""
     labels = np.asarray(y_true, dtype=int)
     values = np.asarray(scores, dtype=float)
     positive = labels == 1
@@ -251,6 +259,7 @@ def roc_auc(y_true, scores):
 
 
 def average_precision(y_true, scores):
+    """Average precision over the PR curve; None without positives."""
     labels = np.asarray(y_true, dtype=int)
     values = np.asarray(scores, dtype=float)
     if int(labels.sum()) == 0:
@@ -270,6 +279,7 @@ def average_precision(y_true, scores):
 
 
 def roc_points(y_true, scores):
+    """(fpr, tpr) points over the threshold grid, descending."""
     points = []
     for threshold in sorted(
         threshold_values(),
@@ -295,6 +305,7 @@ def roc_points(y_true, scores):
 
 
 def pr_points(y_true, scores):
+    """(recall, precision) points over the threshold grid, descending."""
     points = []
     for threshold in sorted(
         threshold_values(),
@@ -320,6 +331,7 @@ def pr_points(y_true, scores):
 
 
 def score_distribution_table(df):
+    """Per-label distribution statistics for each detector score."""
     frames = []
     for column in [
         "schema_score",
@@ -339,6 +351,7 @@ def score_distribution_table(df):
 
 
 def per_drift_type_table(df):
+    """Detected/window counts aggregated by drift type and subtype."""
     table = df.copy()
     table["detected"] = table["decision"] == POSITIVE
     rows = []
@@ -365,6 +378,7 @@ def per_drift_type_table(df):
 
 
 def detection_channel(series):
+    """Which channel(s) hit the max score of 1.0 for one window."""
     fires = []
     if series["schema_score"] >= 1.0:
         fires.append("schema")
@@ -378,6 +392,7 @@ def detection_channel(series):
 
 
 def per_column_table(df):
+    """Per-column KS/PSI/chi2 statistics from the cached statistical details."""
     rows = []
     for _, row in df.iterrows():
         details = load_json(row["statistical_details"])
@@ -407,6 +422,7 @@ def per_column_table(df):
 
 
 def load_json(value):
+    """Parse a JSON string, tolerating None, dict, and invalid input."""
     if value is None:
         return {}
     if isinstance(value, dict):
@@ -420,6 +436,7 @@ def load_json(value):
 
 
 def variance_shift_analysis(df, per_column):
+    """Compare window_005 (variance drift) against the control windows."""
     controls = df[
         df["event_id"].isin(
             ["window_000", "window_001", "window_009"]
@@ -512,6 +529,7 @@ def variance_shift_analysis(df, per_column):
 
 
 def load_dataframe():
+    """Load per-window evaluation rows from Postgres into a dataframe."""
     import psycopg2
 
     conn = psycopg2.connect(
@@ -548,6 +566,7 @@ def load_dataframe():
 
 
 def write_output(name, data):
+    """Write a dataframe as CSV (anything else as JSON) into OUTPUT_DIR."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     path = OUTPUT_DIR / name
     if isinstance(data, pd.DataFrame):
@@ -560,6 +579,7 @@ def write_output(name, data):
 
 
 def make_plots(y_true, scores, score_table):
+    """Render ROC, PR, and score-distribution plots; skipped without matplotlib."""
     try:
         import matplotlib
         matplotlib.use("Agg")
@@ -631,6 +651,7 @@ def make_plots(y_true, scores, score_table):
 
 
 def summarize_sweep(sweep_rows):
+    """Best threshold per selection key (f1, youden_j, balanced_accuracy)."""
     summary = {}
     for key in ["f1", "youden_j", "balanced_accuracy"]:
         summary[key] = best_thresholds(
@@ -641,6 +662,7 @@ def summarize_sweep(sweep_rows):
 
 
 def report(df):
+    """Attach labels/channels and compute the full summary for the report."""
     df = df.copy()
     df["y_true"] = df["ground_truth"].apply(
         ground_truth_binary
@@ -715,15 +737,13 @@ def report(df):
         ),
         "variance_shift_investigation": variance,
         "statistical_normalization": {
-            "ks_floor": KS_FLOOR,
-            "psi_scale": PSI_SCALE,
-            "chi2_scale": CHI2_SCALE,
             "statistical_decision_threshold": (
                 STATISTICAL_DECISION_THRESHOLD
             ),
             "note": (
-                "constants frozen in configs/thresholds.yaml; "
-                "clean statistical score band 0.12-0.25"
+                "Revision: per-column effect-size thresholds calibrated "
+                "on clean data (configs/thresholds.yaml); the old "
+                "ks_floor / psi_scale / chi2_scale constants were removed"
             ),
         },
         "limitations": [
@@ -795,6 +815,7 @@ def report(df):
 
 
 def print_report(df, summary):
+    """Print the human-readable Phase 6 report."""
     print()
     print("=" * 90)
     print("PHASE 6 EVALUATION")
@@ -896,6 +917,7 @@ def print_report(df, summary):
 
 
 def main():
+    """Run the Phase 6 evaluation end to end."""
     df = load_dataframe()
     summary = report(df)
     print_report(df, summary)

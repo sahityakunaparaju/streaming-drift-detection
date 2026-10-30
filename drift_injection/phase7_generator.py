@@ -139,6 +139,7 @@ CONTROLS = [
 ]
 
 def build_matrix_spec():
+    """Ordered (drift_type, subtype, feature, severity) cells of the controlled matrix."""
     spec = []
     for severity in STATISTICAL_SEVERITIES:
         for subtype in STATISTICAL_TYPES:
@@ -203,6 +204,7 @@ def inject_range_violation(batch, magnitude_fraction, random_state):
     return result
 
 def inject_domain_violation(batch, n_invalid, random_state):
+    """Set n_invalid device values to an out-of-domain sentinel."""
     result = batch.copy()
     rng = np.random.default_rng(random_state)
     selected = rng.choice(
@@ -226,6 +228,7 @@ def inject_nullability_change(batch, column="temp", n_nulls=2):
     return result
 
 def semantic_metadata_for(subtype):
+    """Semantic sidecar metadata for one semantic subtype."""
     if subtype == "unit_change":
         return {"change": "unit_change", "column": "temp",
                 "new_unit": "fahrenheit", "converted": False}
@@ -235,6 +238,12 @@ def semantic_metadata_for(subtype):
     if subtype == "business_meaning_change":
         return {"change": "business_meaning_change", "column": "temp",
                 "new_meaning": "case_temperature"}
+    if subtype == "definition_change":
+        return {"change": "definition_change", "column": "temp",
+                "new_definition": (
+                    "exponentially_weighted_moving_average_of_"
+                    "raw_readings"
+                )}
     if subtype == "range_change":
         return {"change": "range_change", "column": "temp",
                 "valid_range": {"min": 0.0, "max": 40.0}}
@@ -358,6 +367,8 @@ def apply_semantic_metadata(contract, metadata):
             field["unit"] = metadata["new_unit"]
         if "new_meaning" in metadata:
             field["business_meaning"] = metadata["new_meaning"]
+        if "new_definition" in metadata:
+            field["definition"] = metadata["new_definition"]
         if "valid_range" in metadata:
             field["valid_range"] = metadata["valid_range"]
         if "allowed_domain" in metadata:
