@@ -1,0 +1,5 @@
+detector,semantic_cases,detected,missed,recall,raw_fired_injected,raw_fired_clean_slice
+ADWIN,50,0,50,0.0000,1.0,1.0
+DDM,50,0,50,0.0000,35.0,35.0
+KSWIN,50,0,50,0.0000,48.0,48.0
+B4 (Phase 8 verified result),50,50,0,1.0000,,

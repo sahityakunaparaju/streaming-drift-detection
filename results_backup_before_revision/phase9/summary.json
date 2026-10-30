@@ -1,0 +1,44 @@
+{
+  "phase": 9,
+  "section": "U",
+  "headline": "Adding semantic detection to the schema+statistical baseline improves adjusted F1 by 0.2339 +/- 0.0025 (B3 0.7606 +/- 0.0069 -> B4 0.9945 +/- 0.0055, 30.7% relative), with 100.0% of the adjusted recall gain concentrated in semantic-specific drift subtypes \u2014 corroborating the isolated Semantic Blind-Spot Recovery = 1.0 result from Phase 8 using independent evidence (raw F1: B3 0.6457 +/- 0.0100 -> B4 0.9055 +/- 0.0177, delta 0.2598 +/- 0.0156).",
+  "steps": {
+    "B0_null->B1_schema": {
+      "adjusted_f1_delta_mean": 0.375,
+      "adjusted_f1_delta_std": 0.0
+    },
+    "B1_schema->B3_schema_statistical": {
+      "adjusted_f1_delta_mean": 0.2605886,
+      "adjusted_f1_delta_std": 0.00694098186426099
+    },
+    "B3_schema_statistical->B4_unified": {
+      "adjusted_f1_delta_mean": 0.23386750000000003,
+      "adjusted_f1_delta_std": 0.0024630676503092624,
+      "adjusted_f1_rel_pct": 30.748225781979905,
+      "raw_f1_delta_mean": 0.2598269,
+      "raw_f1_delta_std": 0.015600971882866809
+    }
+  },
+  "concentration": {
+    "raw": {
+      "total_gain": 5.84,
+      "semantic_gain": 5.0,
+      "semantic_share": 0.8561643835616438
+    },
+    "adjusted": {
+      "total_gain": 5.0,
+      "semantic_gain": 5.0,
+      "semantic_share": 1.0
+    }
+  },
+  "subtype_recompute": {
+    "note": "B3 per-subtype recall recomputed from cached per-window decisions (rows.csv); B4 recompute validated against cached aggregate_subtype_recall.csv",
+    "validation_mismatches": 0,
+    "mismatches": []
+  },
+  "lag": {
+    "note": "lag structurally ~0; only nonzero lags are B4-only detections, see lag.csv and nonzero_lag_streams",
+    "n_nonzero_lag_streams": 5
+  },
+  "novelty": "Ablation re-presents existing Phase 7 multi-seed results; no new experiment, windows, or seeds were created."
+}

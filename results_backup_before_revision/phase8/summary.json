@@ -1,0 +1,212 @@
+{
+  "phase": 8,
+  "section": "T",
+  "seeds": [
+    42,
+    123,
+    7,
+    11,
+    2024,
+    314,
+    2718,
+    999,
+    555,
+    777
+  ],
+  "metric": {
+    "metric": "semantic_blind_spot_recovery",
+    "novel_non_standard": true,
+    "novel_statement": "Semantic Blind-Spot Recovery is a NOVEL, NON-STANDARD metric purpose-built for this thesis (Section T of the research plan). It is not a published literature metric and is not compared against any published baseline; it quantifies the coverage contribution of the semantic detector over the blind spot left by the schema and statistical detectors.",
+    "n_seeds": 10,
+    "recovery_mean": 1.0,
+    "recovery_std": 0.0,
+    "recovery_pooled": 1.0,
+    "total_z_cases": 50,
+    "total_isolated": 50,
+    "total_excluded": 0,
+    "total_w_missed_by_schema_statistical": 50,
+    "total_v_recovered_by_semantic": 50,
+    "per_seed": [
+      {
+        "seed": 42,
+        "z": 5,
+        "n_isolated": 5,
+        "n_excluded": 0,
+        "w": 5,
+        "v": 5,
+        "recovery": 1.0
+      },
+      {
+        "seed": 123,
+        "z": 5,
+        "n_isolated": 5,
+        "n_excluded": 0,
+        "w": 5,
+        "v": 5,
+        "recovery": 1.0
+      },
+      {
+        "seed": 7,
+        "z": 5,
+        "n_isolated": 5,
+        "n_excluded": 0,
+        "w": 5,
+        "v": 5,
+        "recovery": 1.0
+      },
+      {
+        "seed": 11,
+        "z": 5,
+        "n_isolated": 5,
+        "n_excluded": 0,
+        "w": 5,
+        "v": 5,
+        "recovery": 1.0
+      },
+      {
+        "seed": 2024,
+        "z": 5,
+        "n_isolated": 5,
+        "n_excluded": 0,
+        "w": 5,
+        "v": 5,
+        "recovery": 1.0
+      },
+      {
+        "seed": 314,
+        "z": 5,
+        "n_isolated": 5,
+        "n_excluded": 0,
+        "w": 5,
+        "v": 5,
+        "recovery": 1.0
+      },
+      {
+        "seed": 2718,
+        "z": 5,
+        "n_isolated": 5,
+        "n_excluded": 0,
+        "w": 5,
+        "v": 5,
+        "recovery": 1.0
+      },
+      {
+        "seed": 999,
+        "z": 5,
+        "n_isolated": 5,
+        "n_excluded": 0,
+        "w": 5,
+        "v": 5,
+        "recovery": 1.0
+      },
+      {
+        "seed": 555,
+        "z": 5,
+        "n_isolated": 5,
+        "n_excluded": 0,
+        "w": 5,
+        "v": 5,
+        "recovery": 1.0
+      },
+      {
+        "seed": 777,
+        "z": 5,
+        "n_isolated": 5,
+        "n_excluded": 0,
+        "w": 5,
+        "v": 5,
+        "recovery": 1.0
+      }
+    ]
+  },
+  "per_detector_recall": [
+    {
+      "detector": "schema",
+      "config": "B1_schema",
+      "recall_mean": 0.0,
+      "recall_std": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "per_seed": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "detector": "statistical",
+      "config": "B2_statistical",
+      "recall_mean": 0.0,
+      "recall_std": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "per_seed": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "detector": "semantic",
+      "config": "semantic",
+      "recall_mean": 1.0,
+      "recall_std": 0.0,
+      "min": 1.0,
+      "max": 1.0,
+      "per_seed": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "detector": "combined",
+      "config": "B4_unified",
+      "recall_mean": 1.0,
+      "recall_std": 0.0,
+      "min": 1.0,
+      "max": 1.0,
+      "per_seed": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  ],
+  "thresholds_used": {
+    "statistical.ks_floor": 0.5,
+    "statistical.psi_scale": 72.0,
+    "statistical.decision_threshold": 0.25,
+    "note": "configs/thresholds.yaml is FROZEN and was not modified; values read directly from the config."
+  },
+  "windows_region": "[320000, 405184)",
+  "excluded_cases": []
+}

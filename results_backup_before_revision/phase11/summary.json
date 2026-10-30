@@ -1,0 +1,316 @@
+{
+  "phase": 11,
+  "section": "W",
+  "rq5": "Can the unified detector operate continuously with acceptable streaming overhead?",
+  "pipeline": "Kafka -> standalone consumer -> Postgres (Docker network)",
+  "window_size": 1000,
+  "supersedes": "Prior local-simulation run (invalid: fixed cost / near-zero batch denominator)",
+  "load_points": {
+    "comfortable": {
+      "n_windows": 5,
+      "window_size": 1000,
+      "description": "5 windows x 1000 rows = 5,000 total",
+      "inter_window_delay_sec": 0.5
+    },
+    "stress": {
+      "n_windows": 20,
+      "window_size": 1000,
+      "description": "20 windows x 1000 rows = 20,000 total",
+      "inter_window_delay_sec": 0.05
+    }
+  },
+  "repetitions": 3,
+  "results": [
+    {
+      "load_point": "comfortable",
+      "config": {
+        "n_windows": 5,
+        "window_size": 1000,
+        "description": "5 windows x 1000 rows = 5,000 total",
+        "inter_window_delay_sec": 0.5
+      },
+      "with_detection": {
+        "latency_mean_ms": 1123.36,
+        "latency_p50_ms": 1208.9,
+        "latency_p95_ms": 1351.74,
+        "detection_time_mean_ms": 539.58,
+        "detection_time_total_ms": 2697.92,
+        "throughput_rows_sec": 1209.3,
+        "wall_time_sec": 4.15,
+        "cpu_pct": 1.22,
+        "memory_mb": 544.73
+      },
+      "without_detection": {
+        "latency_mean_ms": 671.09,
+        "latency_p50_ms": 660.16,
+        "latency_p95_ms": 837.48,
+        "detection_time_mean_ms": 0.0,
+        "detection_time_total_ms": 0.0,
+        "throughput_rows_sec": 1387.07,
+        "wall_time_sec": 3.61,
+        "cpu_pct": 1.12,
+        "memory_mb": 518.3
+      },
+      "overhead": {
+        "latency_mean_ms_delta": 452.27,
+        "latency_mean_ms_pct": 67.4,
+        "latency_p50_ms_delta": 548.74,
+        "latency_p50_ms_pct": 83.1,
+        "latency_p95_ms_delta": 514.26,
+        "latency_p95_ms_pct": 61.4,
+        "detection_time_mean_ms_delta": 539.58,
+        "detection_time_mean_ms_pct": 0.0,
+        "throughput_delta": -177.77,
+        "throughput_pct": -12.8
+      },
+      "repetitions": {
+        "with_detection": [
+          {
+            "total_rows": 5000,
+            "n_windows": 5,
+            "n_processed": 5,
+            "latency_mean_ms": 1225.6,
+            "latency_p50_ms": 1376.78,
+            "latency_p95_ms": 1589.54,
+            "latency_min_ms": 523.85,
+            "latency_max_ms": 1589.54,
+            "detection_time_mean_ms": 574.47,
+            "detection_time_total_ms": 2872.35,
+            "throughput_rows_sec": 1102.85,
+            "wall_time_sec": 4.53,
+            "cpu_pct": 1.65,
+            "memory_mb": 543.8
+          },
+          {
+            "total_rows": 5000,
+            "n_windows": 5,
+            "n_processed": 5,
+            "latency_mean_ms": 1355.04,
+            "latency_p50_ms": 1408.54,
+            "latency_p95_ms": 1592.95,
+            "latency_min_ms": 1027.5,
+            "latency_max_ms": 1592.95,
+            "detection_time_mean_ms": 588.87,
+            "detection_time_total_ms": 2944.37,
+            "throughput_rows_sec": 1214.42,
+            "wall_time_sec": 4.12,
+            "cpu_pct": 0.99,
+            "memory_mb": 545.05
+          },
+          {
+            "total_rows": 5000,
+            "n_windows": 5,
+            "n_processed": 5,
+            "latency_mean_ms": 789.43,
+            "latency_p50_ms": 841.39,
+            "latency_p95_ms": 872.74,
+            "latency_min_ms": 652.28,
+            "latency_max_ms": 872.74,
+            "detection_time_mean_ms": 455.41,
+            "detection_time_total_ms": 2277.04,
+            "throughput_rows_sec": 1310.64,
+            "wall_time_sec": 3.81,
+            "cpu_pct": 1.01,
+            "memory_mb": 545.35
+          }
+        ],
+        "without_detection": [
+          {
+            "total_rows": 5000,
+            "n_windows": 5,
+            "n_processed": 5,
+            "latency_mean_ms": 696.97,
+            "latency_p50_ms": 662.61,
+            "latency_p95_ms": 841.55,
+            "latency_min_ms": 620.05,
+            "latency_max_ms": 841.55,
+            "detection_time_mean_ms": 0.0,
+            "detection_time_total_ms": 0.0,
+            "throughput_rows_sec": 1407.91,
+            "wall_time_sec": 3.55,
+            "cpu_pct": 0.97,
+            "memory_mb": 518.0
+          },
+          {
+            "total_rows": 5000,
+            "n_windows": 5,
+            "n_processed": 5,
+            "latency_mean_ms": 639.08,
+            "latency_p50_ms": 586.83,
+            "latency_p95_ms": 855.95,
+            "latency_min_ms": 533.83,
+            "latency_max_ms": 855.95,
+            "detection_time_mean_ms": 0.0,
+            "detection_time_total_ms": 0.0,
+            "throughput_rows_sec": 1430.51,
+            "wall_time_sec": 3.5,
+            "cpu_pct": 1.28,
+            "memory_mb": 518.2
+          },
+          {
+            "total_rows": 5000,
+            "n_windows": 5,
+            "n_processed": 5,
+            "latency_mean_ms": 677.23,
+            "latency_p50_ms": 731.05,
+            "latency_p95_ms": 814.95,
+            "latency_min_ms": 537.98,
+            "latency_max_ms": 814.95,
+            "detection_time_mean_ms": 0.0,
+            "detection_time_total_ms": 0.0,
+            "throughput_rows_sec": 1322.79,
+            "wall_time_sec": 3.78,
+            "cpu_pct": 1.12,
+            "memory_mb": 518.7
+          }
+        ]
+      }
+    },
+    {
+      "load_point": "stress",
+      "config": {
+        "n_windows": 20,
+        "window_size": 1000,
+        "description": "20 windows x 1000 rows = 20,000 total",
+        "inter_window_delay_sec": 0.05
+      },
+      "with_detection": {
+        "latency_mean_ms": 4375.93,
+        "latency_p50_ms": 4653.9,
+        "latency_p95_ms": 7502.57,
+        "detection_time_mean_ms": 506.7,
+        "detection_time_total_ms": 10133.97,
+        "throughput_rows_sec": 1526.98,
+        "wall_time_sec": 13.15,
+        "cpu_pct": 1.16,
+        "memory_mb": 549.92
+      },
+      "without_detection": {
+        "latency_mean_ms": 438.34,
+        "latency_p50_ms": 504.33,
+        "latency_p95_ms": 961.05,
+        "detection_time_mean_ms": 0.0,
+        "detection_time_total_ms": 0.0,
+        "throughput_rows_sec": 3556.44,
+        "wall_time_sec": 5.71,
+        "cpu_pct": 0.92,
+        "memory_mb": 519.22
+      },
+      "overhead": {
+        "latency_mean_ms_delta": 3937.59,
+        "latency_mean_ms_pct": 898.3,
+        "latency_p50_ms_delta": 4149.57,
+        "latency_p50_ms_pct": 822.8,
+        "latency_p95_ms_delta": 6541.52,
+        "latency_p95_ms_pct": 680.7,
+        "detection_time_mean_ms_delta": 506.7,
+        "detection_time_mean_ms_pct": 0.0,
+        "throughput_delta": -2029.46,
+        "throughput_pct": -57.1
+      },
+      "repetitions": {
+        "with_detection": [
+          {
+            "total_rows": 20000,
+            "n_windows": 20,
+            "n_processed": 20,
+            "latency_mean_ms": 4565.82,
+            "latency_p50_ms": 4623.47,
+            "latency_p95_ms": 7558.43,
+            "latency_min_ms": 1374.79,
+            "latency_max_ms": 7558.43,
+            "detection_time_mean_ms": 507.43,
+            "detection_time_total_ms": 10148.64,
+            "throughput_rows_sec": 1400.79,
+            "wall_time_sec": 14.28,
+            "cpu_pct": 1.02,
+            "memory_mb": 549.8
+          },
+          {
+            "total_rows": 20000,
+            "n_windows": 20,
+            "n_processed": 20,
+            "latency_mean_ms": 5009.16,
+            "latency_p50_ms": 5181.24,
+            "latency_p95_ms": 7839.77,
+            "latency_min_ms": 1377.45,
+            "latency_max_ms": 7839.77,
+            "detection_time_mean_ms": 509.34,
+            "detection_time_total_ms": 10186.81,
+            "throughput_rows_sec": 1557.41,
+            "wall_time_sec": 12.84,
+            "cpu_pct": 1.27,
+            "memory_mb": 549.85
+          },
+          {
+            "total_rows": 20000,
+            "n_windows": 20,
+            "n_processed": 20,
+            "latency_mean_ms": 3552.8,
+            "latency_p50_ms": 4156.99,
+            "latency_p95_ms": 7109.52,
+            "latency_min_ms": 845.51,
+            "latency_max_ms": 7109.52,
+            "detection_time_mean_ms": 503.32,
+            "detection_time_total_ms": 10066.46,
+            "throughput_rows_sec": 1622.74,
+            "wall_time_sec": 12.32,
+            "cpu_pct": 1.18,
+            "memory_mb": 550.1
+          }
+        ],
+        "without_detection": [
+          {
+            "total_rows": 20000,
+            "n_windows": 20,
+            "n_processed": 20,
+            "latency_mean_ms": 676.72,
+            "latency_p50_ms": 605.05,
+            "latency_p95_ms": 1561.33,
+            "latency_min_ms": 501.9,
+            "latency_max_ms": 1561.33,
+            "detection_time_mean_ms": 0.0,
+            "detection_time_total_ms": 0.0,
+            "throughput_rows_sec": 3018.37,
+            "wall_time_sec": 6.63,
+            "cpu_pct": 1.14,
+            "memory_mb": 519.0
+          },
+          {
+            "total_rows": 20000,
+            "n_windows": 20,
+            "n_processed": 20,
+            "latency_mean_ms": 273.66,
+            "latency_p50_ms": 274.01,
+            "latency_p95_ms": 408.23,
+            "latency_min_ms": 154.26,
+            "latency_max_ms": 408.23,
+            "detection_time_mean_ms": 0.0,
+            "detection_time_total_ms": 0.0,
+            "throughput_rows_sec": 4096.56,
+            "wall_time_sec": 4.88,
+            "cpu_pct": 0.86,
+            "memory_mb": 519.25
+          },
+          {
+            "total_rows": 20000,
+            "n_windows": 20,
+            "n_processed": 20,
+            "latency_mean_ms": 364.64,
+            "latency_p50_ms": 633.94,
+            "latency_p95_ms": 913.58,
+            "latency_min_ms": -90.57,
+            "latency_max_ms": 913.58,
+            "detection_time_mean_ms": 0.0,
+            "detection_time_total_ms": 0.0,
+            "throughput_rows_sec": 3554.38,
+            "wall_time_sec": 5.63,
+            "cpu_pct": 0.75,
+            "memory_mb": 519.4
+          }
+        ]
+      }
+    }
+  ],
+  "answer": "RQ5 NOT CONFIRMED: The drift detection layer adds significant overhead even at realistic batch sizes.\n\nPer-load-point breakdown:\n  - comfortable: latency +67.4% (+452.3 ms), detection +539.6 ms/event, throughput -12.8%\n  - stress: latency +898.3% (+3937.6 ms), detection +506.7 ms/event, throughput -57.1%"
+}

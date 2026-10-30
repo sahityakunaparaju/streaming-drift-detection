@@ -1,0 +1,84 @@
+{
+  "seed": 42,
+  "window_size": 1000,
+  "n_windows": 7,
+  "windows": [
+    {
+      "event_id": "clean-00",
+      "file": "results\\phase13\\windows\\clean-00.csv",
+      "metadata_file": null,
+      "drift_type": "normal",
+      "subtype": "clean",
+      "severity": "none",
+      "injected": false,
+      "ground_truth": "NO_DRIFT",
+      "expected_false_negative": ""
+    },
+    {
+      "event_id": "clean-01",
+      "file": "results\\phase13\\windows\\clean-01.csv",
+      "metadata_file": null,
+      "drift_type": "normal",
+      "subtype": "normal_noise",
+      "severity": "none",
+      "injected": false,
+      "ground_truth": "NO_DRIFT",
+      "expected_false_negative": ""
+    },
+    {
+      "event_id": "schema-added",
+      "file": "results\\phase13\\windows\\schema-added.csv",
+      "metadata_file": null,
+      "drift_type": "schema",
+      "subtype": "added",
+      "severity": "high",
+      "injected": true,
+      "ground_truth": "DRIFT",
+      "expected_false_negative": ""
+    },
+    {
+      "event_id": "stat-mean-shift",
+      "file": "results\\phase13\\windows\\stat-mean-shift.csv",
+      "metadata_file": null,
+      "drift_type": "statistical",
+      "subtype": "mean_shift",
+      "severity": "high",
+      "injected": true,
+      "ground_truth": "DRIFT",
+      "expected_false_negative": ""
+    },
+    {
+      "event_id": "cat-wd-shift",
+      "file": "results\\phase13\\windows\\cat-wd-shift.csv",
+      "metadata_file": null,
+      "drift_type": "statistical",
+      "subtype": "category_shift",
+      "severity": "high",
+      "injected": true,
+      "ground_truth": "DRIFT",
+      "expected_false_negative": ""
+    },
+    {
+      "event_id": "sem-unit-change",
+      "file": "results\\phase13\\windows\\sem-unit-change.csv",
+      "metadata_file": "results\\phase13\\windows\\sem-unit-change.metadata.json",
+      "drift_type": "semantic",
+      "subtype": "unit_change",
+      "severity": "high",
+      "injected": true,
+      "ground_truth": "DRIFT",
+      "expected_false_negative": ""
+    },
+    {
+      "event_id": "schema-nullability",
+      "file": "results\\phase13\\windows\\schema-nullability.csv",
+      "metadata_file": null,
+      "drift_type": "schema",
+      "subtype": "nullability_change",
+      "severity": "low",
+      "injected": true,
+      "ground_truth": "DRIFT",
+      "expected_false_negative": ""
+    }
+  ]
+}

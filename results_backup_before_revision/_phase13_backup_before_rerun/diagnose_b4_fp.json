@@ -1,0 +1,600 @@
+{
+  "categorical_columns": [
+    "wd"
+  ],
+  "reference_offsets": [
+    6000,
+    7000
+  ],
+  "cross_offset_attribution_identical": true,
+  "per_offset": {
+    "6000": {
+      "summary": {
+        "n_negatives": 2,
+        "n_false_positives": 2,
+        "n_chi2_explained": 1
+      },
+      "records": [
+        {
+          "event_id": "clean-00",
+          "ground_truth": "NO_DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": true,
+          "trigger_paths": [
+            "override:statistical",
+            "statistical:decision_threshold"
+          ],
+          "schema_events": [],
+          "semantic_events": [],
+          "scores": {
+            "schema_score": 0.0,
+            "statistical_score": 1.0,
+            "semantic_score": 0.0,
+            "unified_score": 0.3333333333333333
+          },
+          "wd_chi2": 223.7716219361422,
+          "wd_p_value": 3.0147979226646526e-39,
+          "chi2_component": 1.0,
+          "ks_component": 0.0,
+          "psi_component": 0.12038986208324307,
+          "statistical_score_no_chi2": 0.12038986208324307,
+          "decision_no_chi2": "NO_DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "NO_DRIFT",
+          "chi2_explained_fp": true
+        },
+        {
+          "event_id": "clean-01",
+          "ground_truth": "NO_DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": true,
+          "trigger_paths": [
+            "override:schema",
+            "override:statistical",
+            "statistical:decision_threshold",
+            "unified:threshold"
+          ],
+          "schema_events": [
+            {
+              "column": "CO",
+              "change": "nullability_change",
+              "old_value": 0.049198132937866,
+              "new_value": 0.1,
+              "severity": "low"
+            },
+            {
+              "column": "O3",
+              "change": "nullability_change",
+              "old_value": 0.03155420564301468,
+              "new_value": 0.1,
+              "severity": "low"
+            }
+          ],
+          "semantic_events": [],
+          "scores": {
+            "schema_score": 1.0,
+            "statistical_score": 1.0,
+            "semantic_score": 0.0,
+            "unified_score": 0.6666666666666666
+          },
+          "wd_chi2": 355.4331620175095,
+          "wd_p_value": 1.5341060212814145e-66,
+          "chi2_component": 1.0,
+          "ks_component": 0.0,
+          "psi_component": 0.09650068460495632,
+          "statistical_score_no_chi2": 0.09650068460495632,
+          "decision_no_chi2": "DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "NO_DRIFT",
+          "chi2_explained_fp": false
+        },
+        {
+          "event_id": "schema-added",
+          "ground_truth": "DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": false,
+          "trigger_paths": [
+            "override:schema",
+            "override:statistical",
+            "statistical:decision_threshold",
+            "unified:threshold"
+          ],
+          "schema_events": [
+            {
+              "column": "AQI_index",
+              "change": "added",
+              "old_value": null,
+              "new_value": "float64",
+              "severity": "high"
+            },
+            {
+              "column": "CO",
+              "change": "nullability_change",
+              "old_value": 0.049198132937866,
+              "new_value": 0.229,
+              "severity": "low"
+            }
+          ],
+          "semantic_events": [],
+          "scores": {
+            "schema_score": 1.0,
+            "statistical_score": 1.0,
+            "semantic_score": 0.0,
+            "unified_score": 0.6666666666666666
+          },
+          "wd_chi2": 105.71709185826805,
+          "wd_p_value": 1.0657979816524477e-15,
+          "chi2_component": 1.0,
+          "ks_component": 0.2667999999999999,
+          "psi_component": 0.18225993370296933,
+          "statistical_score_no_chi2": 0.2667999999999999,
+          "decision_no_chi2": "DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "DRIFT",
+          "chi2_explained_fp": false
+        },
+        {
+          "event_id": "stat-mean-shift",
+          "ground_truth": "DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": false,
+          "trigger_paths": [
+            "override:schema",
+            "override:statistical",
+            "statistical:decision_threshold",
+            "unified:threshold"
+          ],
+          "schema_events": [
+            {
+              "column": "CO",
+              "change": "nullability_change",
+              "old_value": 0.049198132937866,
+              "new_value": 0.186,
+              "severity": "low"
+            }
+          ],
+          "semantic_events": [],
+          "scores": {
+            "schema_score": 1.0,
+            "statistical_score": 1.0,
+            "semantic_score": 0.0,
+            "unified_score": 0.6666666666666666
+          },
+          "wd_chi2": 154.24166361886773,
+          "wd_p_value": 3.459564884000198e-25,
+          "chi2_component": 1.0,
+          "ks_component": 0.5542,
+          "psi_component": 0.22170264428654354,
+          "statistical_score_no_chi2": 0.5542,
+          "decision_no_chi2": "DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "DRIFT",
+          "chi2_explained_fp": false
+        },
+        {
+          "event_id": "cat-wd-shift",
+          "ground_truth": "DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": false,
+          "trigger_paths": [
+            "override:statistical",
+            "statistical:decision_threshold"
+          ],
+          "schema_events": [],
+          "semantic_events": [],
+          "scores": {
+            "schema_score": 0.0,
+            "statistical_score": 1.0,
+            "semantic_score": 0.0,
+            "unified_score": 0.3333333333333333
+          },
+          "wd_chi2": 1081.820722612787,
+          "wd_p_value": 3.8374002997283287e-221,
+          "chi2_component": 1.0,
+          "ks_component": 0.1277999999999999,
+          "psi_component": 0.12828729179889087,
+          "statistical_score_no_chi2": 0.12828729179889087,
+          "decision_no_chi2": "NO_DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "NO_DRIFT",
+          "chi2_explained_fp": false
+        },
+        {
+          "event_id": "sem-unit-change",
+          "ground_truth": "DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": false,
+          "trigger_paths": [
+            "override:schema",
+            "override:semantic",
+            "override:statistical",
+            "statistical:decision_threshold",
+            "unified:threshold"
+          ],
+          "schema_events": [
+            {
+              "column": "O3",
+              "change": "nullability_change",
+              "old_value": 0.03155420564301468,
+              "new_value": 0.11,
+              "severity": "low"
+            }
+          ],
+          "semantic_events": [
+            {
+              "timestamp": "2026-09-22T07:31:30.226261+00:00",
+              "drift_type": "semantic",
+              "column": "TEMP",
+              "change": "unit_change",
+              "old_value": "celsius",
+              "new_value": "fahrenheit",
+              "severity": "high"
+            }
+          ],
+          "scores": {
+            "schema_score": 1.0,
+            "statistical_score": 1.0,
+            "semantic_score": 1.0,
+            "unified_score": 1.0
+          },
+          "wd_chi2": 83.83279766172798,
+          "wd_p_value": 1.381568190816703e-11,
+          "chi2_component": 1.0,
+          "ks_component": 0.0,
+          "psi_component": 0.10341296800174549,
+          "statistical_score_no_chi2": 0.10341296800174549,
+          "decision_no_chi2": "DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "NO_DRIFT",
+          "chi2_explained_fp": false
+        },
+        {
+          "event_id": "schema-nullability",
+          "ground_truth": "DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": false,
+          "trigger_paths": [
+            "override:schema",
+            "override:statistical",
+            "statistical:decision_threshold",
+            "unified:threshold"
+          ],
+          "schema_events": [
+            {
+              "column": "CO",
+              "change": "nullability_change",
+              "old_value": 0.049198132937866,
+              "new_value": 0.135,
+              "severity": "low"
+            },
+            {
+              "column": "O3",
+              "change": "nullability_change",
+              "old_value": 0.03155420564301468,
+              "new_value": 0.251,
+              "severity": "low"
+            },
+            {
+              "column": "PM2.5",
+              "change": "nullability_change",
+              "old_value": 0.020769164955509924,
+              "new_value": 0.202,
+              "severity": "low"
+            }
+          ],
+          "semantic_events": [],
+          "scores": {
+            "schema_score": 1.0,
+            "statistical_score": 1.0,
+            "semantic_score": 0.0,
+            "unified_score": 0.6666666666666666
+          },
+          "wd_chi2": 120.95664263868231,
+          "wd_p_value": 1.2339979838999644e-18,
+          "chi2_component": 1.0,
+          "ks_component": 0.0,
+          "psi_component": 0.12191231193677848,
+          "statistical_score_no_chi2": 0.12191231193677848,
+          "decision_no_chi2": "DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "NO_DRIFT",
+          "chi2_explained_fp": false
+        }
+      ]
+    },
+    "7000": {
+      "summary": {
+        "n_negatives": 2,
+        "n_false_positives": 2,
+        "n_chi2_explained": 1
+      },
+      "records": [
+        {
+          "event_id": "clean-00",
+          "ground_truth": "NO_DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": true,
+          "trigger_paths": [
+            "override:statistical",
+            "statistical:decision_threshold"
+          ],
+          "schema_events": [],
+          "semantic_events": [],
+          "scores": {
+            "schema_score": 0.0,
+            "statistical_score": 1.0,
+            "semantic_score": 0.0,
+            "unified_score": 0.3333333333333333
+          },
+          "wd_chi2": 247.56631670652797,
+          "wd_p_value": 3.9359450273764086e-44,
+          "chi2_component": 1.0,
+          "ks_component": 0.0,
+          "psi_component": 0.12183103014045793,
+          "statistical_score_no_chi2": 0.12183103014045793,
+          "decision_no_chi2": "NO_DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "NO_DRIFT",
+          "chi2_explained_fp": true
+        },
+        {
+          "event_id": "clean-01",
+          "ground_truth": "NO_DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": true,
+          "trigger_paths": [
+            "override:schema",
+            "override:statistical",
+            "statistical:decision_threshold",
+            "unified:threshold"
+          ],
+          "schema_events": [
+            {
+              "column": "CO",
+              "change": "nullability_change",
+              "old_value": 0.049198132937866,
+              "new_value": 0.1,
+              "severity": "low"
+            },
+            {
+              "column": "O3",
+              "change": "nullability_change",
+              "old_value": 0.03155420564301468,
+              "new_value": 0.1,
+              "severity": "low"
+            }
+          ],
+          "semantic_events": [],
+          "scores": {
+            "schema_score": 1.0,
+            "statistical_score": 1.0,
+            "semantic_score": 0.0,
+            "unified_score": 0.6666666666666666
+          },
+          "wd_chi2": 372.100263354051,
+          "wd_p_value": 4.957631188805279e-70,
+          "chi2_component": 1.0,
+          "ks_component": 0.0,
+          "psi_component": 0.09809550963999655,
+          "statistical_score_no_chi2": 0.09809550963999655,
+          "decision_no_chi2": "DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "NO_DRIFT",
+          "chi2_explained_fp": false
+        },
+        {
+          "event_id": "schema-added",
+          "ground_truth": "DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": false,
+          "trigger_paths": [
+            "override:schema",
+            "override:statistical",
+            "statistical:decision_threshold",
+            "unified:threshold"
+          ],
+          "schema_events": [
+            {
+              "column": "AQI_index",
+              "change": "added",
+              "old_value": null,
+              "new_value": "float64",
+              "severity": "high"
+            },
+            {
+              "column": "CO",
+              "change": "nullability_change",
+              "old_value": 0.049198132937866,
+              "new_value": 0.229,
+              "severity": "low"
+            }
+          ],
+          "semantic_events": [],
+          "scores": {
+            "schema_score": 1.0,
+            "statistical_score": 1.0,
+            "semantic_score": 0.0,
+            "unified_score": 0.6666666666666666
+          },
+          "wd_chi2": 113.25622223623029,
+          "wd_p_value": 3.812197943075336e-17,
+          "chi2_component": 1.0,
+          "ks_component": 0.26672947294729465,
+          "psi_component": 0.18226617801519984,
+          "statistical_score_no_chi2": 0.26672947294729465,
+          "decision_no_chi2": "DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "DRIFT",
+          "chi2_explained_fp": false
+        },
+        {
+          "event_id": "stat-mean-shift",
+          "ground_truth": "DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": false,
+          "trigger_paths": [
+            "override:schema",
+            "override:statistical",
+            "statistical:decision_threshold",
+            "unified:threshold"
+          ],
+          "schema_events": [
+            {
+              "column": "CO",
+              "change": "nullability_change",
+              "old_value": 0.049198132937866,
+              "new_value": 0.186,
+              "severity": "low"
+            }
+          ],
+          "semantic_events": [],
+          "scores": {
+            "schema_score": 1.0,
+            "statistical_score": 1.0,
+            "semantic_score": 0.0,
+            "unified_score": 0.6666666666666666
+          },
+          "wd_chi2": 159.24323281937632,
+          "wd_p_value": 3.4818699569277266e-26,
+          "chi2_component": 1.0,
+          "ks_component": 0.5541624162416241,
+          "psi_component": 0.22171200994053988,
+          "statistical_score_no_chi2": 0.5541624162416241,
+          "decision_no_chi2": "DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "DRIFT",
+          "chi2_explained_fp": false
+        },
+        {
+          "event_id": "cat-wd-shift",
+          "ground_truth": "DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": false,
+          "trigger_paths": [
+            "override:statistical",
+            "statistical:decision_threshold"
+          ],
+          "schema_events": [],
+          "semantic_events": [],
+          "scores": {
+            "schema_score": 0.0,
+            "statistical_score": 1.0,
+            "semantic_score": 0.0,
+            "unified_score": 0.3333333333333333
+          },
+          "wd_chi2": 1103.3803847282597,
+          "wd_p_value": 9.078579523536473e-226,
+          "chi2_component": 1.0,
+          "ks_component": 0.12773017301730172,
+          "psi_component": 0.12835586983259253,
+          "statistical_score_no_chi2": 0.12835586983259253,
+          "decision_no_chi2": "NO_DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "NO_DRIFT",
+          "chi2_explained_fp": false
+        },
+        {
+          "event_id": "sem-unit-change",
+          "ground_truth": "DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": false,
+          "trigger_paths": [
+            "override:schema",
+            "override:semantic",
+            "override:statistical",
+            "statistical:decision_threshold",
+            "unified:threshold"
+          ],
+          "schema_events": [
+            {
+              "column": "O3",
+              "change": "nullability_change",
+              "old_value": 0.03155420564301468,
+              "new_value": 0.11,
+              "severity": "low"
+            }
+          ],
+          "semantic_events": [
+            {
+              "timestamp": "2026-09-22T07:32:01.503144+00:00",
+              "drift_type": "semantic",
+              "column": "TEMP",
+              "change": "unit_change",
+              "old_value": "celsius",
+              "new_value": "fahrenheit",
+              "severity": "high"
+            }
+          ],
+          "scores": {
+            "schema_score": 1.0,
+            "statistical_score": 1.0,
+            "semantic_score": 1.0,
+            "unified_score": 1.0
+          },
+          "wd_chi2": 85.18185135730857,
+          "wd_p_value": 7.785906403778301e-12,
+          "chi2_component": 1.0,
+          "ks_component": 0.0,
+          "psi_component": 0.10716139410459494,
+          "statistical_score_no_chi2": 0.10716139410459494,
+          "decision_no_chi2": "DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "NO_DRIFT",
+          "chi2_explained_fp": false
+        },
+        {
+          "event_id": "schema-nullability",
+          "ground_truth": "DRIFT",
+          "decision": "DRIFT",
+          "is_false_positive": false,
+          "trigger_paths": [
+            "override:schema",
+            "override:statistical",
+            "statistical:decision_threshold",
+            "unified:threshold"
+          ],
+          "schema_events": [
+            {
+              "column": "CO",
+              "change": "nullability_change",
+              "old_value": 0.049198132937866,
+              "new_value": 0.135,
+              "severity": "low"
+            },
+            {
+              "column": "O3",
+              "change": "nullability_change",
+              "old_value": 0.03155420564301468,
+              "new_value": 0.251,
+              "severity": "low"
+            },
+            {
+              "column": "PM2.5",
+              "change": "nullability_change",
+              "old_value": 0.020769164955509924,
+              "new_value": 0.202,
+              "severity": "low"
+            }
+          ],
+          "semantic_events": [],
+          "scores": {
+            "schema_score": 1.0,
+            "statistical_score": 1.0,
+            "semantic_score": 0.0,
+            "unified_score": 0.6666666666666666
+          },
+          "wd_chi2": 138.44481371661465,
+          "wd_p_value": 4.663288715205233e-22,
+          "chi2_component": 1.0,
+          "ks_component": 0.0,
+          "psi_component": 0.12219694309495649,
+          "statistical_score_no_chi2": 0.12219694309495649,
+          "decision_no_chi2": "DRIFT",
+          "b2_decision": "DRIFT",
+          "b2_decision_no_chi2": "NO_DRIFT",
+          "chi2_explained_fp": false
+        }
+      ]
+    }
+  }
+}

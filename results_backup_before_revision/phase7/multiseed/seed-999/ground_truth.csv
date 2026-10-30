@@ -1,0 +1,111 @@
+event_id,timestamp,drift_type,subtype,feature,severity,injected,ground_truth,expected_false_negative
+matrix-statistical-mean_shift-low,1594516247.7968075,statistical,mean_shift,temp,low,True,DRIFT,"expected false negative — known aggregation limitation: mean-shift temp KS (0.27-0.48 at low/medium) sits below the ks_floor (0.50) and at or below the other columns' sampling-noise floor (~0.36-0.50), so max-over-columns aggregation masks the shifted column (co owns max_ks in 9/10 medium windows) and PSI does not move; high severity is marginal; diagnosed in experiments/diagnose_mean_shift.py, same known limitation as variance/distribution shift, not fixed in Phase 7"
+matrix-statistical-variance_shift-low,1594525657.855971,statistical,variance_shift,temp,low,True,DRIFT,"expected false negative — known aggregation limitation: post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
+matrix-statistical-distribution_shift-low,1594528325.6341326,statistical,distribution_shift,temp,low,True,DRIFT,"expected false negative — known aggregation limitation: temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
+matrix-statistical-category_shift-low,1594532869.8982089,statistical,category_shift,device,low,True,DRIFT,
+matrix-statistical-mean_shift-medium,1594535556.7342796,statistical,mean_shift,temp,medium,True,DRIFT,"expected false negative — known aggregation limitation: mean-shift temp KS (0.27-0.48 at low/medium) sits below the ks_floor (0.50) and at or below the other columns' sampling-noise floor (~0.36-0.50), so max-over-columns aggregation masks the shifted column (co owns max_ks in 9/10 medium windows) and PSI does not move; high severity is marginal; diagnosed in experiments/diagnose_mean_shift.py, same known limitation as variance/distribution shift, not fixed in Phase 7"
+matrix-statistical-variance_shift-medium,1594538817.778976,statistical,variance_shift,temp,medium,True,DRIFT,"expected false negative — known aggregation limitation: post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
+matrix-statistical-distribution_shift-medium,1594542483.1959612,statistical,distribution_shift,temp,medium,True,DRIFT,"expected false negative — known aggregation limitation: temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
+matrix-statistical-category_shift-medium,1594544474.2764766,statistical,category_shift,device,medium,True,DRIFT,
+matrix-statistical-mean_shift-high,1594546328.032237,statistical,mean_shift,temp,high,True,DRIFT,"expected false negative — known aggregation limitation: mean-shift temp KS (0.27-0.48 at low/medium) sits below the ks_floor (0.50) and at or below the other columns' sampling-noise floor (~0.36-0.50), so max-over-columns aggregation masks the shifted column (co owns max_ks in 9/10 medium windows) and PSI does not move; high severity is marginal; diagnosed in experiments/diagnose_mean_shift.py, same known limitation as variance/distribution shift, not fixed in Phase 7"
+matrix-statistical-variance_shift-high,1594548323.5504868,statistical,variance_shift,temp,high,True,DRIFT,"expected false negative — known aggregation limitation: post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
+matrix-statistical-distribution_shift-high,1594550886.1262608,statistical,distribution_shift,temp,high,True,DRIFT,"expected false negative — known aggregation limitation: temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
+matrix-statistical-category_shift-high,1594553845.1971672,statistical,category_shift,device,high,True,DRIFT,
+matrix-schema-added-high,1594570360.9545856,schema,added,battery_level,high,True,DRIFT,
+matrix-schema-removed-high,1594572654.0376456,schema,removed,motion,high,True,DRIFT,
+matrix-schema-renamed-high,1594593815.6535428,schema,renamed,temp,high,True,DRIFT,
+matrix-schema-type_change-medium,1594599150.7773042,schema,type_change,temp,medium,True,DRIFT,
+matrix-schema-nullability_change-low,1594606091.0344143,schema,nullability_change,temp,low,True,DRIFT,
+matrix-semantic-unit_change-high,1594611427.7964242,semantic,unit_change,temp,high,True,DRIFT,
+matrix-semantic-unit_conversion-high,1594613993.1874568,semantic,unit_conversion,temp,high,True,DRIFT,
+matrix-semantic-business_meaning_change-high,1594617659.990595,semantic,business_meaning_change,temp,high,True,DRIFT,
+matrix-semantic-range_change-medium,1594619459.3079498,semantic,range_change,temp,medium,True,DRIFT,
+matrix-semantic-allowed_domain_change-medium,1594624368.7039547,semantic,allowed_domain_change,device,medium,True,DRIFT,
+matrix-semantic-range_violation-low,1594635032.017771,semantic,range_violation,temp,low,True,DRIFT,
+matrix-semantic-domain_violation-low,1594641103.3711393,semantic,domain_violation,device,low,True,DRIFT,
+matrix-semantic-range_violation-medium,1594646250.3797374,semantic,range_violation,temp,medium,True,DRIFT,
+matrix-semantic-domain_violation-medium,1594652265.6784954,semantic,domain_violation,device,medium,True,DRIFT,
+matrix-semantic-range_violation-high,1594663770.7009673,semantic,range_violation,temp,high,True,DRIFT,
+matrix-semantic-domain_violation-high,1594666627.1165724,semantic,domain_violation,device,high,True,DRIFT,
+matrix-normal-clean-none,1594669579.8199587,normal,clean,,none,False,NO_DRIFT,
+matrix-normal-normal_noise-none,1594680125.867906,normal,normal_noise,temp,none,False,NO_DRIFT,
+lag-mean_shift-00,1594718012.1253843,statistical,mean_shift,temp,none,False,NO_DRIFT,"expected false negative — known aggregation limitation: mean-shift temp KS (0.27-0.48 at low/medium) sits below the ks_floor (0.50) and at or below the other columns' sampling-noise floor (~0.36-0.50), so max-over-columns aggregation masks the shifted column (co owns max_ks in 9/10 medium windows) and PSI does not move; high severity is marginal; diagnosed in experiments/diagnose_mean_shift.py, same known limitation as variance/distribution shift, not fixed in Phase 7"
+lag-mean_shift-01,1594719686.156453,statistical,mean_shift,temp,none,False,NO_DRIFT,"expected false negative — known aggregation limitation: mean-shift temp KS (0.27-0.48 at low/medium) sits below the ks_floor (0.50) and at or below the other columns' sampling-noise floor (~0.36-0.50), so max-over-columns aggregation masks the shifted column (co owns max_ks in 9/10 medium windows) and PSI does not move; high severity is marginal; diagnosed in experiments/diagnose_mean_shift.py, same known limitation as variance/distribution shift, not fixed in Phase 7"
+lag-mean_shift-02,1594721365.1230805,statistical,mean_shift,temp,none,False,NO_DRIFT,"expected false negative — known aggregation limitation: mean-shift temp KS (0.27-0.48 at low/medium) sits below the ks_floor (0.50) and at or below the other columns' sampling-noise floor (~0.36-0.50), so max-over-columns aggregation masks the shifted column (co owns max_ks in 9/10 medium windows) and PSI does not move; high severity is marginal; diagnosed in experiments/diagnose_mean_shift.py, same known limitation as variance/distribution shift, not fixed in Phase 7"
+lag-mean_shift-03,1594723017.9562228,statistical,mean_shift,temp,medium,True,DRIFT,"expected false negative — known aggregation limitation: mean-shift temp KS (0.27-0.48 at low/medium) sits below the ks_floor (0.50) and at or below the other columns' sampling-noise floor (~0.36-0.50), so max-over-columns aggregation masks the shifted column (co owns max_ks in 9/10 medium windows) and PSI does not move; high severity is marginal; diagnosed in experiments/diagnose_mean_shift.py, same known limitation as variance/distribution shift, not fixed in Phase 7"
+lag-mean_shift-04,1594724677.7110486,statistical,mean_shift,temp,medium,True,DRIFT,"expected false negative — known aggregation limitation: mean-shift temp KS (0.27-0.48 at low/medium) sits below the ks_floor (0.50) and at or below the other columns' sampling-noise floor (~0.36-0.50), so max-over-columns aggregation masks the shifted column (co owns max_ks in 9/10 medium windows) and PSI does not move; high severity is marginal; diagnosed in experiments/diagnose_mean_shift.py, same known limitation as variance/distribution shift, not fixed in Phase 7"
+lag-variance_shift-00,1594730685.5367715,statistical,variance_shift,temp,none,False,NO_DRIFT,"expected false negative — known aggregation limitation: post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
+lag-variance_shift-01,1594732398.6890802,statistical,variance_shift,temp,none,False,NO_DRIFT,"expected false negative — known aggregation limitation: post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
+lag-variance_shift-02,1594734108.855273,statistical,variance_shift,temp,none,False,NO_DRIFT,"expected false negative — known aggregation limitation: post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
+lag-variance_shift-03,1594735860.4666908,statistical,variance_shift,temp,medium,True,DRIFT,"expected false negative — known aggregation limitation: post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
+lag-variance_shift-04,1594737570.0203552,statistical,variance_shift,temp,medium,True,DRIFT,"expected false negative — known aggregation limitation: post-shift KS (~0.26) sits below the sampling-noise floor of the other columns (~0.40-0.50) and PSI does not move under max-over-columns aggregation; documented in docs/phase6_notes.md, not fixed in Phase 6"
+lag-distribution_shift-00,1594746630.2809384,statistical,distribution_shift,temp,none,False,NO_DRIFT,"expected false negative — known aggregation limitation: temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
+lag-distribution_shift-01,1594748316.7331097,statistical,distribution_shift,temp,none,False,NO_DRIFT,"expected false negative — known aggregation limitation: temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
+lag-distribution_shift-02,1594750023.1770198,statistical,distribution_shift,temp,none,False,NO_DRIFT,"expected false negative — known aggregation limitation: temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
+lag-distribution_shift-03,1594751734.3101726,statistical,distribution_shift,temp,medium,True,DRIFT,"expected false negative — known aggregation limitation: temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
+lag-distribution_shift-04,1594753414.245884,statistical,distribution_shift,temp,medium,True,DRIFT,"expected false negative — known aggregation limitation: temp KS elevation (0.448 -> 0.474) stays below the ks_floor (0.50) and PSI does not move under max-over-columns aggregation; structurally the same known limitation as variance shift; documented in docs/phase6_notes.md, not fixed in Phase 6"
+lag-category_shift-00,1594767863.3504808,statistical,category_shift,device,none,False,NO_DRIFT,
+lag-category_shift-01,1594769598.3286512,statistical,category_shift,device,none,False,NO_DRIFT,
+lag-category_shift-02,1594771274.504819,statistical,category_shift,device,none,False,NO_DRIFT,
+lag-category_shift-03,1594772932.9515414,statistical,category_shift,device,medium,True,DRIFT,
+lag-category_shift-04,1594774609.1206148,statistical,category_shift,device,medium,True,DRIFT,
+lag-added-00,1594780129.6007788,schema,added,battery_level,none,False,NO_DRIFT,
+lag-added-01,1594781785.8937817,schema,added,battery_level,none,False,NO_DRIFT,
+lag-added-02,1594783401.507763,schema,added,battery_level,none,False,NO_DRIFT,
+lag-added-03,1594785084.109467,schema,added,battery_level,medium,True,DRIFT,
+lag-added-04,1594786709.739709,schema,added,battery_level,medium,True,DRIFT,
+lag-removed-00,1594789164.0744543,schema,removed,motion,none,False,NO_DRIFT,
+lag-removed-01,1594790814.852215,schema,removed,motion,none,False,NO_DRIFT,
+lag-removed-02,1594792448.75363,schema,removed,motion,none,False,NO_DRIFT,
+lag-removed-03,1594794157.650067,schema,removed,motion,medium,True,DRIFT,
+lag-removed-04,1594795860.8185863,schema,removed,motion,medium,True,DRIFT,
+lag-renamed-00,1594803033.3469844,schema,renamed,temp,none,False,NO_DRIFT,
+lag-renamed-01,1594804767.46787,schema,renamed,temp,none,False,NO_DRIFT,
+lag-renamed-02,1594806465.3764837,schema,renamed,temp,none,False,NO_DRIFT,
+lag-renamed-03,1594808163.1257725,schema,renamed,temp,medium,True,DRIFT,
+lag-renamed-04,1594809854.3825326,schema,renamed,temp,medium,True,DRIFT,
+lag-type_change-00,1594823316.0983143,schema,type_change,temp,none,False,NO_DRIFT,
+lag-type_change-01,1594825002.735058,schema,type_change,temp,none,False,NO_DRIFT,
+lag-type_change-02,1594826666.8703997,schema,type_change,temp,none,False,NO_DRIFT,
+lag-type_change-03,1594828329.1975968,schema,type_change,temp,medium,True,DRIFT,
+lag-type_change-04,1594829953.556023,schema,type_change,temp,medium,True,DRIFT,
+lag-nullability_change-00,1594834123.9903436,schema,nullability_change,temp,none,False,NO_DRIFT,
+lag-nullability_change-01,1594835837.2948897,schema,nullability_change,temp,none,False,NO_DRIFT,
+lag-nullability_change-02,1594837553.171451,schema,nullability_change,temp,none,False,NO_DRIFT,
+lag-nullability_change-03,1594839320.7456834,schema,nullability_change,temp,medium,True,DRIFT,
+lag-nullability_change-04,1594841039.2108717,schema,nullability_change,temp,medium,True,DRIFT,
+lag-unit_change-00,1594844649.023808,semantic,unit_change,temp,none,False,NO_DRIFT,
+lag-unit_change-01,1594846367.125266,semantic,unit_change,temp,none,False,NO_DRIFT,
+lag-unit_change-02,1594848082.076299,semantic,unit_change,temp,none,False,NO_DRIFT,
+lag-unit_change-03,1594849782.4990125,semantic,unit_change,temp,medium,True,DRIFT,
+lag-unit_change-04,1594851446.070679,semantic,unit_change,temp,medium,True,DRIFT,
+lag-unit_conversion-00,1594855897.0183244,semantic,unit_conversion,temp,none,False,NO_DRIFT,
+lag-unit_conversion-01,1594857603.3373597,semantic,unit_conversion,temp,none,False,NO_DRIFT,
+lag-unit_conversion-02,1594859280.9037025,semantic,unit_conversion,temp,none,False,NO_DRIFT,
+lag-unit_conversion-03,1594860963.0291371,semantic,unit_conversion,temp,medium,True,DRIFT,
+lag-unit_conversion-04,1594862633.0084622,semantic,unit_conversion,temp,medium,True,DRIFT,
+lag-business_meaning_change-00,1594871323.9054835,semantic,business_meaning_change,temp,none,False,NO_DRIFT,
+lag-business_meaning_change-01,1594873056.0308504,semantic,business_meaning_change,temp,none,False,NO_DRIFT,
+lag-business_meaning_change-02,1594874755.4619076,semantic,business_meaning_change,temp,none,False,NO_DRIFT,
+lag-business_meaning_change-03,1594876438.1065612,semantic,business_meaning_change,temp,medium,True,DRIFT,
+lag-business_meaning_change-04,1594878129.4397466,semantic,business_meaning_change,temp,medium,True,DRIFT,
+lag-range_change-00,1594883091.5901978,semantic,range_change,temp,none,False,NO_DRIFT,
+lag-range_change-01,1594884732.5988517,semantic,range_change,temp,none,False,NO_DRIFT,
+lag-range_change-02,1594886395.6168013,semantic,range_change,temp,none,False,NO_DRIFT,
+lag-range_change-03,1594888071.056871,semantic,range_change,temp,medium,True,DRIFT,
+lag-range_change-04,1594889759.8037453,semantic,range_change,temp,medium,True,DRIFT,
+lag-allowed_domain_change-00,1594905226.0765257,semantic,allowed_domain_change,device,none,False,NO_DRIFT,
+lag-allowed_domain_change-01,1594906928.6203704,semantic,allowed_domain_change,device,none,False,NO_DRIFT,
+lag-allowed_domain_change-02,1594908634.8801124,semantic,allowed_domain_change,device,none,False,NO_DRIFT,
+lag-allowed_domain_change-03,1594910344.5654411,semantic,allowed_domain_change,device,medium,True,DRIFT,
+lag-allowed_domain_change-04,1594912041.313279,semantic,allowed_domain_change,device,medium,True,DRIFT,
+lag-range_violation-00,1594916146.105512,semantic,range_violation,temp,none,False,NO_DRIFT,
+lag-range_violation-01,1594917895.660605,semantic,range_violation,temp,none,False,NO_DRIFT,
+lag-range_violation-02,1594919603.8301518,semantic,range_violation,temp,none,False,NO_DRIFT,
+lag-range_violation-03,1594921326.9729352,semantic,range_violation,temp,medium,True,DRIFT,
+lag-range_violation-04,1594923008.8920252,semantic,range_violation,temp,medium,True,DRIFT,
+lag-domain_violation-00,1594928137.1925435,semantic,domain_violation,device,none,False,NO_DRIFT,
+lag-domain_violation-01,1594929816.8282018,semantic,domain_violation,device,none,False,NO_DRIFT,
+lag-domain_violation-02,1594931511.570536,semantic,domain_violation,device,none,False,NO_DRIFT,
+lag-domain_violation-03,1594933245.6580973,semantic,domain_violation,device,medium,True,DRIFT,
+lag-domain_violation-04,1594934978.0952168,semantic,domain_violation,device,medium,True,DRIFT,

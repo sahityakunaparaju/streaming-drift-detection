@@ -1,0 +1,95 @@
+{
+  "seed": 7,
+  "test_set": {
+    "n_windows": 7,
+    "n_blind_spot": 5,
+    "n_control": 2
+  },
+  "blind_spot": {
+    "z": 5,
+    "n_isolated": 5,
+    "n_excluded": 0,
+    "excluded": [],
+    "w_missed_by_schema_statistical": 5,
+    "v_recovered_by_semantic": 5,
+    "recovery": 1.0
+  },
+  "per_detector_recall": {
+    "schema": {
+      "tp": 0,
+      "fn": 5,
+      "recall": 0.0
+    },
+    "statistical": {
+      "tp": 0,
+      "fn": 5,
+      "recall": 0.0
+    },
+    "semantic": {
+      "tp": 5,
+      "fn": 0,
+      "recall": 1.0
+    },
+    "combined": {
+      "tp": 5,
+      "fn": 0,
+      "recall": 1.0
+    }
+  },
+  "controls": [
+    {
+      "seed": 7,
+      "event_id": "bs-clean",
+      "set": "control",
+      "subtype": "clean",
+      "feature": null,
+      "severity": "none",
+      "ground_truth": "NO_DRIFT",
+      "start_row": 395145,
+      "schema_identical": true,
+      "schema_events": 0,
+      "schema_event_types": [],
+      "statistical_score": 0.151311,
+      "max_ks": 0.274965,
+      "max_psi": 10.894418,
+      "max_chi2": 1.964619,
+      "affected_ks": null,
+      "affected_psi": null,
+      "affected_chi2": null,
+      "semantic_fired": false,
+      "semantic_event_types": [],
+      "isolated": true,
+      "B1_schema": "NO_DRIFT",
+      "B2_statistical": "NO_DRIFT",
+      "semantic": "NO_DRIFT",
+      "B4_unified": "NO_DRIFT"
+    },
+    {
+      "seed": 7,
+      "event_id": "bs-normal_noise",
+      "set": "control",
+      "subtype": "normal_noise",
+      "feature": "temp",
+      "severity": "none",
+      "ground_truth": "NO_DRIFT",
+      "start_row": 399871,
+      "schema_identical": true,
+      "schema_events": 0,
+      "schema_event_types": [],
+      "statistical_score": 0.182922,
+      "max_ks": 0.312725,
+      "max_psi": 13.170369,
+      "max_chi2": 0.137039,
+      "affected_ks": null,
+      "affected_psi": null,
+      "affected_chi2": null,
+      "semantic_fired": false,
+      "semantic_event_types": [],
+      "isolated": true,
+      "B1_schema": "NO_DRIFT",
+      "B2_statistical": "NO_DRIFT",
+      "semantic": "NO_DRIFT",
+      "B4_unified": "NO_DRIFT"
+    }
+  ]
+}

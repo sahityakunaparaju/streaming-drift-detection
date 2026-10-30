@@ -1,0 +1,65 @@
+RESULTS
+A Unified Framework for Schema, Statistical, and Semantic Drift Detection in Streaming ETL Pipelines
+
+1. Experimental Setup
+
+The proposed framework was evaluated on an IoT telemetry dataset containing 405,184 records. The primary evaluation used controlled drift injection and a ten-seed experiment (seeds: 42, 123, 7, 11, 2024, 314, 2718, 999, 555, and 777). Each seed contained 110 evaluation windows: 30 matrix windows and 80 lag-stream windows. The baseline ladder progressively enabled detection capabilities: B0 (null/no effective drift detector), B1 (schema), B2 (statistical), B3 (schema + statistical), and B4 (unified schema + statistical + semantic).
+
+Precision, recall, F1-score, and false-positive rate (FPR) are reported. Unless otherwise stated, values are mean ± standard deviation across ten seeds. Raw metrics use all labelled evaluation windows. Adjusted metrics exclude 24 of the 110 windows under the experiment's documented expected-false-negative rule; adjusted metrics are therefore supplementary and must not be interpreted as full-set performance.
+
+2. Baseline Comparison
+
+The raw baseline-ladder results are shown below.
+
+Configuration                 Precision          Recall             F1-score           FPR
+B0 – Null                     1.0000 ± 0.0000    0.0500 ± 0.0000    0.0952 ± 0.0000    0.0000 ± 0.0000
+B1 – Schema                   1.0000 ± 0.0000    0.2500 ± 0.0000    0.4000 ± 0.0000    0.0000 ± 0.0000
+B2 – Statistical              0.9729 ± 0.0333    0.2333 ± 0.0149    0.3761 ± 0.0201    0.0080 ± 0.0098
+B3 – Schema + Statistical     0.9866 ± 0.0165    0.4800 ± 0.0100    0.6457 ± 0.0100    0.0080 ± 0.0098
+B4 – Unified                  0.9922 ± 0.0096    0.8333 ± 0.0298    0.9055 ± 0.0177    0.0080 ± 0.0098
+
+B4 achieved the highest raw F1-score in the evaluated baseline ladder (0.9055 ± 0.0177), with precision of 0.9922 ± 0.0096 and recall of 0.8333 ± 0.0298. Compared with B3, the unified configuration increased raw F1 by 0.2598 ± 0.0156 and raw recall by 0.3533 ± 0.0267, while the reported mean FPR remained 0.0080 ± 0.0098. These results indicate that combining the three detection dimensions improves overall coverage on this controlled benchmark compared with the individual and two-channel configurations.
+
+3. Ablation Study
+
+The ablation study evaluated the incremental contribution of adding detection dimensions. On raw metrics, the progression from B0 to B1 increased F1 from 0.0952 to 0.4000. Adding statistical detection on top of schema detection (B1 to B3) increased F1 from 0.4000 to 0.6457. Adding the semantic channel (B3 to B4) increased raw F1 from 0.6457 ± 0.0100 to 0.9055 ± 0.0177, an absolute improvement of 0.2598 ± 0.0156.
+
+For the adjusted evaluation, B3 achieved F1 = 0.7606 ± 0.0069 and B4 achieved F1 = 0.9945 ± 0.0055. This adjusted improvement is 0.2339 ± 0.0025. However, the adjusted result excludes the 24 expected-false-negative windows and should be presented only alongside the raw result. The raw result is the principal measure of performance across all labelled windows.
+
+4. Semantic Blind-Spot Experiment
+
+A separate experiment examined 50 isolated semantic blind-spot cases across ten seeds (five cases per seed). In this experiment, the schema and statistical detectors each recorded zero detections across the 50 cases, while the semantic detector and unified configuration recorded 50 detections (recall = 1.0000 ± 0.0000). The experiment demonstrates that the semantic contract channel can identify the specific metadata/contract changes represented in these test cases when the corresponding semantic metadata is supplied.
+
+This is a purpose-built, non-standard experiment and should not be interpreted as proof that the framework detects every possible semantic change. In particular, the test relies on declared semantic metadata and therefore evaluates contract-validation recovery rather than unrestricted discovery of unknown semantic changes.
+
+5. Comparison with Classical Streaming Detectors
+
+The comparison with River implementations of ADWIN, DDM, and KSWIN used the documented ten-seed comparison protocol. The raw F1-scores were:
+
+Detector       Precision          Recall             F1-score           FPR
+ADWIN          0.7995 ± 0.0732    0.1483 ± 0.0189    0.2496 ± 0.0282    0.0460 ± 0.0201
+DDM            0.5577 ± 0.0248    0.7900 ± 0.0559    0.6537 ± 0.0358    0.7500 ± 0.0300
+KSWIN          0.5454 ± 0.0087    0.9617 ± 0.0211    0.6960 ± 0.0119    0.9620 ± 0.0227
+B4 – Unified   0.9922 ± 0.0096    0.8333 ± 0.0298    0.9055 ± 0.0177    0.0080 ± 0.0098
+
+Under this experiment's configuration, B4 had the highest raw F1 and lowest FPR among the compared detectors. ADWIN had lower recall, while DDM and KSWIN produced substantially higher false-positive rates. This comparison should be interpreted within the documented protocol: the classical detectors process numerical streams, whereas B4 also evaluates schema and declared semantic-contract information. The comparison is not a claim of universal superiority over the literature.
+
+On the 50 metadata-only semantic cases, ADWIN, DDM, and KSWIN each recorded zero semantic-case recovery. Their numerical inputs did not contain the metadata change being tested. B4's semantic channel recorded 50/50 detections. This result reflects the different information available to the detectors, not a like-for-like numerical-stream test.
+
+6. Processing Overhead
+
+The overhead experiment measured the pipeline with and without the drift-detection layer at two load points, using windows of 1,000 records.
+
+At the comfortable load point, mean latency increased from 671.09 ms to 1,123.36 ms (+67.4%), and throughput decreased from 1,387.07 to 1,209.30 rows/s (-12.8%). Mean detection time was 539.58 ms per event.
+
+At the stress load point, mean latency increased from 438.34 ms to 4,375.93 ms (+898.3%), and throughput decreased from 3,556.44 to 1,526.98 rows/s (-57.1%). Mean detection time was 506.70 ms per event. These results show that the detector adds measurable processing overhead, particularly under stress load. The overhead is an important limitation for real-time deployment and requires optimization before production use.
+
+7. Secondary-Dataset Evaluation
+
+A secondary-dataset evaluation contained only seven windows (five positive and two negative). For B4, precision was 0.7143, recall was 1.0000, F1-score was 0.8333, and FPR was 1.0000. The detector identified all positive windows but also flagged both negative windows. Because the sample was very small and the false-positive rate was 100%, this experiment does not establish robust generalization. It should be reported as a limited transfer check, not as evidence of successful cross-dataset deployment.
+
+8. Overall Findings
+
+The primary controlled evaluation indicates that the unified B4 configuration provides the strongest raw F1-score among the tested baseline configurations, reaching 0.9055 ± 0.0177. The ablation results show a substantial improvement when the semantic channel is added to the schema-plus-statistical configuration. The isolated semantic experiment further demonstrates recovery of the declared contract-change cases that were not visible to schema-only or numerical statistical detectors.
+
+The results also identify limitations. The raw recall of B4 is 0.8333 ± 0.0298 rather than perfect, the adjusted F1 excludes 24 expected-false-negative windows, the semantic blind-spot experiment depends on supplied contract metadata, the overhead rises sharply under stress load, and the small secondary-dataset test has an FPR of 1.0. Accordingly, the results support the usefulness of combining complementary detection dimensions on the evaluated benchmark, but do not establish universal superiority or production readiness.

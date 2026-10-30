@@ -1,0 +1,11 @@
+event_id,timestamp,drift_type,subtype,feature,severity,injected,ground_truth,expected_false_negative
+window-000,1594512094.3859746,normal,clean,,none,False,NO_DRIFT,
+window-001,1594513780.010636,normal,normal_noise,temp,none,False,NO_DRIFT,
+window-002,1594515445.269781,schema,added,battery_level,high,True,DRIFT,
+window-003,1594517102.6394937,schema,removed,motion,high,True,DRIFT,
+window-004,1594518752.914583,statistical,mean_shift,temp,medium,True,DRIFT,
+window-005,1594520379.2188077,statistical,variance_shift,temp,medium,True,DRIFT,expected false negative — known aggregation limitation
+window-006,1594522089.019113,statistical,category_shift,device,medium,True,DRIFT,
+window-007,1594523740.659608,semantic,unit_change,temp,high,True,DRIFT,
+window-008,1594525370.5512528,semantic,unit_conversion,temp,high,True,DRIFT,
+window-009,1594527010.4760983,normal,clean,,none,False,NO_DRIFT,

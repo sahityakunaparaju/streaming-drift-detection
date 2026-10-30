@@ -1,0 +1,4 @@
+detector,input_stream,parameters,library
+adwin,"raw numeric values, every row; 5 per-feature streams (temp, co, humidity, lpg, smoke) against local 2000-row warm-up","delta=0.002, clock=32 (river defaults)",river 0.21.0 (river.drift.ADWIN)
+ddm,"binary surprise stream, every row (|x-mu|>2*sigma vs local warm-up)","warm_start=30, warning_threshold=2.0, drift_threshold=3.0 (river defaults); k=2.0 (adapter)",river 0.21.0 (river.drift.binary.DDM)
+kswin,"raw numeric values, every 10th row; 5 per-feature streams (sliding window spans 1000 rows)","alpha=0.005, window_size=100, stat_size=30 (river defaults); stride=10 + cold-start prefill (adapter), seed=42",river 0.21.0 (river.drift.KSWIN)

@@ -1,0 +1,765 @@
+{
+  "seed": 314,
+  "test_set": {
+    "n_windows": 110,
+    "n_matrix": 30,
+    "n_lag": 80,
+    "n_expected_false_negative": 24
+  },
+  "ladder": {
+    "B0_null": {
+      "metrics": {
+        "n": 110,
+        "n_positives": 60,
+        "n_negatives": 50,
+        "raw": {
+          "precision": 1.0,
+          "recall": 0.05,
+          "f1": 0.095238,
+          "fpr": 0.0,
+          "specificity": 1.0,
+          "accuracy": 0.481818,
+          "balanced_accuracy": 0.525,
+          "youden_j": 0.05,
+          "tp": 3,
+          "fp": 0,
+          "tn": 50,
+          "fn": 57
+        },
+        "adjusted": {
+          "precision": 1.0,
+          "recall": 0.066667,
+          "f1": 0.125,
+          "fpr": 0.0,
+          "specificity": 1.0,
+          "accuracy": 0.511628,
+          "balanced_accuracy": 0.533333,
+          "youden_j": 0.066667,
+          "tp": 3,
+          "fp": 0,
+          "tn": 41,
+          "fn": 42
+        },
+        "flagged": {
+          "n_flagged": 24,
+          "n_flagged_detected": 0,
+          "n_flagged_missed": 24
+        }
+      },
+      "lag": {
+        "unit": "windows",
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "n_detected": 1,
+        "n_never_detected": 15
+      }
+    },
+    "B1_schema": {
+      "metrics": {
+        "n": 110,
+        "n_positives": 60,
+        "n_negatives": 50,
+        "raw": {
+          "precision": 1.0,
+          "recall": 0.25,
+          "f1": 0.4,
+          "fpr": 0.0,
+          "specificity": 1.0,
+          "accuracy": 0.590909,
+          "balanced_accuracy": 0.625,
+          "youden_j": 0.25,
+          "tp": 15,
+          "fp": 0,
+          "tn": 50,
+          "fn": 45
+        },
+        "adjusted": {
+          "precision": 1.0,
+          "recall": 0.333333,
+          "f1": 0.5,
+          "fpr": 0.0,
+          "specificity": 1.0,
+          "accuracy": 0.651163,
+          "balanced_accuracy": 0.666667,
+          "youden_j": 0.333333,
+          "tp": 15,
+          "fp": 0,
+          "tn": 41,
+          "fn": 30
+        },
+        "flagged": {
+          "n_flagged": 24,
+          "n_flagged_detected": 0,
+          "n_flagged_missed": 24
+        }
+      },
+      "lag": {
+        "unit": "windows",
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "n_detected": 5,
+        "n_never_detected": 11
+      }
+    },
+    "B2_statistical": {
+      "metrics": {
+        "n": 110,
+        "n_positives": 60,
+        "n_negatives": 50,
+        "raw": {
+          "precision": 1.0,
+          "recall": 0.266667,
+          "f1": 0.421053,
+          "fpr": 0.0,
+          "specificity": 1.0,
+          "accuracy": 0.6,
+          "balanced_accuracy": 0.633333,
+          "youden_j": 0.266667,
+          "tp": 16,
+          "fp": 0,
+          "tn": 50,
+          "fn": 44
+        },
+        "adjusted": {
+          "precision": 1.0,
+          "recall": 0.333333,
+          "f1": 0.5,
+          "fpr": 0.0,
+          "specificity": 1.0,
+          "accuracy": 0.651163,
+          "balanced_accuracy": 0.666667,
+          "youden_j": 0.333333,
+          "tp": 15,
+          "fp": 0,
+          "tn": 41,
+          "fn": 30
+        },
+        "flagged": {
+          "n_flagged": 24,
+          "n_flagged_detected": 1,
+          "n_flagged_missed": 23
+        }
+      },
+      "lag": {
+        "unit": "windows",
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "n_detected": 4,
+        "n_never_detected": 12
+      }
+    },
+    "B3_schema_statistical": {
+      "metrics": {
+        "n": 110,
+        "n_positives": 60,
+        "n_negatives": 50,
+        "raw": {
+          "precision": 1.0,
+          "recall": 0.483333,
+          "f1": 0.651685,
+          "fpr": 0.0,
+          "specificity": 1.0,
+          "accuracy": 0.718182,
+          "balanced_accuracy": 0.741667,
+          "youden_j": 0.483333,
+          "tp": 29,
+          "fp": 0,
+          "tn": 50,
+          "fn": 31
+        },
+        "adjusted": {
+          "precision": 1.0,
+          "recall": 0.622222,
+          "f1": 0.767123,
+          "fpr": 0.0,
+          "specificity": 1.0,
+          "accuracy": 0.802326,
+          "balanced_accuracy": 0.811111,
+          "youden_j": 0.622222,
+          "tp": 28,
+          "fp": 0,
+          "tn": 41,
+          "fn": 17
+        },
+        "flagged": {
+          "n_flagged": 24,
+          "n_flagged_detected": 1,
+          "n_flagged_missed": 23
+        }
+      },
+      "lag": {
+        "unit": "windows",
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "n_detected": 8,
+        "n_never_detected": 8
+      }
+    },
+    "B4_unified": {
+      "metrics": {
+        "n": 110,
+        "n_positives": 60,
+        "n_negatives": 50,
+        "raw": {
+          "precision": 1.0,
+          "recall": 0.866667,
+          "f1": 0.928571,
+          "fpr": 0.0,
+          "specificity": 1.0,
+          "accuracy": 0.927273,
+          "balanced_accuracy": 0.933333,
+          "youden_j": 0.866667,
+          "tp": 52,
+          "fp": 0,
+          "tn": 50,
+          "fn": 8
+        },
+        "adjusted": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "fpr": 0.0,
+          "specificity": 1.0,
+          "accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "youden_j": 1.0,
+          "tp": 45,
+          "fp": 0,
+          "tn": 41,
+          "fn": 0
+        },
+        "flagged": {
+          "n_flagged": 24,
+          "n_flagged_detected": 7,
+          "n_flagged_missed": 17
+        }
+      },
+      "lag": {
+        "unit": "windows",
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "n_detected": 15,
+        "n_never_detected": 1
+      }
+    },
+    "B5_evidently": {
+      "metrics": {
+        "n": 0,
+        "n_positives": 0,
+        "n_negatives": 0,
+        "raw": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "specificity": 0.0,
+          "accuracy": 0.0,
+          "balanced_accuracy": 0.0,
+          "youden_j": -1.0,
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0
+        },
+        "adjusted": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "fpr": 0.0,
+          "specificity": 0.0,
+          "accuracy": 0.0,
+          "balanced_accuracy": 0.0,
+          "youden_j": -1.0,
+          "tp": 0,
+          "fp": 0,
+          "tn": 0,
+          "fn": 0
+        },
+        "flagged": {
+          "n_flagged": 0,
+          "n_flagged_detected": 0,
+          "n_flagged_missed": 0
+        }
+      },
+      "lag": {
+        "unit": "windows",
+        "mean": null,
+        "median": null,
+        "p95": null,
+        "n_detected": 0,
+        "n_never_detected": 16
+      }
+    },
+    "semantic": {
+      "metrics": {
+        "n": 110,
+        "n_positives": 60,
+        "n_negatives": 50,
+        "raw": {
+          "precision": 1.0,
+          "recall": 0.533333,
+          "f1": 0.695652,
+          "fpr": 0.0,
+          "specificity": 1.0,
+          "accuracy": 0.745455,
+          "balanced_accuracy": 0.766667,
+          "youden_j": 0.533333,
+          "tp": 32,
+          "fp": 0,
+          "tn": 50,
+          "fn": 28
+        },
+        "adjusted": {
+          "precision": 1.0,
+          "recall": 0.555556,
+          "f1": 0.714286,
+          "fpr": 0.0,
+          "specificity": 1.0,
+          "accuracy": 0.767442,
+          "balanced_accuracy": 0.777778,
+          "youden_j": 0.555556,
+          "tp": 25,
+          "fp": 0,
+          "tn": 41,
+          "fn": 20
+        },
+        "flagged": {
+          "n_flagged": 24,
+          "n_flagged_detected": 7,
+          "n_flagged_missed": 17
+        }
+      },
+      "lag": {
+        "unit": "windows",
+        "mean": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "n_detected": 9,
+        "n_never_detected": 7
+      }
+    }
+  },
+  "subtype_recall": {
+    "added": {
+      "schema": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "statistical": {
+        "raw_recall": 0.666667,
+        "adj_recall": 0.666667,
+        "n": 3,
+        "flagged": 0
+      },
+      "semantic": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "combined": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      }
+    },
+    "allowed_domain_change": {
+      "schema": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "statistical": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "semantic": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "combined": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      }
+    },
+    "business_meaning_change": {
+      "schema": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "statistical": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "semantic": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "combined": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      }
+    },
+    "category_shift": {
+      "schema": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 0
+      },
+      "statistical": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 5,
+        "flagged": 0
+      },
+      "semantic": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 0
+      },
+      "combined": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 5,
+        "flagged": 0
+      }
+    },
+    "distribution_shift": {
+      "schema": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 5
+      },
+      "statistical": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 5
+      },
+      "semantic": {
+        "raw_recall": 0.6,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 5
+      },
+      "combined": {
+        "raw_recall": 0.6,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 5
+      }
+    },
+    "domain_violation": {
+      "schema": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 0
+      },
+      "statistical": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 5,
+        "flagged": 0
+      },
+      "semantic": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 5,
+        "flagged": 0
+      },
+      "combined": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 5,
+        "flagged": 0
+      }
+    },
+    "mean_shift": {
+      "schema": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 5
+      },
+      "statistical": {
+        "raw_recall": 0.2,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 5
+      },
+      "semantic": {
+        "raw_recall": 0.2,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 5
+      },
+      "combined": {
+        "raw_recall": 0.2,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 5
+      }
+    },
+    "nullability_change": {
+      "schema": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "statistical": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "semantic": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "combined": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      }
+    },
+    "range_change": {
+      "schema": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "statistical": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "semantic": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "combined": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      }
+    },
+    "range_violation": {
+      "schema": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 0
+      },
+      "statistical": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 0
+      },
+      "semantic": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 5,
+        "flagged": 0
+      },
+      "combined": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 5,
+        "flagged": 0
+      }
+    },
+    "removed": {
+      "schema": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "statistical": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "semantic": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "combined": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      }
+    },
+    "renamed": {
+      "schema": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "statistical": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "semantic": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "combined": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      }
+    },
+    "type_change": {
+      "schema": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "statistical": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "semantic": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "combined": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      }
+    },
+    "unit_change": {
+      "schema": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "statistical": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "semantic": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "combined": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      }
+    },
+    "unit_conversion": {
+      "schema": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "statistical": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "semantic": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      },
+      "combined": {
+        "raw_recall": 1.0,
+        "adj_recall": 1.0,
+        "n": 3,
+        "flagged": 0
+      }
+    },
+    "variance_shift": {
+      "schema": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 5
+      },
+      "statistical": {
+        "raw_recall": 0.0,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 5
+      },
+      "semantic": {
+        "raw_recall": 0.6,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 5
+      },
+      "combined": {
+        "raw_recall": 0.6,
+        "adj_recall": 0.0,
+        "n": 5,
+        "flagged": 5
+      }
+    }
+  }
+}

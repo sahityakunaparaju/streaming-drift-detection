@@ -1,0 +1,481 @@
+{
+  "profile_version": "1.0",
+  "dataset": {
+    "name": "beijing_air_quality",
+    "rows": 420768,
+    "columns": 14
+  },
+  "schema": {
+    "schema_version": "1.0",
+    "columns": {
+      "ts": {
+        "dtype": "float64",
+        "nullable": false,
+        "missing_rate": 0.0
+      },
+      "station": {
+        "dtype": "string",
+        "nullable": false,
+        "missing_rate": 0.0
+      },
+      "PM2.5": {
+        "dtype": "float64",
+        "nullable": true,
+        "missing_rate": 0.020769164955509924
+      },
+      "PM10": {
+        "dtype": "float64",
+        "nullable": true,
+        "missing_rate": 0.015326735873450452
+      },
+      "SO2": {
+        "dtype": "float64",
+        "nullable": true,
+        "missing_rate": 0.021439368012776638
+      },
+      "NO2": {
+        "dtype": "float64",
+        "nullable": true,
+        "missing_rate": 0.028794965396608106
+      },
+      "CO": {
+        "dtype": "float64",
+        "nullable": true,
+        "missing_rate": 0.049198132937866
+      },
+      "O3": {
+        "dtype": "float64",
+        "nullable": true,
+        "missing_rate": 0.03155420564301468
+      },
+      "TEMP": {
+        "dtype": "float64",
+        "nullable": true,
+        "missing_rate": 0.0009458894212487642
+      },
+      "PRES": {
+        "dtype": "float64",
+        "nullable": true,
+        "missing_rate": 0.0009340063883185034
+      },
+      "DEWP": {
+        "dtype": "float64",
+        "nullable": true,
+        "missing_rate": 0.000957772454179025
+      },
+      "RAIN": {
+        "dtype": "float64",
+        "nullable": true,
+        "missing_rate": 0.0009268765685603468
+      },
+      "wd": {
+        "dtype": "string",
+        "nullable": true,
+        "missing_rate": 0.004330177199787056
+      },
+      "WSPM": {
+        "dtype": "float64",
+        "nullable": true,
+        "missing_rate": 0.0007557608943645905
+      }
+    },
+    "dataset": {
+      "name": "beijing_air_quality",
+      "description": "Reference schema for Beijing Multi-Site Air-Quality dataset"
+    }
+  },
+  "statistics": {
+    "ts": {
+      "dtype": "float64",
+      "count": 420768,
+      "missing_count": 0,
+      "missing_percentage": 0.0,
+      "unique_count": 35064,
+      "statistics": {
+        "mean": 1425209400.0,
+        "std": 36439620.99648537,
+        "min": 1362096000.0,
+        "q25": 1393652700.0,
+        "median": 1425209400.0,
+        "q75": 1456766100.0,
+        "max": 1488322800.0
+      }
+    },
+    "station": {
+      "dtype": "object",
+      "count": 420768,
+      "missing_count": 0,
+      "missing_percentage": 0.0,
+      "unique_count": 12,
+      "value_frequencies": {
+        "Aotizhongxin": 0.08333333333333333,
+        "Changping": 0.08333333333333333,
+        "Dingling": 0.08333333333333333,
+        "Dongsi": 0.08333333333333333,
+        "Guanyuan": 0.08333333333333333,
+        "Gucheng": 0.08333333333333333,
+        "Huairou": 0.08333333333333333,
+        "Nongzhanguan": 0.08333333333333333,
+        "Shunyi": 0.08333333333333333,
+        "Tiantan": 0.08333333333333333,
+        "Wanliu": 0.08333333333333333,
+        "Wanshouxigong": 0.08333333333333333
+      }
+    },
+    "PM2.5": {
+      "dtype": "float64",
+      "count": 412029,
+      "missing_count": 8739,
+      "missing_percentage": 2.0769164955509924,
+      "unique_count": 888,
+      "statistics": {
+        "mean": 79.79342813248583,
+        "std": 80.82239126019611,
+        "min": 2.0,
+        "q25": 20.0,
+        "median": 55.0,
+        "q75": 111.0,
+        "max": 999.0
+      }
+    },
+    "PM10": {
+      "dtype": "float64",
+      "count": 414319,
+      "missing_count": 6449,
+      "missing_percentage": 1.5326735873450452,
+      "unique_count": 1084,
+      "statistics": {
+        "mean": 104.6026175483142,
+        "std": 91.77242556561536,
+        "min": 2.0,
+        "q25": 36.0,
+        "median": 82.0,
+        "q75": 145.0,
+        "max": 999.0
+      }
+    },
+    "SO2": {
+      "dtype": "float64",
+      "count": 411747,
+      "missing_count": 9021,
+      "missing_percentage": 2.143936801277664,
+      "unique_count": 691,
+      "statistics": {
+        "mean": 15.830834699949245,
+        "std": 21.650603112381223,
+        "min": 0.2856,
+        "q25": 3.0,
+        "median": 7.0,
+        "q75": 20.0,
+        "max": 500.0
+      }
+    },
+    "NO2": {
+      "dtype": "float64",
+      "count": 408652,
+      "missing_count": 12116,
+      "missing_percentage": 2.8794965396608108,
+      "unique_count": 1212,
+      "statistics": {
+        "mean": 50.63858559263139,
+        "std": 35.12791179929233,
+        "min": 1.0265,
+        "q25": 23.0,
+        "median": 43.0,
+        "q75": 71.0,
+        "max": 290.0
+      }
+    },
+    "CO": {
+      "dtype": "float64",
+      "count": 400067,
+      "missing_count": 20701,
+      "missing_percentage": 4.9198132937866,
+      "unique_count": 132,
+      "statistics": {
+        "mean": 1230.7664541189351,
+        "std": 1160.1827164041176,
+        "min": 100.0,
+        "q25": 500.0,
+        "median": 900.0,
+        "q75": 1500.0,
+        "max": 10000.0
+      }
+    },
+    "O3": {
+      "dtype": "float64",
+      "count": 407491,
+      "missing_count": 13277,
+      "missing_percentage": 3.1554205643014677,
+      "unique_count": 1598,
+      "statistics": {
+        "mean": 57.37227127961109,
+        "std": 56.66160739844318,
+        "min": 0.2142,
+        "q25": 11.0,
+        "median": 45.0,
+        "q75": 82.0,
+        "max": 1071.0
+      }
+    },
+    "TEMP": {
+      "dtype": "float64",
+      "count": 420370,
+      "missing_count": 398,
+      "missing_percentage": 0.09458894212487641,
+      "unique_count": 2034,
+      "statistics": {
+        "mean": 13.538975833816355,
+        "std": 11.436139407923784,
+        "min": -19.9,
+        "q25": 3.1,
+        "median": 14.5,
+        "q75": 23.3,
+        "max": 41.6
+      }
+    },
+    "PRES": {
+      "dtype": "float64",
+      "count": 420375,
+      "missing_count": 393,
+      "missing_percentage": 0.09340063883185033,
+      "unique_count": 726,
+      "statistics": {
+        "mean": 1010.7469819844983,
+        "std": 10.474054749615195,
+        "min": 982.4,
+        "q25": 1002.3,
+        "median": 1010.4,
+        "q75": 1019.0,
+        "max": 1042.8
+      }
+    },
+    "DEWP": {
+      "dtype": "float64",
+      "count": 420365,
+      "missing_count": 403,
+      "missing_percentage": 0.0957772454179025,
+      "unique_count": 645,
+      "statistics": {
+        "mean": 2.490822023717484,
+        "std": 13.793846872139357,
+        "min": -43.4,
+        "q25": -8.9,
+        "median": 3.1,
+        "q75": 15.1,
+        "max": 29.1
+      }
+    },
+    "RAIN": {
+      "dtype": "float64",
+      "count": 420378,
+      "missing_count": 390,
+      "missing_percentage": 0.09268765685603468,
+      "unique_count": 253,
+      "statistics": {
+        "mean": 0.06447578132062096,
+        "std": 0.8210041463618168,
+        "min": 0.0,
+        "q25": 0.0,
+        "median": 0.0,
+        "q75": 0.0,
+        "max": 72.5
+      }
+    },
+    "wd": {
+      "dtype": "object",
+      "count": 418946,
+      "missing_count": 1822,
+      "missing_percentage": 0.4330177199787056,
+      "unique_count": 16,
+      "value_frequencies": {
+        "NE": 0.1034381519336621,
+        "ENE": 0.08149498980775566,
+        "NW": 0.07781432451915044,
+        "N": 0.07368252710373174,
+        "E": 0.07101631236483938,
+        "SW": 0.06863891766480644,
+        "NNE": 0.06738815981057225,
+        "NNW": 0.060451704993006256,
+        "WNW": 0.058181722704119386,
+        "ESE": 0.05781174662128293,
+        "SSW": 0.05385658294863777,
+        "SE": 0.04791548314102533,
+        "WSW": 0.04783432709704831,
+        "S": 0.046318618628653815,
+        "SSE": 0.04223456006263337,
+        "W": 0.041921870599074824
+      }
+    },
+    "WSPM": {
+      "dtype": "float64",
+      "count": 420450,
+      "missing_count": 318,
+      "missing_percentage": 0.07557608943645905,
+      "unique_count": 117,
+      "statistics": {
+        "mean": 1.729710548222143,
+        "std": 1.2463855654028804,
+        "min": 0.0,
+        "q25": 0.9,
+        "median": 1.4,
+        "q75": 2.2,
+        "max": 13.2
+      }
+    }
+  },
+  "semantic_contract": {
+    "contract_version": "1.0",
+    "dataset": {
+      "name": "beijing_air_quality"
+    },
+    "fields": {
+      "ts": {
+        "business_meaning": "measurement_timestamp",
+        "data_role": "timestamp",
+        "unit": "unix_epoch_seconds"
+      },
+      "station": {
+        "business_meaning": "air_quality_monitoring_station_identifier",
+        "data_role": "identifier",
+        "domain": "station_id",
+        "allowed_domain": [
+          "Aotizhongxin",
+          "Changping",
+          "Dingling",
+          "Dongsi",
+          "Guanyuan",
+          "Gucheng",
+          "Huairou",
+          "Nongzhanguan",
+          "Shunyi",
+          "Tiantan",
+          "Wanliu",
+          "Wanshouxigong"
+        ]
+      },
+      "PM2.5": {
+        "business_meaning": "fine_particulate_matter_concentration",
+        "data_role": "sensor_measurement",
+        "unit": "ug_m3",
+        "valid_range": {
+          "min": 0.0,
+          "max": 1000.0
+        }
+      },
+      "PM10": {
+        "business_meaning": "coarse_particulate_matter_concentration",
+        "data_role": "sensor_measurement",
+        "unit": "ug_m3",
+        "valid_range": {
+          "min": 0.0,
+          "max": 1000.0
+        }
+      },
+      "SO2": {
+        "business_meaning": "sulfur_dioxide_concentration",
+        "data_role": "sensor_measurement",
+        "unit": "ug_m3",
+        "valid_range": {
+          "min": 0.0,
+          "max": 500.0
+        }
+      },
+      "NO2": {
+        "business_meaning": "nitrogen_dioxide_concentration",
+        "data_role": "sensor_measurement",
+        "unit": "ug_m3",
+        "valid_range": {
+          "min": 0.0,
+          "max": 500.0
+        }
+      },
+      "CO": {
+        "business_meaning": "carbon_monoxide_concentration",
+        "data_role": "sensor_measurement",
+        "unit": "ug_m3",
+        "valid_range": {
+          "min": 0.0,
+          "max": 10000.0
+        }
+      },
+      "O3": {
+        "business_meaning": "ozone_concentration",
+        "data_role": "sensor_measurement",
+        "unit": "ug_m3",
+        "valid_range": {
+          "min": 0.0,
+          "max": 1000.0
+        }
+      },
+      "TEMP": {
+        "business_meaning": "ambient_air_temperature",
+        "data_role": "sensor_measurement",
+        "unit": "celsius",
+        "valid_range": {
+          "min": -40.0,
+          "max": 60.0
+        }
+      },
+      "PRES": {
+        "business_meaning": "atmospheric_pressure",
+        "data_role": "sensor_measurement",
+        "unit": "hpa",
+        "valid_range": {
+          "min": 900.0,
+          "max": 1100.0
+        }
+      },
+      "DEWP": {
+        "business_meaning": "dew_point_temperature",
+        "data_role": "sensor_measurement",
+        "unit": "celsius",
+        "valid_range": {
+          "min": -50.0,
+          "max": 50.0
+        }
+      },
+      "RAIN": {
+        "business_meaning": "precipitation",
+        "data_role": "sensor_measurement",
+        "unit": "mm",
+        "valid_range": {
+          "min": 0.0,
+          "max": 200.0
+        }
+      },
+      "WSPM": {
+        "business_meaning": "wind_speed",
+        "data_role": "sensor_measurement",
+        "unit": "m_s",
+        "valid_range": {
+          "min": 0.0,
+          "max": 50.0
+        }
+      },
+      "wd": {
+        "business_meaning": "wind_direction",
+        "data_role": "categorical_measurement",
+        "unit": "compass_direction",
+        "allowed_values": [
+          "N",
+          "NNE",
+          "NE",
+          "ENE",
+          "E",
+          "ESE",
+          "SE",
+          "SSE",
+          "S",
+          "SSW",
+          "SW",
+          "WSW",
+          "W",
+          "WNW",
+          "NW",
+          "NNW"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+event_id,timestamp,drift_type,subtype,feature,severity,injected,ground_truth,expected_false_negative
+bs-unit_change,1595071941.983335,semantic,unit_change,temp,high,True,DRIFT,
+bs-business_meaning_change,1595083088.4286242,semantic,business_meaning_change,temp,high,True,DRIFT,
+bs-range_change,1595085056.244332,semantic,range_change,temp,medium,True,DRIFT,
+bs-allowed_domain_change,1595087632.3240056,semantic,allowed_domain_change,device,medium,True,DRIFT,
+bs-definition_change,1595160400.970872,semantic,definition_change,temp,high,True,DRIFT,
+bs-clean,1595170584.36621,normal,clean,,none,False,NO_DRIFT,
+bs-normal_noise,1595176875.2319996,normal,normal_noise,temp,none,False,NO_DRIFT,

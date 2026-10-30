@@ -1,0 +1,8 @@
+seed,event_id,set,subtype,feature,severity,ground_truth,start_row,schema_identical,schema_events,schema_event_types,statistical_score,max_ks,max_psi,max_chi2,affected_ks,affected_psi,affected_chi2,semantic_fired,semantic_event_types,isolated,B1_schema,B2_statistical,semantic,B4_unified
+314,bs-unit_change,blind_spot,unit_change,temp,high,DRIFT,356085,True,0,[],0.132955,0.337093,9.572784,0.361983,0.2355805559943137,9.57278449056268,,True,['unit_change'],True,NO_DRIFT,NO_DRIFT,DRIFT,DRIFT
+314,bs-business_meaning_change,blind_spot,business_meaning_change,temp,high,DRIFT,364774,True,0,[],0.161565,0.258818,11.632691,0.372318,0.22347462881061442,6.489875123183492,,True,['business_meaning_change'],True,NO_DRIFT,NO_DRIFT,DRIFT,DRIFT
+314,bs-range_change,blind_spot,range_change,temp,medium,DRIFT,374983,True,0,[],0.184261,0.223196,13.008156,5.896353,0.213885128731638,9.478240479613033,,True,['range_change'],True,NO_DRIFT,NO_DRIFT,DRIFT,DRIFT
+314,bs-allowed_domain_change,blind_spot,allowed_domain_change,device,medium,DRIFT,378075,True,0,[],0.16391,0.340875,11.801532,2.505973,,,2.505973034342752,True,"['allowed_domain_change', 'allowed_domain_violation']",True,NO_DRIFT,NO_DRIFT,DRIFT,DRIFT
+314,bs-definition_change,blind_spot,definition_change,temp,high,DRIFT,379716,True,0,[],0.186079,0.341218,13.397665,0.181817,0.17700308008213553,7.698595502458177,,True,['definition_change'],True,NO_DRIFT,NO_DRIFT,DRIFT,DRIFT
+314,bs-clean,control,clean,,none,NO_DRIFT,383797,True,0,[],0.190247,0.396951,13.697799,0.642523,,,,False,[],True,NO_DRIFT,NO_DRIFT,NO_DRIFT,NO_DRIFT
+314,bs-normal_noise,control,normal_noise,temp,none,NO_DRIFT,398124,True,0,[],0.189392,0.281041,13.636234,0.477659,,,,False,[],True,NO_DRIFT,NO_DRIFT,NO_DRIFT,NO_DRIFT

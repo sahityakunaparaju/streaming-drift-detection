@@ -1,0 +1,298 @@
+{
+  "dataset": "controlled 10-window experimental ground-truth set",
+  "windows": 10,
+  "ground_truth_counts": {
+    "DRIFT": 7,
+    "NO_DRIFT": 3
+  },
+  "score_distributions": [
+    {
+      "score": "schema_score",
+      "ground_truth": "DRIFT",
+      "count": 7,
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.2857142857142857,
+      "median": 0.0,
+      "std": 0.4879500364742666
+    },
+    {
+      "score": "schema_score",
+      "ground_truth": "NO_DRIFT",
+      "count": 3,
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "median": 0.0,
+      "std": 0.0
+    },
+    {
+      "score": "statistical_score",
+      "ground_truth": "DRIFT",
+      "count": 7,
+      "min": 0.1449724595355448,
+      "max": 1.0,
+      "mean": 0.41485393748573074,
+      "median": 0.18837528629447867,
+      "std": 0.4003620588246552
+    },
+    {
+      "score": "statistical_score",
+      "ground_truth": "NO_DRIFT",
+      "count": 3,
+      "min": 0.12441175225729952,
+      "max": 0.16000456200450064,
+      "mean": 0.1449551164714797,
+      "median": 0.15044903515263902,
+      "std": 0.018421438143682144
+    },
+    {
+      "score": "semantic_score",
+      "ground_truth": "DRIFT",
+      "count": 7,
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.42857142857142855,
+      "median": 0.0,
+      "std": 0.5345224838248488
+    },
+    {
+      "score": "semantic_score",
+      "ground_truth": "NO_DRIFT",
+      "count": 3,
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0,
+      "median": 0.0,
+      "std": 0.0
+    },
+    {
+      "score": "unified_score",
+      "ground_truth": "DRIFT",
+      "count": 7,
+      "min": 0.06279176209815955,
+      "max": 0.6666666666666666,
+      "mean": 0.37637988392381505,
+      "median": 0.38831201376935964,
+      "std": 0.1760142710335398
+    },
+    {
+      "score": "unified_score",
+      "ground_truth": "NO_DRIFT",
+      "count": 3,
+      "min": 0.0414705840857665,
+      "max": 0.05333485400150021,
+      "mean": 0.0483183721571599,
+      "median": 0.050149678384213005,
+      "std": 0.0061404793812273786
+    }
+  ],
+  "unified_only": {
+    "roc_auc": 1.0,
+    "pr_auc": 1.0,
+    "best": {
+      "f1": {
+        "key": "f1",
+        "value": 1.0,
+        "thresholds": [
+          0.06
+        ]
+      },
+      "youden_j": {
+        "key": "youden_j",
+        "value": 1.0,
+        "thresholds": [
+          0.06
+        ]
+      },
+      "balanced_accuracy": {
+        "key": "balanced_accuracy",
+        "value": 1.0,
+        "thresholds": [
+          0.06
+        ]
+      }
+    }
+  },
+  "final_policy": {
+    "best": {
+      "f1": {
+        "key": "f1",
+        "value": 1.0,
+        "thresholds": [
+          0.06
+        ]
+      },
+      "youden_j": {
+        "key": "youden_j",
+        "value": 1.0,
+        "thresholds": [
+          0.06
+        ]
+      },
+      "balanced_accuracy": {
+        "key": "balanced_accuracy",
+        "value": 1.0,
+        "thresholds": [
+          0.06
+        ]
+      }
+    }
+  },
+  "threshold_0_5_unified_only": {
+    "threshold": 0.5,
+    "tp": 1,
+    "tn": 3,
+    "fp": 0,
+    "fn": 6,
+    "precision": 1.0,
+    "recall": 0.14285714285714285,
+    "f1": 0.25,
+    "accuracy": 0.4,
+    "specificity": 1.0,
+    "fpr": 0.0,
+    "fnr": 0.8571428571428571,
+    "balanced_accuracy": 0.5714285714285714,
+    "youden_j": 0.1428571428571428
+  },
+  "threshold_0_5_final_policy": {
+    "threshold": 0.5,
+    "tp": 6,
+    "tn": 3,
+    "fp": 0,
+    "fn": 1,
+    "precision": 1.0,
+    "recall": 0.8571428571428571,
+    "f1": 0.923076923076923,
+    "accuracy": 0.9,
+    "specificity": 1.0,
+    "fpr": 0.0,
+    "fnr": 0.14285714285714285,
+    "balanced_accuracy": 0.9285714285714286,
+    "youden_j": 0.8571428571428572
+  },
+  "per_drift_type": [
+    {
+      "drift_type": "normal",
+      "subtype": "clean",
+      "windows": 2,
+      "detected": 0,
+      "missed": 2,
+      "channels": "none; none",
+      "event_ids": "window_000, window_009"
+    },
+    {
+      "drift_type": "normal",
+      "subtype": "normal_noise",
+      "windows": 1,
+      "detected": 0,
+      "missed": 1,
+      "channels": "none",
+      "event_ids": "window_001"
+    },
+    {
+      "drift_type": "schema",
+      "subtype": "added",
+      "windows": 1,
+      "detected": 1,
+      "missed": 0,
+      "channels": "schema",
+      "event_ids": "window_002"
+    },
+    {
+      "drift_type": "schema",
+      "subtype": "removed",
+      "windows": 1,
+      "detected": 1,
+      "missed": 0,
+      "channels": "schema",
+      "event_ids": "window_003"
+    },
+    {
+      "drift_type": "semantic",
+      "subtype": "unit_change",
+      "windows": 1,
+      "detected": 1,
+      "missed": 0,
+      "channels": "semantic",
+      "event_ids": "window_007"
+    },
+    {
+      "drift_type": "semantic",
+      "subtype": "unit_conversion",
+      "windows": 1,
+      "detected": 1,
+      "missed": 0,
+      "channels": "semantic+statistical",
+      "event_ids": "window_008"
+    },
+    {
+      "drift_type": "statistical",
+      "subtype": "category_shift",
+      "windows": 1,
+      "detected": 1,
+      "missed": 0,
+      "channels": "statistical",
+      "event_ids": "window_006"
+    },
+    {
+      "drift_type": "statistical",
+      "subtype": "mean_shift",
+      "windows": 1,
+      "detected": 0,
+      "missed": 1,
+      "channels": "none",
+      "event_ids": "window_004"
+    },
+    {
+      "drift_type": "statistical",
+      "subtype": "variance_shift",
+      "windows": 1,
+      "detected": 1,
+      "missed": 0,
+      "channels": "semantic",
+      "event_ids": "window_005"
+    }
+  ],
+  "variance_shift_investigation": {
+    "target": {
+      "event_id": "window_005",
+      "statistical_score": 0.1649360413080789,
+      "unified_score": 0.38831201376935964,
+      "decision": "DRIFT",
+      "temp_ks": 0.25917815116095405,
+      "temp_psi": 9.112957927560684
+    },
+    "clean_controls": {
+      "statistical_score_min": 0.12441175225729952,
+      "statistical_score_max": 0.16000456200450064,
+      "temp_ks_values": [
+        0.1924771955457274,
+        0.19447462881061445,
+        0.17645456878850108
+      ],
+      "temp_psi_values": [
+        7.297521448731274,
+        5.455014793193342,
+        8.704676986818779
+      ]
+    },
+    "separability": {
+      "statistical_score_inside_clean_band": false,
+      "statistical_score_gap_to_clean_max": 0.004931479303578262,
+      "target_temp_ks_above_clean_max_temp_ks": true
+    }
+  },
+  "statistical_normalization": {
+    "ks_floor": 0.5,
+    "psi_scale": 72.0,
+    "chi2_scale": 32.0,
+    "statistical_decision_threshold": 0.25,
+    "note": "constants frozen in configs/thresholds.yaml; clean statistical score band 0.12-0.25"
+  },
+  "limitations": [
+    "10-window dataset: metrics and AUC are illustrative, not statistically reliable",
+    "threshold selection is unstable across nearby thresholds",
+    "variance-shift windows are expected false negatives under max-over-columns aggregation"
+  ]
+}

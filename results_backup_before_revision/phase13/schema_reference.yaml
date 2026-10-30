@@ -1,0 +1,61 @@
+schema_version: '1.0'
+columns:
+  ts:
+    dtype: float64
+    nullable: false
+    missing_rate: 0.0
+  station:
+    dtype: string
+    nullable: false
+    missing_rate: 0.0
+  PM2.5:
+    dtype: float64
+    nullable: true
+    missing_rate: 0.020769164955509924
+  PM10:
+    dtype: float64
+    nullable: true
+    missing_rate: 0.015326735873450452
+  SO2:
+    dtype: float64
+    nullable: true
+    missing_rate: 0.021439368012776638
+  NO2:
+    dtype: float64
+    nullable: true
+    missing_rate: 0.028794965396608106
+  CO:
+    dtype: float64
+    nullable: true
+    missing_rate: 0.049198132937866
+  O3:
+    dtype: float64
+    nullable: true
+    missing_rate: 0.03155420564301468
+  TEMP:
+    dtype: float64
+    nullable: true
+    missing_rate: 0.0009458894212487642
+  PRES:
+    dtype: float64
+    nullable: true
+    missing_rate: 0.0009340063883185034
+  DEWP:
+    dtype: float64
+    nullable: true
+    missing_rate: 0.000957772454179025
+  RAIN:
+    dtype: float64
+    nullable: true
+    missing_rate: 0.0009268765685603468
+  wd:
+    dtype: string
+    nullable: true
+    missing_rate: 0.004330177199787056
+  WSPM:
+    dtype: float64
+    nullable: true
+    missing_rate: 0.0007557608943645905
+dataset:
+  name: beijing_air_quality
+  description: Reference schema for Beijing Multi-Site Air-Quality dataset

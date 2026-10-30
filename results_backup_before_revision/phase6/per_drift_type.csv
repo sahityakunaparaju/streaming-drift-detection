@@ -1,0 +1,10 @@
+drift_type,subtype,windows,detected,missed,channels,event_ids
+normal,clean,2,0,2,none; none,"window_000, window_009"
+normal,normal_noise,1,0,1,none,window_001
+schema,added,1,1,0,schema,window_002
+schema,removed,1,1,0,schema,window_003
+semantic,unit_change,1,1,0,semantic,window_007
+semantic,unit_conversion,1,1,0,semantic+statistical,window_008
+statistical,category_shift,1,1,0,statistical,window_006
+statistical,mean_shift,1,0,1,none,window_004
+statistical,variance_shift,1,1,0,semantic,window_005

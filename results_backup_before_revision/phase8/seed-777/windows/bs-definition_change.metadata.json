@@ -1,0 +1,5 @@
+{
+  "change": "definition_change",
+  "column": "temp",
+  "new_definition": "exponentially_weighted_moving_average_of_raw_readings"
+}

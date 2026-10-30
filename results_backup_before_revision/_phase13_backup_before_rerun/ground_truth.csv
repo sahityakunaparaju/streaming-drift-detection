@@ -1,0 +1,8 @@
+event_id,timestamp,drift_type,subtype,feature,severity,injected,ground_truth,expected_false_negative
+clean-00,1362096000.0,normal,clean,,none,False,NO_DRIFT,
+clean-01,1365696000.0,normal,normal_noise,PM2.5,none,False,NO_DRIFT,
+schema-added,1369296000.0,schema,added,AQI_index,high,True,DRIFT,
+stat-mean-shift,1372896000.0,statistical,mean_shift,PM2.5,high,True,DRIFT,
+cat-wd-shift,1376496000.0,statistical,category_shift,wd,high,True,DRIFT,
+sem-unit-change,1380096000.0,semantic,unit_change,TEMP,high,True,DRIFT,
+schema-nullability,1383696000.0,schema,nullability_change,PM2.5,low,True,DRIFT,

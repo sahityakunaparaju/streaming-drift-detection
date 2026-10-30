@@ -1,0 +1,8 @@
+{
+  "change": "range_change",
+  "column": "temp",
+  "valid_range": {
+    "min": 0.0,
+    "max": 40.0
+  }
+}

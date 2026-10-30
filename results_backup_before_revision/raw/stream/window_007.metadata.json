@@ -1,0 +1,6 @@
+{
+  "column": "temp",
+  "old_unit": "celsius",
+  "new_unit": "fahrenheit",
+  "metadata_only": true
+}

@@ -1,0 +1,8 @@
+{
+  "change": "allowed_domain_change",
+  "column": "device",
+  "allowed_domain": [
+    "1c:bf:ce:15:ec:4d",
+    "00:0f:00:70:91:0a"
+  ]
+}
